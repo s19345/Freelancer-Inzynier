@@ -10,7 +10,9 @@ user_router = DefaultRouter()
 user_router.register(r'users', UserViewSet, basename='user')
 
 urlpatterns = [
-    path('create_user/', CreateUserView.as_view(), name='create_user'),
-    path('users/', UserListView.as_view(), name='user_list'),
-    path('', include(user_router.urls), name='user_view_set')
+    # path('create_user/', CreateUserView.as_view(), name='create_user'),
+    # path('users/', UserListView.as_view(), name='user_list'),
+    # path('', include(user_router.urls), name='user_view_set'),
+    path('dj-rest-auth/', include('dj_rest_auth.urls')),
+    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
 ]
