@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser } from '../../redux/authThunks';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 const UserProfile = () => {
   const dispatch = useDispatch();
@@ -21,7 +21,6 @@ const UserProfile = () => {
   if (!user) {
     return <p>£adowanie danych u¿ytkownika...</p>;
   }
-  console.log("user", user);
 
   return (
     <div style={{ padding: '1rem', border: '1px solid #ccc', borderRadius: '8px' }}>

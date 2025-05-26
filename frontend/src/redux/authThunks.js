@@ -65,7 +65,6 @@ export const fetchUser = createAsyncThunk(
     const token = state.auth.token;
 
     try {
-        console.log(`Token z fetcha: ${token}`)
       const res = await fetch(`${USERS_BACKEND_URL}user/`, {
         headers: {
           'Content-Type': 'application/json',

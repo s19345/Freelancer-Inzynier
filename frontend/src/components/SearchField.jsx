@@ -8,7 +8,6 @@ function SearchField() {
             const response = axios.get("adres url backendu");
             if (response.status === '200') {
                 const data = response.data;
-                console.log("Project data:", data);
             }
         } catch (error) {
             console.error("Error fetching project data:", error);
@@ -17,7 +16,6 @@ function SearchField() {
 
     const handleClick = () => {
         // Handle search button click
-        console.log("Search button clicked");
     }
 
     return (
