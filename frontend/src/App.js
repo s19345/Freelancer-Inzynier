@@ -13,6 +13,8 @@ import ChangePassword from "./components/user/ChangePassword";
 import {PersistGate} from 'redux-persist/integration/react';
 import Home from "./components/layout/Home";
 import PasswordResetConfirm from "./components/user/PasswordResetConfirm";
+import CreateProject from "./components/Project/CreateProject";
+import CreateClient from "./components/client/CreateClient";
 
 function App() {
     return (
@@ -29,6 +31,8 @@ function App() {
                             <Route path="password-reset/:uid/:token" element={<PasswordResetConfirm/>}/>
                             <Route path="/edit-profile" element={<EditProfile />}/>
                             <Route path="/change-password" element={<ChangePassword />} />
+                            <Route path="/create-project" element={<CreateProject />} />
+                            <Route path="/create-client" element={<CreateClient />} />
                         </Route>
                     </Routes>
                 </PersistGate>

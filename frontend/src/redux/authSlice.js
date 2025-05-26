@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchUser, loginUser, logoutUser, registerUser, updateUserData, changePassword } from './authThunks';
 
+
 const initialState = {
   token: null,
   isLoggedIn: false,
@@ -90,6 +91,7 @@ const authSlice = createSlice({
         state.error = action.payload;
         state.successMessage = null;
       });
+
   },
 });
 

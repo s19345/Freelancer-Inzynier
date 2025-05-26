@@ -41,6 +41,9 @@ class ProjectViewSet(ModelViewSet):
         user = self.request.user
         return Project.objects.filter(manager=user)
 
+    def perform_create(self, serializer):
+        serializer.save(manager=self.request.user)
+
 
 class ClientViewSet(ModelViewSet):
     serializer_class = ClientSerializer
