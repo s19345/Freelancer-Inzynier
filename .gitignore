@@ -3,4 +3,5 @@
 .DS_Store
 **/*.pyc
 
+.env
 db.sqlite3

@@ -5,4 +5,6 @@ from django.urls.conf import include
 urlpatterns = [
     path('auth/', include('dj_rest_auth.urls')),
     path('auth/registration/', include('dj_rest_auth.registration.urls')),
+    path("/auth/password/reset/confirm/<str:uidb64>/<str:token>/", password_reset_confirm_redirect,
+         name="password_reset_confirm"),
 ]

@@ -10,6 +10,7 @@ import Register from "./components/user/Register";
 import UserProfile from "./components/user/UserProfile";
 import {PersistGate} from 'redux-persist/integration/react';
 import Home from "./components/layout/Home";
+import PasswordResetConfirm from "./components/user/PasswordResetConfirm";
 
 function App() {
     return (
@@ -23,6 +24,9 @@ function App() {
                             <Route path="/logout" element={<Logout/>}/>
                             <Route path="/register" element={<Register/>}/>
                             <Route path="/profile" element={<UserProfile/>}/>
+                            <Route path="password-reset/:uid/:token" element={<PasswordResetConfirm/>}/>
+                            <Route path="/edit-profile" element={<EditProfile />}/>
+                            <Route path="/change-password" element={<ChangePassword />} />
                         </Route>
                     </Routes>
                 </PersistGate>
