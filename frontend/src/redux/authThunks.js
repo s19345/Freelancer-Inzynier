@@ -26,7 +26,7 @@ export const loginUser = createAsyncThunk(
       return { token: data.key };
     } catch (error) {
         console.error(error)
-      return thunkAPI.rejectWithValue('B³±d sieci');
+      return thunkAPI.rejectWithValue(`B³±d logowania, ${error}`);
     }
   }
 );
@@ -105,6 +105,68 @@ export const registerUser = createAsyncThunk(
     } catch (error) {
         console.error(error)
       return thunkAPI.rejectWithValue('B³±d sieci');
+    }
+  }
+);
+
+export const updateUserData = createAsyncThunk(
+  'auth/updateUserData',
+  async (updatedData, thunkAPI) => {
+    const state = thunkAPI.getState();
+    const token = state.auth.token;
+
+    try {
+      const res = await fetch(`${USERS_BACKEND_URL}user/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${token}`,
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        return thunkAPI.rejectWithValue(errorData);
+      }
+
+      return await res.json();
+    } catch (error) {
+      console.error(error);
+      return thunkAPI.rejectWithValue('B³±d aktualizacji danych');
+    }
+  }
+);
+
+export const changePassword = createAsyncThunk(
+  'auth/changePassword',
+  async ({ oldPassword, newPassword1, newPassword2 }, thunkAPI) => {
+    const state = thunkAPI.getState();
+    const token = state.auth.token;
+
+    try {
+      const res = await fetch(`${USERS_BACKEND_URL}password/change/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${token}`,
+        },
+        body: JSON.stringify({
+          old_password: oldPassword,
+          new_password1: newPassword1,
+          new_password2: newPassword2,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        const firstError = Object.values(errorData)[0];
+        return thunkAPI.rejectWithValue(firstError ? firstError[0] : 'B³±d zmiany has³a');
+      }
+
+      return 'Has³o zosta³o zmienione pomy¶lnie';
+    } catch (error) {
+      return thunkAPI.rejectWithValue('B³±d sieci podczas zmiany has³a');
     }
   }
 );

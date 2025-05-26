@@ -29,6 +29,7 @@ const Login = () => {
                 <div>
                     <label htmlFor="nickname">Nick:</label><br/>
                     <input
+                        id="nickname"
                         value={nickname}
                         onChange={(e) => setNickname(e.target.value)}
                         required

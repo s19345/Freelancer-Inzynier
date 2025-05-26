@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser } from '../../redux/authThunks';
+import { Link } from 'react-router-dom';
 
 const UserProfile = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,14 @@ const UserProfile = () => {
       <p><strong>Nick:</strong> {user.username}</p>
       <p><strong>Email:</strong> {user.email}</p>
       <p><strong>Bio:</strong> {user.bio}</p>
+
+      <Link to="/edit-profile">
+        <button style={{ marginTop: '1rem' }}>Edytuj profil</button>
+      </Link>
+
+      <Link to="/change-password">
+        <button style={{ marginTop: '1rem' }}>Zmieñ has³o</button>
+      </Link>
     </div>
   );
 };
