@@ -13,12 +13,20 @@ const ProjectForm = () => {
         "client": null,
         "collabolators": []
     });
+
+    const [errors, setErrors] = useState({});
     const token = useSelector((state) => state.auth.token);
 
+    const validate = () => {
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = "Nazwa projektu jest wymagana";
+    if (!formData.status) newErrors.status = "Status projektu jest wymagany";
+    if (formData.budget && Number(formData.budget) < 0)
+      newErrors.budget = "Bud¿et nie mo¿e byæ ujemny";
+    return newErrors;
+  };
+
     const createProject = async (data) => {
-        console.log("URL: ", `${PROJECT_BACKEND_URL}projects/"`)
-        console.log("Token: ", token)
-        console.log("Data: ", data)
         try {
             const response = await fetch(`${PROJECT_BACKEND_URL}projects/`, {
                 method: "POST",
@@ -48,11 +56,13 @@ const ProjectForm = () => {
     };
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        createProject(formData);
-
-
-    };
+    e.preventDefault();
+    const validationErrors = validate();
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length === 0) {
+      createProject(formData);
+    }
+  };
 
     return (
         <form onSubmit={handleSubmit}>
@@ -65,8 +75,8 @@ const ProjectForm = () => {
                     value={formData.name}
                     onChange={handleChange}
                     className="w-full border px-3 py-2 rounded"
-                    required
                 />
+                {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
             </div>
 
             <div>
@@ -109,13 +119,13 @@ const ProjectForm = () => {
                     name="status"
                     value={formData.status}
                     onChange={handleChange}
-                    required
                 >
                     <option value="">-- Wybierz status --</option>
                     <option value="active">Aktywny</option>
                     <option value="completed">Ukoñczony</option>
                     <option value="paused">Wstrzymany</option>
                 </select>
+                {errors.status && <p className="text-red-500 text-sm">{errors.status}</p>}
             </div>
 
             <div>
@@ -127,6 +137,7 @@ const ProjectForm = () => {
                     value={formData.budget}
                     onChange={handleChange}
                 ></input>
+                {errors.budget && <p className="text-red-500 text-sm">{errors.budget}</p>}
             </div>
 
 

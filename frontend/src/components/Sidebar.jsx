@@ -1,4 +1,4 @@
-
+import { Link } from "react-router";
 
 function Sidebar() {
     return (
@@ -6,7 +6,7 @@ function Sidebar() {
             <h2>Sidebar</h2>
             <ul>
                 <li><a href="#dashboard">Dashboard</a></li>
-                <li><a href="#projects">Projects</a></li>
+                <li><Link to="/project">Projects</Link></li>
                 <li><a href="#clients">Clients</a></li>
                 <li><a href="#calendar">Calendar</a></li>
                 <li><a href='/create-project'>Stwórz projekt</a></li>

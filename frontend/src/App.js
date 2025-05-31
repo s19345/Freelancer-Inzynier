@@ -15,6 +15,9 @@ import Home from "./components/layout/Home";
 import PasswordResetConfirm from "./components/user/PasswordResetConfirm";
 import CreateProject from "./components/Project/CreateProject";
 import CreateClient from "./components/client/CreateClient";
+import ProjectDetails from "./components/Project/ProjectDetails";
+import EditProject from "./components/Project/EditProject";
+import UserProjectsList from "./components/Project/UserProjectList";
 
 function App() {
     return (
@@ -33,6 +36,9 @@ function App() {
                             <Route path="/change-password" element={<ChangePassword />} />
                             <Route path="/create-project" element={<CreateProject />} />
                             <Route path="/create-client" element={<CreateClient />} />
+                            <Route path="/project" element={<UserProjectsList />} />
+                            <Route path="/project/:projectId" element={<ProjectDetails />} />
+                            <Route path="/project/:projectId/edit" element={<EditProject />} />
                         </Route>
                     </Routes>
                 </PersistGate>

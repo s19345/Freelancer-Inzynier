@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import {PROJECT_BACKEND_URL} from "../../settings";
-import {useSelector} from "react-redux";
+import { PROJECT_BACKEND_URL } from "../../settings";
+import { useSelector } from "react-redux";
 
 const CreateClientForm = () => {
   const [formData, setFormData] = useState({
@@ -12,8 +12,31 @@ const CreateClientForm = () => {
     notes: ""
   });
 
+  const [errors, setErrors] = useState({});
   const [status, setStatus] = useState(null);
   const token = useSelector((state) => state.auth.token);
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.company_name.trim()) {
+      newErrors.company_name = "Nazwa firmy jest wymagana";
+    }
+    if (!formData.industry.trim()) {
+      newErrors.industry = "Bran¿a jest wymagana";
+    }
+    if (!formData.contact_person.trim()) {
+      newErrors.contact_person = "Osoba kontaktowa jest wymagana";
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = "Email jest wymagany";
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      newErrors.email = "Podaj poprawny adres email";
+    }
+    if (formData.phone && !/^[0-9+()\-\s]{6,}$/.test(formData.phone)) {
+      newErrors.phone = "Podaj poprawny numer telefonu";
+    }
+    return newErrors;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,7 +48,10 @@ const CreateClientForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("token ", token)
+    const validationErrors = validate();
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) return;
 
     try {
       const response = await fetch(`${PROJECT_BACKEND_URL}clients/`, {
@@ -36,91 +62,106 @@ const CreateClientForm = () => {
         },
         body: JSON.stringify(formData)
       });
-        console.log("response: ", response)
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error("B³±d:", errorData);
-        setStatus("B³±d tworzenia klienta");
+        setStatus("Wyst±pi³ b³±d podczas tworzenia klienta");
         return;
       }
 
       const data = await response.json();
       console.log("Utworzono klienta:", data);
-      setStatus("Klient utworzony pomy¶lnie!");
-      // setFormData({
-      //   company_name: "",
-      //   industry: "",
-      //   contact_person: "",
-      //   email: "",
-      //   phone: "",
-      //   notes: ""
-      // });
-
+      setStatus("Klient zosta³ utworzony pomy¶lnie");
+      setFormData({
+        company_name: "",
+        industry: "",
+        contact_person: "",
+        email: "",
+        phone: "",
+        notes: ""
+      });
+      setErrors({});
     } catch (error) {
       console.error("B³±d sieci:", error);
-      setStatus("B³±d sieci");
+      setStatus("B³±d po³±czenia z serwerem");
     }
   };
 
   return (
     <form onSubmit={handleSubmit} style={{ maxWidth: "400px", margin: "auto" }}>
-      <h2>Dodaj klienta</h2>
+      <h2 className="text-lg font-semibold mb-4">Dodaj klienta</h2>
 
-      <input
-        type="text"
-        name="company_name"
-        placeholder="Nazwa firmy"
-        value={formData.company_name}
-        onChange={handleChange}
-        required
-      />
+      <div>
+        <input
+          type="text"
+          name="company_name"
+          placeholder="Nazwa firmy"
+          value={formData.company_name}
+          onChange={handleChange}
+        />
+        {errors.company_name && <p className="text-red-500 text-sm">{errors.company_name}</p>}
+      </div>
 
-      <input
-        type="text"
-        name="industry"
-        placeholder="Bran¿a"
-        value={formData.industry}
-        onChange={handleChange}
-        required
-      />
+      <div>
+        <input
+          type="text"
+          name="industry"
+          placeholder="Bran¿a"
+          value={formData.industry}
+          onChange={handleChange}
+        />
+        {errors.industry && <p className="text-red-500 text-sm">{errors.industry}</p>}
+      </div>
 
-      <input
-        type="text"
-        name="contact_person"
-        placeholder="Osoba kontaktowa"
-        value={formData.contact_person}
-        onChange={handleChange}
-        required
-      />
+      <div>
+        <input
+          type="text"
+          name="contact_person"
+          placeholder="Osoba kontaktowa"
+          value={formData.contact_person}
+          onChange={handleChange}
+        />
+        {errors.contact_person && <p className="text-red-500 text-sm">{errors.contact_person}</p>}
+      </div>
 
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
-        required
-      />
+      <div>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+      </div>
 
-      <input
-        type="text"
-        name="phone"
-        placeholder="Telefon"
-        value={formData.phone}
-        onChange={handleChange}
-      />
+      <div>
+        <input
+          type="text"
+          name="phone"
+          placeholder="Telefon"
+          value={formData.phone}
+          onChange={handleChange}
+        />
+        {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+      </div>
 
-      <textarea
-        name="notes"
-        placeholder="Notatki"
-        value={formData.notes}
-        onChange={handleChange}
-        rows={4}
-      />
+      <div>
+        <textarea
+          name="notes"
+          placeholder="Notatki"
+          value={formData.notes}
+          onChange={handleChange}
+          rows={4}
+        />
+      </div>
 
-      <button type="submit">Utwórz klienta</button>
+      <button type="submit" className="mt-3">
+        Utwórz klienta
+      </button>
 
-      {status && <p>{status}</p>}
+      {status && <p className="mt-2 text-sm">{status}</p>}
     </form>
   );
 };

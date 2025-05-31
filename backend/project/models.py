@@ -69,5 +69,3 @@ class TimeLog(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
 
-    # def __str__(self) -> str:
-    #     return f"TimeLog for {self.task.title} by {self.user.username}"
