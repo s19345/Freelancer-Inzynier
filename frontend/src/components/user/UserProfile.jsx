@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser } from '../../redux/authThunks';
 import { Link } from 'react-router';
 
+
 const UserProfile = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
@@ -15,16 +16,16 @@ const UserProfile = () => {
   }, []);
 
   if (!isLoggedIn) {
-    return <p>Musisz byÊ zalogowany, aby zobaczyÊ profil uøytkownika.</p>;
+    return <p>Musisz byƒá zalogowany, aby zobaczyƒá profil u≈ºytkownika.</p>;
   }
 
   if (!user) {
-    return <p>£adowanie danych uøytkownika...</p>;
+    return <p>≈Åadowanie danych u≈ºytkownika...</p>;
   }
 
   return (
     <div style={{ padding: '1rem', border: '1px solid #ccc', borderRadius: '8px' }}>
-      <h2>Profil uøytkownika</h2>
+      <h2>Profil u≈ºytkownika</h2>
       <p><strong>Nick:</strong> {user.username}</p>
       <p><strong>Email:</strong> {user.email}</p>
       <p><strong>Bio:</strong> {user.bio}</p>
@@ -34,7 +35,7 @@ const UserProfile = () => {
       </Link>
 
       <Link to="/change-password">
-        <button style={{ marginTop: '1rem' }}>ZmieÒ has≥o</button>
+        <button style={{ marginTop: '1rem' }}>Zmie≈Ñ has≈Ço</button>
       </Link>
     </div>
   );

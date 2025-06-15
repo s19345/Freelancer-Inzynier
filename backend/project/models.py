@@ -28,7 +28,6 @@ class Project(models.Model):
     version = models.CharField(max_length=50)
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="projects", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=150)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='active')
     budget = models.DecimalField(max_digits=10, decimal_places=2)
     collabolators = models.ManyToManyField(CustomUser, related_name="collaborated_projects", null=True, blank=True)

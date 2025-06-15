@@ -34,23 +34,23 @@ const PasswordResetConfirm = () => {
         setTimeout(() => navigate('/login'), 3000);
       } else {
         const data = await response.json();
-        setError(data?.detail || 'Co∂ posz≥o nie tak. SprÛbuj ponownie.');
+        setError(data?.detail || 'Co≈õ posz≈Ço nie tak. Spr√≥buj ponownie.');
       }
     } catch (err) {
-      setError('Co∂ posz≥o nie tak. SprÛbuj ponownie.');
+      setError('Co≈õ posz≈Ço nie tak. Spr√≥buj ponownie.');
     }
   };
 
   return (
     <div>
-      <h2>Resetowanie has≥a</h2>
+      <h2>Resetowanie has≈Ça</h2>
 
       {success ? (
-        <p>Has≥o zosta≥o zmienione. Za chwilÍ nast±pi przekierowanie do logowania...</p>
+        <p>Has≈Ço zosta≈Ço zmienione. Za chwilƒô nastƒÖpi przekierowanie do logowania...</p>
       ) : (
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label>Nowe has≥o</label>
+            <label>Nowe has≈Ço</label>
             <input
               type="password"
               value={newPassword1}
@@ -59,7 +59,7 @@ const PasswordResetConfirm = () => {
             />
           </div>
           <div className="mb-4">
-            <label>PowtÛrz nowe has≥o</label>
+            <label>Powt√≥rz nowe has≈Ço</label>
             <input
               type="password"
               value={newPassword2}
@@ -71,7 +71,7 @@ const PasswordResetConfirm = () => {
           {error && <p>{error}</p>}
 
           <button type="submit">
-            ZmieÒ has≥o
+            Zmie≈Ñ has≈Ço
           </button>
         </form>
       )}

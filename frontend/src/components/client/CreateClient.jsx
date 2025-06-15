@@ -22,7 +22,7 @@ const CreateClientForm = () => {
       newErrors.company_name = "Nazwa firmy jest wymagana";
     }
     if (!formData.industry.trim()) {
-      newErrors.industry = "Bran¿a jest wymagana";
+      newErrors.industry = "BranÅ¼a jest wymagana";
     }
     if (!formData.contact_person.trim()) {
       newErrors.contact_person = "Osoba kontaktowa jest wymagana";
@@ -65,14 +65,14 @@ const CreateClientForm = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("B³±d:", errorData);
-        setStatus("Wyst±pi³ b³±d podczas tworzenia klienta");
+        console.error("BÅ‚Ä…d:", errorData);
+        setStatus("WystÄ…piÅ‚ bÅ‚Ä…d podczas tworzenia klienta");
         return;
       }
 
       const data = await response.json();
       console.log("Utworzono klienta:", data);
-      setStatus("Klient zosta³ utworzony pomy¶lnie");
+      setStatus("Klient zostaÅ‚ utworzony pomyÅ›lnie");
       setFormData({
         company_name: "",
         industry: "",
@@ -83,8 +83,8 @@ const CreateClientForm = () => {
       });
       setErrors({});
     } catch (error) {
-      console.error("B³±d sieci:", error);
-      setStatus("B³±d po³±czenia z serwerem");
+      console.error("BÅ‚Ä…d sieci:", error);
+      setStatus("BÅ‚Ä…d poÅ‚Ä…czenia z serwerem");
     }
   };
 
@@ -107,7 +107,7 @@ const CreateClientForm = () => {
         <input
           type="text"
           name="industry"
-          placeholder="Bran¿a"
+          placeholder="BranÅ¼a"
           value={formData.industry}
           onChange={handleChange}
         />
@@ -158,7 +158,7 @@ const CreateClientForm = () => {
       </div>
 
       <button type="submit" className="mt-3">
-        Utwórz klienta
+        UtwÃ³rz klienta
       </button>
 
       {status && <p className="mt-2 text-sm">{status}</p>}

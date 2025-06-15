@@ -17,16 +17,15 @@ export const loginUser = createAsyncThunk(
       if (!res.ok) {
         const errorData = await res.json();
         return thunkAPI.rejectWithValue(
-          errorData?.non_field_errors?.[0] || 'B³±d logowania'
+          errorData?.non_field_errors?.[0] || 'BÅ‚Ä…d logowania'
         );
       }
 
       const data = await res.json();
-      console.log("kay", data)
       return { token: data.key };
     } catch (error) {
         console.error(error)
-      return thunkAPI.rejectWithValue(`B³±d logowania, ${error}`);
+      return thunkAPI.rejectWithValue(`BÅ‚Ä…d logowania, ${error}`);
     }
   }
 );
@@ -47,13 +46,13 @@ export const logoutUser = createAsyncThunk(
       });
 
       if (!res.ok) {
-        return thunkAPI.rejectWithValue('Wylogowanie nie powiod³o siê');
+        return thunkAPI.rejectWithValue('Wylogowanie nie powiodÅ‚o siÄ™');
       }
 
       return true;
     } catch (error) {
         console.error(error)
-      return thunkAPI.rejectWithValue('B³±d sieci podczas wylogowania');
+      return thunkAPI.rejectWithValue('BÅ‚Ä…d sieci podczas wylogowania');
     }
   }
 );
@@ -73,13 +72,13 @@ export const fetchUser = createAsyncThunk(
       });
 
       if (!res.ok) {
-        return thunkAPI.rejectWithValue('Nie uda³o siê pobraæ danych u¿ytkownika');
+        return thunkAPI.rejectWithValue('Nie udaÅ‚o siÄ™ pobraÄ‡ danych uÅ¼ytkownika');
       }
 
       return await res.json();
     } catch (error) {
         console.error(error)
-      return thunkAPI.rejectWithValue('B³±d sieci przy pobieraniu danych u¿ytkownika');
+      return thunkAPI.rejectWithValue('BÅ‚Ä…d sieci przy pobieraniu danych uÅ¼ytkownika');
     }
   }
 );
@@ -100,10 +99,10 @@ export const registerUser = createAsyncThunk(
         return thunkAPI.rejectWithValue(firstError[0]);
       }
 
-      return 'Rejestracja zakoñczona sukcesem';
+      return 'Rejestracja zakoÅ„czona sukcesem';
     } catch (error) {
         console.error(error)
-      return thunkAPI.rejectWithValue('B³±d sieci');
+      return thunkAPI.rejectWithValue('BÅ‚Ä…d sieci');
     }
   }
 );
@@ -132,7 +131,7 @@ export const updateUserData = createAsyncThunk(
       return await res.json();
     } catch (error) {
       console.error(error);
-      return thunkAPI.rejectWithValue('B³±d aktualizacji danych');
+      return thunkAPI.rejectWithValue('BÅ‚Ä…d aktualizacji danych');
     }
   }
 );
@@ -160,12 +159,14 @@ export const changePassword = createAsyncThunk(
       if (!res.ok) {
         const errorData = await res.json();
         const firstError = Object.values(errorData)[0];
-        return thunkAPI.rejectWithValue(firstError ? firstError[0] : 'B³±d zmiany has³a');
+        return thunkAPI.rejectWithValue(firstError ? firstError[0] : 'BÅ‚Ä…d zmiany hasÅ‚a');
       }
 
-      return 'Has³o zosta³o zmienione pomy¶lnie';
+      return 'HasÅ‚o zostaÅ‚o zmienione pomyÅ›lnie';
     } catch (error) {
-      return thunkAPI.rejectWithValue('B³±d sieci podczas zmiany has³a');
+      return thunkAPI.rejectWithValue('BÅ‚Ä…d sieci podczas zmiany hasÅ‚a');
     }
   }
 );
+
+

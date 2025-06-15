@@ -16,6 +16,7 @@ function SearchField() {
 
     const handleClick = () => {
         // Handle search button click
+        console.log("Search button clicked");
     }
 
     return (

@@ -39,6 +39,8 @@ function App() {
                             <Route path="/project" element={<UserProjectsList />} />
                             <Route path="/project/:projectId" element={<ProjectDetails />} />
                             <Route path="/project/:projectId/edit" element={<EditProject />} />
+
+
                         </Route>
                     </Routes>
                 </PersistGate>

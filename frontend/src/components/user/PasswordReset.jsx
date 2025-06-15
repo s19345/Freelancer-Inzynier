@@ -29,12 +29,12 @@ const PasswordReset = () => {
         throw data;
       }
 
-      setSuccessMessage('Link do resetu has³a zosta³ wys³any na podany adres e-mail.');
+      setSuccessMessage('Link do resetu hasÅ‚a zostaÅ‚ wysÅ‚any na podany adres e-mail.');
     } catch (error) {
       if (error?.email) {
         setErrorMessage(error.email.join(' '));
       } else {
-        setErrorMessage('Wyst±pi³ b³±d podczas resetowania has³a.');
+        setErrorMessage('WystÄ…piÅ‚ bÅ‚Ä…d podczas resetowania hasÅ‚a.');
       }
     } finally {
       setLoading(false);
@@ -43,7 +43,7 @@ const PasswordReset = () => {
 
   return (
     <form onSubmit={handleSubmit} style={{ maxWidth: 400, margin: '2rem auto' }}>
-      <h2>Resetowanie has³a</h2>
+      <h2>Resetowanie hasÅ‚a</h2>
 
       <label htmlFor="email">Adres e-mail:</label>
       <input
@@ -56,7 +56,7 @@ const PasswordReset = () => {
       />
 
       <button type="submit" disabled={loading}>
-        {loading ? 'Wysy³anie...' : 'Wy¶lij link resetuj±cy'}
+        {loading ? 'WysyÅ‚anie...' : 'WyÅ›lij link resetujÄ…cy'}
       </button>
 
       {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}

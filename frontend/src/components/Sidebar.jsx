@@ -9,9 +9,8 @@ function Sidebar() {
                 <li><Link to="/project">Projects</Link></li>
                 <li><a href="#clients">Clients</a></li>
                 <li><a href="#calendar">Calendar</a></li>
-                <li><a href='/create-project'>Stwórz projekt</a></li>
-                <li><a href='/create-client'>Stwórz klienta</a></li>
-
+                <li><a href='/create-project'>StwÃ³rz projekt</a></li>
+                <li><a href='/create-client'>StwÃ³rz klienta</a></li>
             </ul>
         </div>
     )

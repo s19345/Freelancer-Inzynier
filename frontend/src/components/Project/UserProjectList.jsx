@@ -21,13 +21,13 @@ const UserProjectsList = () => {
                 });
 
                 if (!response.ok) {
-                    throw new Error("Nie uda?o si? pobra? projekt?w");
+                    throw new Error("Nie uda�o si� pobra� projekt�w");
                 }
 
                 const data = await response.json();
                 setProjects(data);
             } catch (err) {
-                console.error("B??d pobierania projekt?w:", err);
+                console.error("B��d pobierania projekt�w:", err);
                 setError(err.message);
             } finally {
                 setLoading(false);
@@ -41,9 +41,9 @@ const UserProjectsList = () => {
         setProjects((prev) => prev.filter((p) => p.id !== deletedId));
     };
 
-    if (loading) return <p>?adowanie projekt?w...</p>;
-    if (error) return <p className="text-red-600">B??d: {error}</p>;
-    if (projects.length === 0) return <p>Brak projekt?w do wy?wietlenia.</p>;
+    if (loading) return <p>�adowanie projekt�w...</p>;
+    if (error) return <p className="text-red-600">B��d: {error}</p>;
+    if (projects.length === 0) return <p>Brak projekt�w do wy�wietlenia.</p>;
 
     return (
         <div className="max-w-3xl mx-auto">
@@ -64,7 +64,7 @@ const UserProjectsList = () => {
                             )}
                             {project.budget && (
                                 <p className="text-gray-700 text-sm">
-                                    Bud?et: <strong>{project.budget} z?</strong>
+                                    Bud�et: <strong>{project.budget} z�</strong>
                                 </p>
                             )}
                         </Link>

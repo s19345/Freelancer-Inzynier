@@ -35,7 +35,7 @@ export default function Register() {
         <>
           <h1>Rejestracja</h1>
           <form onSubmit={handleSubmit}>
-            <label htmlFor="username">Nazwa uøytkownika</label>
+            <label htmlFor="username">Nazwa u≈ºytkownika</label>
             <input
               type="text"
               id="username"
@@ -53,7 +53,7 @@ export default function Register() {
               onChange={handleChange}
               required
             />
-            <label htmlFor="password1">Has≥o</label>
+            <label htmlFor="password1">Has≈Ço</label>
             <input
               type="password"
               id="password1"
@@ -62,7 +62,7 @@ export default function Register() {
               onChange={handleChange}
               required
             />
-            <label htmlFor="password2">PowtÛrz has≥o</label>
+            <label htmlFor="password2">Powt√≥rz has≈Ço</label>
             <input
               type="password"
               id="password2"

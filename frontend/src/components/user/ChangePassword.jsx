@@ -21,7 +21,7 @@ const ChangePassword = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (newPassword1 !== newPassword2) {
-      alert('Nowe has?a nie s? takie same!');
+      alert('Nowe has³a nie s± takie same!');
       return;
     }
     dispatch(changePassword({ oldPassword, newPassword1, newPassword2 }));
@@ -29,10 +29,10 @@ const ChangePassword = () => {
 
   return (
     <div style={{ padding: '2rem' }}>
-      <h2>Zmie? has?o</h2>
+      <h2>Zmieñ has³o</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Aktualne has?o:</label><br />
+          <label>Aktualne has³o:</label><br />
           <input
             type="password"
             value={oldPassword}
@@ -41,7 +41,7 @@ const ChangePassword = () => {
           />
         </div>
         <div>
-          <label>Nowe has?o:</label><br />
+          <label>Nowe has³o:</label><br />
           <input
             type="password"
             value={newPassword1}
@@ -50,7 +50,7 @@ const ChangePassword = () => {
           />
         </div>
         <div>
-          <label>Powtórz nowe has?o:</label><br />
+          <label>Powtórz nowe has³o:</label><br />
           <input
             type="password"
             value={newPassword2}
@@ -58,7 +58,7 @@ const ChangePassword = () => {
             required
           />
         </div>
-        <button type="submit" disabled={loading}>Zmie? has?o</button>
+        <button type="submit" disabled={loading}>Zmieñ has³o</button>
       </form>
 
       {error && <p style={{ color: 'red' }}> {error}</p>}

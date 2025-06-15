@@ -35,14 +35,14 @@ const EditProfile = () => {
     const result = await dispatch(updateUserData(form));
 
     if (updateUserData.fulfilled.match(result)) {
-      setMessage('Dane u?ytkownika zosta?y zaktualizowane');
+      setMessage('Dane u¿ytkownika zosta³y zaktualizowane');
     } else {
-      setMessage('Wyst?pi? b??d podczas aktualizacji');
+      setMessage('Wyst±pi³ b³±d podczas aktualizacji');
     }
   };
 
   if (!isLoggedIn) {
-    return <p>Musisz by? zalogowany, aby edytowa? profil.</p>;
+    return <p>Musisz byæ zalogowany, aby edytowaæ profil.</p>;
   }
 
   return (

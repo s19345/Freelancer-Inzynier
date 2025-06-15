@@ -1,42 +1,73 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router';
-import {useDispatch, useSelector} from 'react-redux';
-import {loginUser} from '../../redux/authThunks';
 import PasswordReset from './PasswordReset';
+import useAuthStore from "../../zustand_store/authStore";
+import {createAsyncThunk} from "@reduxjs/toolkit";
+import {USERS_BACKEND_URL} from "../../settings";
 
 const Login = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const {loading, error} = useSelector((state) => state.auth);
 
     const [nickname, setNickname] = useState('');
     const [password, setPassword] = useState('');
     const [showReset, setShowReset] = useState(false);
 
-  const handleSubmit = async (e) => {
-        e.preventDefault();
-        const result = await dispatch(loginUser({nickname, password}));
+    const loading = useAuthStore(state => state.loading)
+    const error = useAuthStore(state => state.error);
+    const setLoading = useAuthStore(state => state.setLoading);
+    const setError = useAuthStore(state => state.setError);
+    const setToken = useAuthStore(state => state.setToken);
+    const setIsLoggedIn = useAuthStore(state => state.setIsLoggedIn);
 
-        if (loginUser.fulfilled.match(result)) {
-            navigate('/');
+
+    async function loginUser() {
+        try {
+            setLoading(true)
+            const res = await fetch(`${USERS_BACKEND_URL}login/`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    username: nickname,
+                    password: password,
+                }),
+            });
+            if (res.ok) {
+                const data = await res.json()
+                setToken(data.key)
+                setIsLoggedIn(true)
+                navigate("/")
+            } else {
+                const err = await res.json()
+                setError(err.non_field_errors[0] || "B≈Çƒôdne dane")
+            }
+
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setLoading(false)
         }
+    }
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        loginUser()
     };
 
-  return (
+    return (
         <div style={{padding: '2rem'}}>
             <h2>Logowanie</h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="nickname">Nick:</label><br/>
                     <input
-                        id="nickname"
                         value={nickname}
                         onChange={(e) => setNickname(e.target.value)}
                         required
                     />
                 </div>
                 <div>
-                    <label>Has≥o:</label><br/>
+                    <label>Has≈Ço:</label><br/>
                     <input
                         type="password"
                         value={password}
@@ -48,9 +79,9 @@ const Login = () => {
                     Zaloguj
                 </button>
             </form>
-            <button onClick={() => setShowReset(!showReset)}>Zapomnia≥e∂ has≥a?</button>
+            <button onClick={() => setShowReset(!showReset)}>Zapomnia≈Çe≈õ has≈Ça?</button>
             {showReset && <PasswordReset/>}
-            {error && <p style={{color: 'red'}}>{error}</p>}
+            {error && <p style={{color: 'red'}}>‚ùå {error}</p>}
         </div>
     );
 };

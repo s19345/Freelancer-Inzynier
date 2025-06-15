@@ -5,34 +5,6 @@ from .serializers import ClientSerializer, ProjectSerializer, TaskSerializer, Ti
 from rest_framework.viewsets import ModelViewSet
 
 
-class ClientListView(APIView):
-    def get(self, request):
-        clients = Client.objects.all()
-        serializer = ClientSerializer(clients, many=True)
-        return Response(serializer.data)
-
-
-class ProjectListView(APIView):
-    def get(self, request):
-        projects = Project.objects.filter(user=request.user)
-        serializer = ProjectSerializer(projects, many=True)
-        return Response(serializer.data)
-
-
-class TaskListView(APIView):
-    def get(self, request):
-        tasks = Task.objects.all()
-        serializer = TaskSerializer(tasks, many=True)
-        return Response(serializer.data)
-
-
-class TimeLogListView(APIView):
-    def get(self, request):
-        timelogs = TimeLog.objects.all()
-        serializer = TimeLogSerializer(timelogs, many=True)
-        return Response(serializer.data)
-
-
 class ProjectViewSet(ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
