@@ -49,7 +49,7 @@ const PasswordResetConfirm = () => {
         <p>Hasło zostało zmienione. Za chwilę nastąpi przekierowanie do logowania...</p>
       ) : (
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+          <div>
             <label>Nowe hasło</label>
             <input
               type="password"
@@ -58,7 +58,7 @@ const PasswordResetConfirm = () => {
               required
             />
           </div>
-          <div className="mb-4">
+          <div>
             <label>Powtórz nowe hasło</label>
             <input
               type="password"

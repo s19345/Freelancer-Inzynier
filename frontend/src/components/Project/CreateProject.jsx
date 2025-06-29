@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { PROJECT_BACKEND_URL } from "../../settings";
-import { useSelector } from "react-redux";
+import useAuthStore from "../../zustand_store/authStore";
 
 const ProjectForm = () => {
   const [formData, setFormData] = useState({
@@ -16,9 +16,9 @@ const ProjectForm = () => {
 
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState(null);
-  const [loading, setLoading] = useState(false); // dodany loading
+  const [loading, setLoading] = useState(false);
 
-  const token = useSelector((state) => state.auth.token);
+  const token = useAuthStore(state => state.token);
 
   const validate = () => {
     const newErrors = {};
@@ -73,7 +73,7 @@ const ProjectForm = () => {
   };
 
   return (
-    <div className="project-container">
+    <div>
       {!successMessage && (
         <>
           <form onSubmit={handleSubmit}>
@@ -85,12 +85,11 @@ const ProjectForm = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full border px-3 py-2 rounded"
                 disabled={loading}
                 required
               />
               {errors.name && (
-                <p className="text-red-500 text-sm">{errors.name}</p>
+                <p>{errors.name}</p>
               )}
             </div>
 
@@ -119,18 +118,6 @@ const ProjectForm = () => {
             </div>
 
             <div>
-              <label htmlFor="title">Tytuł</label>
-              <input
-                type="text"
-                id="title"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                disabled={loading}
-              />
-            </div>
-
-            <div>
               <label htmlFor="status">Status</label>
               <select
                 id="status"
@@ -146,7 +133,7 @@ const ProjectForm = () => {
                 <option value="paused">Wstrzymany</option>
               </select>
               {errors.status && (
-                <p className="text-red-500 text-sm">{errors.status}</p>
+                <p>{errors.status}</p>
               )}
             </div>
 
@@ -161,7 +148,7 @@ const ProjectForm = () => {
                 disabled={loading}
               />
               {errors.budget && (
-                <p className="text-red-500 text-sm">{errors.budget}</p>
+                <p>{errors.budget}</p>
               )}
             </div>
 
@@ -195,7 +182,7 @@ const ProjectForm = () => {
           </form>
 
           {Object.keys(errors).length > 0 && (
-            <div className="error-message">
+            <div>
               {Object.values(errors).map((err, idx) => (
                 <p key={idx}>{err}</p>
               ))}
@@ -207,7 +194,7 @@ const ProjectForm = () => {
       {loading && "working..."}
 
       {successMessage && (
-        <div className="info-message">
+        <div>
           <h1>{successMessage}</h1>
         </div>
       )}

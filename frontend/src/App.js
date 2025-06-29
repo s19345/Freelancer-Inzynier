@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import {BrowserRouter, Routes, Route} from "react-router";
 import {Provider} from 'react-redux'
@@ -18,6 +17,10 @@ import CreateClient from "./components/client/CreateClient";
 import ProjectDetails from "./components/Project/ProjectDetails";
 import EditProject from "./components/Project/EditProject";
 import UserProjectsList from "./components/Project/UserProjectList";
+import ClientList from "./components/client/ClientList";
+import ClientDetails from './components/client/ClientDetails';
+import EditClient from './components/client/EditClient';
+
 
 function App() {
     return (
@@ -39,6 +42,9 @@ function App() {
                             <Route path="/project" element={<UserProjectsList />} />
                             <Route path="/project/:projectId" element={<ProjectDetails />} />
                             <Route path="/project/:projectId/edit" element={<EditProject />} />
+                            <Route path="/clients" element={<ClientList />} />
+                            <Route path="/client/:clientId" element={<ClientDetails />} />
+                            <Route path="/client/:clientId/edit" element={<EditClient />} />
 
 
                         </Route>

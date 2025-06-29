@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { logoutUser } from '../../redux/authThunks';
+import useAuthStore from "../../zustand_store/authStore";
 
 const Logout = () => {
-  const dispatch = useDispatch();
+  const logoutUser = useAuthStore((state) => state.logout);
 
   useEffect(() => {
-    dispatch(logoutUser());
-  }, [dispatch]);
+    logoutUser();
+  }, [logoutUser]);
 
   return null;
 };

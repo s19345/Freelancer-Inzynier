@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../../redux/authThunks';
+import useAuthStore from "../../zustand_store/authStore";
 
 export default function Register() {
-  const dispatch = useDispatch();
-  const { error, loading } = useSelector((state) => state.auth);
+  const { error, loading, registerUser, setError } = useAuthStore();
 
   const [formData, setFormData] = useState({
     username: '',
@@ -22,15 +20,17 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const resultAction = await dispatch(registerUser(formData));
 
-    if (registerUser.fulfilled.match(resultAction)) {
-      setInfo(resultAction.payload);
+    const success = await registerUser(formData);
+
+    if (success) {
+      setInfo('Rejestracja zakończona sukcesem');
+      setError(null);
     }
   };
 
   return (
-    <div className="login-container">
+    <div>
       {!info && (
         <>
           <h1>Rejestracja</h1>
@@ -76,7 +76,7 @@ export default function Register() {
             </button>
           </form>
           {error && (
-            <div className="error-message">
+            <div>
               <h1>{error}</h1>
             </div>
           )}
@@ -84,7 +84,7 @@ export default function Register() {
       )}
       {loading && 'working...'}
       {info && (
-        <div className="info-message">
+        <div>
           <h1>{info}</h1>
         </div>
       )}

@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { useSelector } from 'react-redux';
 import useAuthStore from "../../zustand_store/authStore";
 
 const Header = () => {
     const isLoggedIn = useAuthStore(state => state.isLoggedIn)
-    const user = useSelector((state) => state.auth.user);
+    const user = useAuthStore(state => state.user);
 
     return (
         <header style={{ padding: '1rem', backgroundColor: '#333', color: '#fff' }}>
@@ -24,7 +23,7 @@ const Header = () => {
                             </Link>
                         </li>
 
-                        {/* Jeśli użytkownik nie jest zalogowany, pokazujemy opcje logowania i rejestracji */}
+                        {/* jeśli użytkownik nie jest zalogowany pokazuje opcje logowania i rejestracji */}
                         {!isLoggedIn ? (
                             <>
                                 <li style={{ marginRight: '1rem' }}>
@@ -39,7 +38,7 @@ const Header = () => {
                                 </li>
                             </>
                         ) : (
-                            // Jeśli użytkownik jest zalogowany, pokazujemy jego profil oraz opcję wylogowania
+                            // jeśli użytkownik jest zalogowany pokazuje jego profil oraz opcję wylogowania
                             <>
                                 <li style={{ marginRight: '1rem' }}>
                                     <Link to="/profile" style={{ color: '#fff', textDecoration: 'none' }}>

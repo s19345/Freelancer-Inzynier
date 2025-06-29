@@ -1,17 +1,17 @@
 import React, {useState, useEffect} from "react";
-import {useSelector} from "react-redux";
+import useAuthStore from "../../zustand_store/authStore";
 import {useParams} from "react-router";
 import {PROJECT_BACKEND_URL} from "../../settings";
+import DeleteProject from "./DeleteProject";
 
 const EditProject = () => {
     const {projectId} = useParams();
-    const token = useSelector((state) => state.auth.token);
+    const token = useAuthStore((state) => state.token);
 
     const [formData, setFormData] = useState({
         name: "",
         description: "",
         version: "",
-        title: "",
         status: "",
         budget: "",
         client: "",
@@ -42,7 +42,6 @@ const EditProject = () => {
                     name: data.name || "",
                     description: data.description || "",
                     version: data.version || "",
-                    title: data.title || "",
                     status: data.status || "",
                     budget: data.budget || "",
                     client: data.client || "",
@@ -103,21 +102,21 @@ const EditProject = () => {
     };
 
     if (loading) return <p>Ładowanie danych projektu...</p>;
-    if (error) return <p className="text-red-600">Błąd: {error}</p>;
+    if (error) return <p>Błąd: {error}</p>;
 
     return (
-        <div className="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+        <div>
             {loading && "working..."}
 
             {submitStatus === "Projekt został zaktualizowany pomyślnie!" ? (
-                <div className="info-message">
-                    <h1 className="text-green-600 text-xl font-bold">{submitStatus}</h1>
+                <div>
+                    <h1>{submitStatus}</h1>
                 </div>
             ) : (
                 <form onSubmit={handleSubmit}>
-                    <h2 className="text-2xl font-bold mb-4">Edytuj projekt</h2>
+                    <h2>Edytuj projekt</h2>
 
-                    <label className="block mb-2">
+                    <label>
                         Nazwa projektu
                         <input
                             type="text"
@@ -125,51 +124,37 @@ const EditProject = () => {
                             value={formData.name}
                             onChange={handleChange}
                             required
-                            className="w-full border rounded p-2"
                         />
                     </label>
 
-                    <label className="block mb-2">
+                    <label>
                         Opis
                         <textarea
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
                             rows={4}
-                            className="w-full border rounded p-2"
                         />
                     </label>
 
-                    <label className="block mb-2">
+                    <label>
                         Wersja
                         <input
                             type="text"
                             name="version"
                             value={formData.version}
                             onChange={handleChange}
-                            className="w-full border rounded p-2"
                         />
                     </label>
 
-                    <label className="block mb-2">
-                        Tytuł
-                        <input
-                            type="text"
-                            name="title"
-                            value={formData.title}
-                            onChange={handleChange}
-                            className="w-full border rounded p-2"
-                        />
-                    </label>
 
-                    <label className="block mb-2">
+                    <label>
                         Status
                         <select
                             name="status"
                             value={formData.status}
                             onChange={handleChange}
                             required
-                            className="w-full border rounded p-2"
                         >
                             <option value="">-- Wybierz status --</option>
                             <option value="active">Aktywny</option>
@@ -178,53 +163,52 @@ const EditProject = () => {
                         </select>
                     </label>
 
-                    <label className="block mb-2">
+                    <label>
                         Budżet
                         <input
                             type="number"
                             name="budget"
                             value={formData.budget}
                             onChange={handleChange}
-                            className="w-full border rounded p-2"
                         />
                     </label>
 
-                    <label className="block mb-2">
+                    <label>
                         Klient (ID)
                         <input
                             type="text"
                             name="client"
                             value={formData.client}
                             onChange={handleChange}
-                            className="w-full border rounded p-2"
                         />
                     </label>
 
-                    <label className="block mb-4">
+                    <label>
                         Współpracownicy
                         <input
                             type="text"
                             name="collaborators"
                             value={formData.collaborators.join(", ")}
                             onChange={handleChange}
-                            className="w-full border rounded p-2"
                         />
                     </label>
 
                     <button
                         type="submit"
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                     >
                         Zapisz zmiany
                     </button>
 
                     {submitStatus && submitStatus.startsWith("Błąd") && (
-                        <div className="info-message">
-                            <h1 className="text-red-600 text-xl font-bold">{submitStatus}</h1>
+                        <div>
+                            <h1>{submitStatus}</h1>
                         </div>
                     )}
                 </form>
             )}
+
+            <DeleteProject projectId={projectId}/>
+
         </div>
     );
 };

@@ -3,14 +3,14 @@ import SearchField from './SearchField';
 
 function Dashboard() {
     return (
-        <div className="dashboard">
+        <div>
             <header>
                 <h1>My Dashboard</h1>
-                <div className="search-field">
+                <div>
                     <SearchField />
                 </div>
             </header>
-            <div className="content">
+            <div>
                 <h2>Dashboard</h2>
                 <p>Welcome to the dashboard!</p>
             </div>

@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {useNavigate} from 'react-router';
 import PasswordReset from './PasswordReset';
 import useAuthStore from "../../zustand_store/authStore";
-import {createAsyncThunk} from "@reduxjs/toolkit";
 import {USERS_BACKEND_URL} from "../../settings";
 
 const Login = () => {
@@ -81,7 +80,7 @@ const Login = () => {
             </form>
             <button onClick={() => setShowReset(!showReset)}>Zapomniałeś hasła?</button>
             {showReset && <PasswordReset/>}
-            {error && <p style={{color: 'red'}}>❌ {error}</p>}
+            {error && <p style={{color: 'red'}}>{error}</p>}
         </div>
     );
 };
