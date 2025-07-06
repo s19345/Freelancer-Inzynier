@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import {PROJECT_BACKEND_URL} from "../../settings";
 import useAuthStore from "../../zustand_store/authStore";
+import {Box, TextField, Button, Typography, Alert} from '@mui/material';
+
 
 const CreateClientForm = () => {
     const [formData, setFormData] = useState({
@@ -14,8 +16,8 @@ const CreateClientForm = () => {
 
     const [errors, setErrors] = useState({});
     const [status, setStatus] = useState(null);
+    const [statusType, setStatusType] = useState("success");
     const token = useAuthStore(state => state.token);
-    console.log("Token:", token);
 
     const validate = () => {
         const newErrors = {};
@@ -30,6 +32,9 @@ const CreateClientForm = () => {
         }
         if (!formData.email.trim()) {
             newErrors.email = "Email jest wymagany";
+        }
+        if (!formData.phone.trim()) {
+            newErrors.phone = "Numer Telefonu jest wymagany";
         } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
             newErrors.email = "Podaj poprawny adres email";
         }
@@ -51,120 +56,135 @@ const CreateClientForm = () => {
         e.preventDefault();
         const validationErrors = validate();
         setErrors(validationErrors);
+        if (Object.keys(validationErrors).length === 0) {
+            try {
+                const response = await fetch(`${PROJECT_BACKEND_URL}clients/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Token ${token}`
+                    },
+                    body: JSON.stringify(formData)
+                });
 
-        if (Object.keys(validationErrors).length > 0) return;
+                const data = await response.json();
 
-        try {
-            const response = await fetch(`${PROJECT_BACKEND_URL}clients/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Token ${token}`
-                },
-                body: JSON.stringify(formData)
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error("Błąd:", errorData);
-                setStatus("Wystąpił błąd podczas tworzenia klienta");
-                return;
+                if (response.ok) {
+                    setStatus("Klient został utworzony pomyślnie");
+                    setStatusType("success");
+                    setFormData({
+                        company_name: "",
+                        industry: "",
+                        contact_person: "",
+                        email: "",
+                        phone: "",
+                        notes: ""
+                    });
+                } else {
+                    const errorMessage = typeof data === "object"
+                        ? Object.values(data).flat().join(" ")
+                        : "Wystąpił błąd podczas tworzenia klienta";
+                    setStatus(errorMessage);
+                    setStatusType("error");
+                }
+            } catch (error) {
+                console.error("Błąd sieci:", error);
+                setStatus("Błąd połączenia z serwerem");
+                setStatusType("error");
             }
-
-            const data = await response.json();
-            console.log("Utworzono klienta:", data);
-            setStatus("Klient został utworzony pomyślnie");
-            setFormData({
-                company_name: "",
-                industry: "",
-                contact_person: "",
-                email: "",
-                phone: "",
-                notes: ""
-            });
-            setErrors({});
-        } catch (error) {
-            console.error("Błąd sieci:", error);
-            setStatus("Błąd połączenia z serwerem");
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{maxWidth: "400px", margin: "auto"}}>
-            <h2>Dodaj klienta</h2>
+        <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{
+                maxWidth: 400,
+                mx: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+            }}
+        >
+            <Typography variant="h5" component="h2" textAlign="center">
+                Dodaj klienta
+            </Typography>
 
-            <div>
-                <input
-                    type="text"
-                    name="company_name"
-                    placeholder="Nazwa firmy"
-                    value={formData.company_name}
-                    onChange={handleChange}
-                />
-                {errors.company_name && <p>{errors.company_name}</p>}
-            </div>
+            <TextField
+                label="Nazwa firmy"
+                name="company_name"
+                value={formData.company_name}
+                onChange={handleChange}
+                error={!!errors.company_name}
+                helperText={errors.company_name}
+                fullWidth
+            />
 
-            <div>
-                <input
-                    type="text"
-                    name="industry"
-                    placeholder="Branża"
-                    value={formData.industry}
-                    onChange={handleChange}
-                />
-                {errors.industry && <p>{errors.industry}</p>}
-            </div>
+            <TextField
+                label="Branża"
+                name="industry"
+                value={formData.industry}
+                onChange={handleChange}
+                error={!!errors.industry}
+                helperText={errors.industry}
+                fullWidth
+            />
 
-            <div>
-                <input
-                    type="text"
-                    name="contact_person"
-                    placeholder="Osoba kontaktowa"
-                    value={formData.contact_person}
-                    onChange={handleChange}
-                />
-                {errors.contact_person && <p>{errors.contact_person}</p>}
-            </div>
+            <TextField
+                label="Osoba kontaktowa"
+                name="contact_person"
+                value={formData.contact_person}
+                onChange={handleChange}
+                error={!!errors.contact_person}
+                helperText={errors.contact_person}
+                fullWidth
+            />
 
-            <div>
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                />
-                {errors.email && <p>{errors.email}</p>}
-            </div>
+            <TextField
+                label="Email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                error={!!errors.email}
+                helperText={errors.email}
+                fullWidth
+            />
 
-            <div>
-                <input
-                    type="text"
-                    name="phone"
-                    placeholder="Telefon"
-                    value={formData.phone}
-                    onChange={handleChange}
-                />
-                {errors.phone && <p>{errors.phone}</p>}
-            </div>
+            <TextField
+                label="Telefon"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                error={!!errors.phone}
+                helperText={errors.phone}
+                fullWidth
+            />
 
-            <div>
-        <textarea
-            name="notes"
-            placeholder="Notatki"
-            value={formData.notes}
-            onChange={handleChange}
-            rows={4}
-        />
-            </div>
+            <TextField
+                label="Notatki"
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+                multiline
+                rows={4}
+                fullWidth
+            />
 
-            <button type="submit">
+            <Button type="submit" variant="contained" color="primary" fullWidth>
                 Utwórz klienta
-            </button>
+            </Button>
 
-            {status && <p>{status}</p>}
-        </form>
+            {status && (
+                <Alert variant="filled" severity={statusType}>
+                    {status}
+                </Alert>
+            )}
+
+        </Box>
     );
+
 };
 
 export default CreateClientForm;
