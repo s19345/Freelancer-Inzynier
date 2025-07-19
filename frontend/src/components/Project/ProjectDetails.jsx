@@ -2,6 +2,15 @@ import React, {useEffect, useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {useParams, Link} from "react-router";
 import {PROJECT_BACKEND_URL} from "../../settings";
+import CreateTask from "../task/CreateTask";
+
+import {
+    Box,
+    Typography,
+    Button,
+    CircularProgress,
+    Alert,
+} from "@mui/material";
 
 const ProjectDetails = () => {
     const {projectId} = useParams();
@@ -9,6 +18,7 @@ const ProjectDetails = () => {
     const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showCreateTask, setShowCreateTask] = useState(false);
 
     useEffect(() => {
         const fetchProject = async () => {
@@ -37,26 +47,52 @@ const ProjectDetails = () => {
         fetchProject();
     }, [projectId, token]);
 
-    if (loading) return <p>Ładowanie danych projektu...</p>;
-    if (error) return <p>Błąd: {error}</p>;
-    if (!project) return <p>Projekt nie został znaleziony</p>;
+    const handleTaskCreated = (newTask) => {
+        console.log("Dodano nowe zadanie:", newTask);
+        setShowCreateTask(false);
+    };
+
+    if (loading) return <CircularProgress/>;
+    if (error) return <Alert severity="error">Błąd: {error}</Alert>;
+    if (!project) return <Alert severity="warning">Projekt nie został znaleziony</Alert>;
 
     return (
-        <div>
-            <h2>{project.name || "Bez nazwy"}</h2>
-            <p><strong>Status:</strong> {project.status}</p>
-            <p><strong>Wersja:</strong> {project.version}</p>
-            <p><strong>Budżet:</strong> {project.budget} zł</p>
-            <p><strong>Opis:</strong> {project.description}</p>
+        <Box sx={{p: 3}}>
+            <Typography variant="h4" gutterBottom>{project.name || "Bez nazwy"}</Typography>
+
+            <Typography><strong>Status:</strong> {project.status}</Typography>
+            <Typography><strong>Wersja:</strong> {project.version}</Typography>
+            <Typography><strong>Budżet:</strong> {project.budget} zł</Typography>
+            <Typography><strong>Opis:</strong> {project.description}</Typography>
             {project.client && (
-                <p><strong>Klient ID:</strong> {project.client}</p>
+                <Typography><strong>Klient ID:</strong> {project.client}</Typography>
             )}
-            <Link
-                to={`/project/${projectId}/edit`}
-            >
-                Edytuj projekt
-            </Link>
-        </div>
+
+            <Box mt={2}>
+                <Button
+                    variant="outlined"
+                    component={Link}
+                    to={`/project/${projectId}/edit`}
+                >
+                    Edytuj projekt
+                </Button>
+            </Box>
+
+            <Box mt={3}>
+                <Button
+                    variant="outlined"
+                    onClick={() => setShowCreateTask(prev => !prev)}
+                >
+                    Dodaj nowe zadanie
+                </Button>
+            </Box>
+
+            {showCreateTask && (
+                <Box mt={3}>
+                    <CreateTask projectId={projectId} onTaskCreated={handleTaskCreated}/>
+                </Box>
+            )}
+        </Box>
     );
 };
 

@@ -2,7 +2,16 @@ import React, {useEffect, useState} from 'react';
 import {useParams, useNavigate} from 'react-router';
 import useAuthStore from '../../zustand_store/authStore';
 import {PROJECT_BACKEND_URL} from '../../settings';
-import DeleteClient from "./DeleteClient";
+import DeleteClient from './DeleteClient';
+import {
+    Box,
+    TextField,
+    Button,
+    Typography,
+    CircularProgress,
+    Alert,
+    Stack,
+} from '@mui/material';
 
 const EditClient = () => {
     const {clientId} = useParams();
@@ -14,7 +23,6 @@ const EditClient = () => {
         contact_person: '',
         email: '',
         phone: '',
-        address: '',
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -37,7 +45,6 @@ const EditClient = () => {
                     contact_person: data.contact_person || '',
                     email: data.email || '',
                     phone: data.phone || '',
-                    address: data.address || '',
                 });
             } catch (err) {
                 setError(err.message);
@@ -50,7 +57,8 @@ const EditClient = () => {
     }, [clientId, token]);
 
     const handleChange = (e) => {
-        setFormData(prev => ({...prev, [e.target.name]: e.target.value}));
+        const {name, value} = e.target;
+        setFormData(prev => ({...prev, [name]: value}));
     };
 
     const handleSubmit = async (e) => {
@@ -80,73 +88,78 @@ const EditClient = () => {
         }
     };
 
-    if (loading) return <p>Ładowanie danych klienta...</p>;
-    if (error) return <p>Błąd: {error}</p>;
+    if (loading)
+        return (
+            <Box display="flex" justifyContent="center" mt={4}>
+                <CircularProgress/>
+            </Box>
+        );
 
     return (
-        <div>
-            <h2>Edytuj klienta</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Nazwa firmy</label>
-                    <input
+        <Box mt={4} maxWidth={600} mx="auto">
+            <Typography variant="h5" mb={3}>
+                Edytuj klienta
+            </Typography>
+
+            {error && (
+                <Alert severity="error" sx={{mb: 2}}>
+                    Błąd: {error}
+                </Alert>
+            )}
+
+            <Box component="form" onSubmit={handleSubmit} noValidate>
+                <Stack spacing={3}>
+                    <TextField
+                        label="Nazwa firmy"
                         name="company_name"
                         value={formData.company_name}
                         onChange={handleChange}
                         required
+                        fullWidth
                     />
-                </div>
 
-                <div>
-                    <label>Osoba kontaktowa</label>
-                    <input
+                    <TextField
+                        label="Osoba kontaktowa"
                         name="contact_person"
                         value={formData.contact_person}
                         onChange={handleChange}
                         required
+                        fullWidth
                     />
-                </div>
 
-                <div>
-                    <label>Email</label>
-                    <input
+                    <TextField
+                        label="Email"
                         name="email"
                         type="email"
                         value={formData.email}
                         onChange={handleChange}
                         required
+                        fullWidth
                     />
-                </div>
 
-                <div>
-                    <label>Telefon</label>
-                    <input
+                    <TextField
+                        label="Telefon"
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
+                        fullWidth
                     />
-                </div>
 
-                <div>
-                    <label>Adres</label>
-                    <input
-                        name="address"
-                        value={formData.address}
-                        onChange={handleChange}
-                    />
-                </div>
+                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            disabled={loading}
+                            size="large"
+                        >
+                            Zapisz zmiany
+                        </Button>
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                >
-                    Zapisz zmiany
-                </button>
-            </form>
-
-            <DeleteClient clientId={clientId}/>
-
-        </div>
+                        <DeleteClient clientId={clientId}/>
+                    </Box>
+                </Stack>
+            </Box>
+        </Box>
     );
 };
 

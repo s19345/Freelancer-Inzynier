@@ -1,68 +1,92 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {USERS_BACKEND_URL} from '../../settings';
-
+import {
+    Box,
+    TextField,
+    Button,
+    Typography,
+    Alert,
+    CircularProgress,
+} from '@mui/material';
 
 const PasswordReset = () => {
-  const [email, setEmail] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setSuccessMessage('');
-    setErrorMessage('');
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setSuccessMessage('');
+        setErrorMessage('');
 
-    try {
-      const response = await fetch(`${USERS_BACKEND_URL}password/reset/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
+        try {
+            const response = await fetch(`${USERS_BACKEND_URL}password/reset/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({email}),
+            });
 
-      const data = await response.json();
+            const data = await response.json();
 
-      if (!response.ok) {
-        throw data;
-      }
+            if (!response.ok) {
+                throw data;
+            }
 
-      setSuccessMessage('Link do resetu hasła został wysłany na podany adres e-mail.');
-    } catch (error) {
-      if (error?.email) {
-        setErrorMessage(error.email.join(' '));
-      } else {
-        setErrorMessage('Wystąpił błąd podczas resetowania hasła.');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+            setSuccessMessage('Link do resetu hasła został wysłany na podany adres e-mail.');
+        } catch (error) {
+            if (error?.email) {
+                setErrorMessage(error.email.join(' '));
+            } else {
+                setErrorMessage('Wystąpił błąd podczas resetowania hasła.');
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 400, margin: '2rem auto' }}>
-      <h2>Resetowanie hasła</h2>
+    return (
+        <Box maxWidth={400} mx="auto" mt={2}>
+            <Typography variant="h6" gutterBottom>
+                Resetowanie hasła
+            </Typography>
 
-      <label htmlFor="email">Adres e-mail:</label>
-      <input
-        type="email"
-        id="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        style={{ width: '100%', marginBottom: '1rem' }}
-      />
+            <TextField
+                label="Adres e-mail"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                fullWidth
+                margin="normal"
+            />
 
-      <button type="submit" disabled={loading}>
-        {loading ? 'Wysyłanie...' : 'Wyślij link resetujący'}
-      </button>
+            <Button
+                variant="contained"
+                disabled={loading}
+                fullWidth
+                sx={{mt: 2, mb: 2}}
+                onClick={handleSubmit}
+            >
+                {loading ? <CircularProgress size={24} color="inherit"/> : 'Wyślij link resetujący'}
+            </Button>
 
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-    </form>
-  );
+            {successMessage && (
+                <Alert severity="success" sx={{mt: 1}}>
+                    {successMessage}
+                </Alert>
+            )}
+
+            {errorMessage && (
+                <Alert severity="error" sx={{mt: 1}}>
+                    {errorMessage}
+                </Alert>
+            )}
+        </Box>
+    );
 };
 
 export default PasswordReset;

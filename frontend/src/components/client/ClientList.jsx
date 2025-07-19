@@ -1,14 +1,26 @@
 import React, {useEffect, useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
-import {Link} from 'react-router';
+import {Link as RouterLink} from "react-router";
+import {
+    Box,
+    CircularProgress,
+    Typography,
+    Table,
+    TableHead,
+    TableRow,
+    TableCell,
+    TableBody,
+    Button,
+    Alert,
+    Stack
+} from "@mui/material";
 
 const ClientList = () => {
     const token = useAuthStore(state => state.token);
     const [clients, setClients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
 
     useEffect(() => {
         const fetchClients = async () => {
@@ -36,49 +48,72 @@ const ClientList = () => {
         fetchClients();
     }, [token]);
 
-    if (loading) return <p>Ładowanie klientów...</p>;
-    if (error) return <p>Błąd: {error}</p>;
+    if (loading) {
+        return (
+            <Box display="flex" justifyContent="center" mt={4}>
+                <CircularProgress/>
+            </Box>
+        );
+    }
+
+    if (error) {
+        return (
+            <Alert severity="error" sx={{mt: 3}}>
+                Błąd: {error}
+            </Alert>
+        );
+    }
 
     return (
-        <div>
-            <h2>Lista klientów</h2>
-            {clients.length === 0 ? (
-                <p>Brak klientów do wyświetlenia.</p>
-            ) : (
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Nazwa firmy</th>
-                        <th>Osoba kontaktowa</th>
-                        <th>Email</th>
-                        <th>Akcje</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {clients.map(client => (
-                        <tr key={client.id}>
-                            <td>{client.company_name}</td>
-                            <td>{client.contact_person}</td>
-                            <td>{client.email}</td>
-                            <td>
-                                <Link
-                                    to={`/client/${client.id}`}
-                                >
-                                    Szczegóły
-                                </Link>
-                                <Link
-                                    to={`/client/${client.id}/edit`}
-                                >
-                                    Edytuj
-                                </Link>
-                            </td>
+        <Box mt={4}>
+            <Typography variant="h5" gutterBottom>
+                Lista klientów
+            </Typography>
 
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+            {clients.length === 0 ? (
+                <Typography variant="body1">Brak klientów do wyświetlenia.</Typography>
+            ) : (
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell><strong>Nazwa firmy</strong></TableCell>
+                            <TableCell><strong>Osoba kontaktowa</strong></TableCell>
+                            <TableCell><strong>Email</strong></TableCell>
+                            <TableCell><strong>Akcje</strong></TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {clients.map(client => (
+                            <TableRow key={client.id}>
+                                <TableCell>{client.company_name}</TableCell>
+                                <TableCell>{client.contact_person}</TableCell>
+                                <TableCell>{client.email}</TableCell>
+                                <TableCell>
+                                    <Stack direction="row" spacing={1}>
+                                        <Button
+                                            component={RouterLink}
+                                            to={`/client/${client.id}`}
+                                            variant="outlined"
+                                            size="small"
+                                        >
+                                            Szczegóły
+                                        </Button>
+                                        <Button
+                                            component={RouterLink}
+                                            to={`/client/${client.id}/edit`}
+                                            variant="contained"
+                                            size="small"
+                                        >
+                                            Edytuj
+                                        </Button>
+                                    </Stack>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
             )}
-        </div>
+        </Box>
     );
 };
 

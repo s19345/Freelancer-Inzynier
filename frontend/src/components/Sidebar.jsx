@@ -1,19 +1,59 @@
-import { Link } from "react-router";
+import React from 'react';
+import {Link as RouterLink} from 'react-router';
+import {
+    Drawer,
+    List,
+    ListItem,
+    ListItemText,
+    Toolbar,
+    Typography,
+    Divider,
+    Box
+} from '@mui/material';
 
-function Sidebar() {
+const drawerWidth = 240;
+
+export default function Sidebar() {
     return (
-        <div>
-            <h2>Sidebar</h2>
-            <ul>
-                <li><a href="#dashboard">Dashboard</a></li>
-                <li><Link to="/project">Projects</Link></li>
-                <li><a href="/clients">Clients</a></li>
-                <li><a href="#calendar">Calendar</a></li>
-                <li><a href='/create-project'>Stwórz projekt</a></li>
-                <li><a href='/create-client'>Stwórz klienta</a></li>
-            </ul>
-        </div>
-    )
+        <Drawer
+            variant="permanent"
+            sx={{
+                width: drawerWidth,
+                flexShrink: 0,
+                [`& .MuiDrawer-paper`]: {
+                    width: drawerWidth,
+                    boxSizing: 'border-box',
+                },
+            }}
+        >
+            <Toolbar>
+                <Typography variant="h6" noWrap>
+                    Sidebar
+                </Typography>
+            </Toolbar>
+            <Divider/>
+            <Box sx={{overflow: 'auto'}}>
+                <List>
+                    <ListItem button component="a" href="#dashboard">
+                        <ListItemText primary="Dashboard"/>
+                    </ListItem>
+                    <ListItem button component={RouterLink} to="/project">
+                        <ListItemText primary="Projects"/>
+                    </ListItem>
+                    <ListItem button component="a" href="/clients">
+                        <ListItemText primary="Clients"/>
+                    </ListItem>
+                    <ListItem button component="a" href="#calendar">
+                        <ListItemText primary="Calendar"/>
+                    </ListItem>
+                    <ListItem button component="a" href="/create-project">
+                        <ListItemText primary="Stwórz projekt"/>
+                    </ListItem>
+                    <ListItem button component="a" href="/create-client">
+                        <ListItemText primary="Stwórz klienta"/>
+                    </ListItem>
+                </List>
+            </Box>
+        </Drawer>
+    );
 }
-
-export default Sidebar;

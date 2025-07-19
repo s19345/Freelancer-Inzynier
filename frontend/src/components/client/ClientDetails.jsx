@@ -1,7 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {useParams, Link} from 'react-router';
+import {useParams, Link as RouterLink} from 'react-router';
 import useAuthStore from '../../zustand_store/authStore';
 import {PROJECT_BACKEND_URL} from '../../settings';
+import {
+    Box,
+    Typography,
+    CircularProgress,
+    Alert,
+    Button,
+    Stack
+} from '@mui/material';
 
 const ClientDetails = () => {
     const {clientId} = useParams();
@@ -37,24 +45,52 @@ const ClientDetails = () => {
         fetchClient();
     }, [clientId, token]);
 
-    if (loading) return <p>Ładowanie danych klienta...</p>;
-    if (error) return <p>Błąd: {error}</p>;
-    if (!client) return <p>Nie znaleziono klienta.</p>;
+    if (loading) {
+        return (
+            <Box display="flex" justifyContent="center" mt={4}>
+                <CircularProgress/>
+            </Box>
+        );
+    }
+
+    if (error) {
+        return (
+            <Alert severity="error" sx={{mt: 3}}>
+                Błąd: {error}
+            </Alert>
+        );
+    }
+
+    if (!client) {
+        return (
+            <Alert severity="warning" sx={{mt: 3}}>
+                Nie znaleziono klienta.
+            </Alert>
+        );
+    }
 
     return (
-        <div>
-            <h2>Szczegóły klienta</h2>
-            <p><strong>Nazwa firmy:</strong> {client.company_name}</p>
-            <p><strong>Osoba kontaktowa:</strong> {client.contact_person}</p>
-            <p><strong>Email:</strong> {client.email}</p>
-            <p><strong>Telefon:</strong> {client.phone || 'Brak danych'}</p>
-            <p><strong>Adres:</strong> {client.address || 'Brak danych'}</p>
-            {/* inne pola z w API */}
+        <Box mt={4}>
+            <Typography variant="h5" gutterBottom>
+                Szczegóły klienta
+            </Typography>
 
-            <Link to="/clients">
+            <Stack spacing={1} mb={3}>
+                <Typography><strong>Nazwa firmy:</strong> {client.company_name}</Typography>
+                <Typography><strong>Osoba kontaktowa:</strong> {client.contact_person}</Typography>
+                <Typography><strong>Email:</strong> {client.email}</Typography>
+                <Typography><strong>Telefon:</strong> {client.phone || 'Brak danych'}</Typography>
+                {/* moge dodać tu pozniej więcej pól*/}
+            </Stack>
+
+            <Button
+                variant="outlined"
+                component={RouterLink}
+                to="/clients"
+            >
                 &larr; Powrót do listy klientów
-            </Link>
-        </div>
+            </Button>
+        </Box>
     );
 };
 

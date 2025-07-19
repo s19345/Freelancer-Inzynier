@@ -20,6 +20,11 @@ import UserProjectsList from "./components/Project/UserProjectList";
 import ClientList from "./components/client/ClientList";
 import ClientDetails from './components/client/ClientDetails';
 import EditClient from './components/client/EditClient';
+import TaskList from "./components/task/UserTaskList";
+import CreateTaskForm from "./components/task/CreateTask";
+import TaskDetails from "./components/task/TaskDetails";
+import EditTask from "./components/task/EditTask";
+import CreateSubtaskPage from "./components/task/subtask/CreateSubtask"
 
 
 function App() {
@@ -35,16 +40,21 @@ function App() {
                             <Route path="/register" element={<Register/>}/>
                             <Route path="/profile" element={<UserProfile/>}/>
                             <Route path="password-reset/:uid/:token" element={<PasswordResetConfirm/>}/>
-                            <Route path="/edit-profile" element={<EditProfile />}/>
-                            <Route path="/change-password" element={<ChangePassword />} />
-                            <Route path="/create-project" element={<CreateProject />} />
-                            <Route path="/create-client" element={<CreateClient />} />
-                            <Route path="/project" element={<UserProjectsList />} />
-                            <Route path="/project/:projectId" element={<ProjectDetails />} />
-                            <Route path="/project/:projectId/edit" element={<EditProject />} />
-                            <Route path="/clients" element={<ClientList />} />
-                            <Route path="/client/:clientId" element={<ClientDetails />} />
-                            <Route path="/client/:clientId/edit" element={<EditClient />} />
+                            <Route path="/edit-profile" element={<EditProfile/>}/>
+                            <Route path="/change-password" element={<ChangePassword/>}/>
+                            <Route path="/create-project" element={<CreateProject/>}/>
+                            <Route path="/create-client" element={<CreateClient/>}/>
+                            <Route path="/project" element={<UserProjectsList/>}/>
+                            <Route path="/project/:projectId" element={<ProjectDetails/>}/>
+                            <Route path="/project/:projectId/edit" element={<EditProject/>}/>
+                            <Route path="/clients" element={<ClientList/>}/>
+                            <Route path="/client/:clientId" element={<ClientDetails/>}/>
+                            <Route path="/client/:clientId/edit" element={<EditClient/>}/>
+                            <Route path="/project/:projectId/tasks" element={<TaskList/>}/>
+                            <Route path="/project/:projectId/create-task" element={<CreateTaskForm/>}/>
+                            <Route path="/task/:taskId" element={<TaskDetails/>}/>
+                            <Route path="/task/:taskId/edit" element={<EditTask/>}/>
+                            <Route path="/tasks/:taskId/subtasks/create" element={<CreateSubtaskPage/>}/>
 
 
                         </Route>

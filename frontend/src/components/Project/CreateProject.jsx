@@ -1,205 +1,190 @@
-import React, { useState } from "react";
-import { PROJECT_BACKEND_URL } from "../../settings";
+import React, {useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
+import {PROJECT_BACKEND_URL} from "../../settings";
+import {
+    Box,
+    Button,
+    CircularProgress,
+    MenuItem,
+    Select,
+    TextField,
+    Typography,
+    Alert,
+    Stack,
+    InputLabel,
+    FormControl,
+    FormHelperText
+} from "@mui/material";
 
 const ProjectForm = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    version: "",
-    title: "",
-    status: "",
-    budget: "",
-    client: "",
-    collaborators: "",
-  });
+    const token = useAuthStore(state => state.token);
 
-  const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        name: "",
+        description: "",
+        version: "",
+        title: "",
+        status: "",
+        budget: "",
+        client: "",
+        collaborators: "",
+    });
 
-  const token = useAuthStore(state => state.token);
+    const [errors, setErrors] = useState({});
+    const [successMessage, setSuccessMessage] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Nazwa projektu jest wymagana";
-    if (!formData.status) newErrors.status = "Status projektu jest wymagany";
-    if (formData.budget && Number(formData.budget) < 0)
-      newErrors.budget = "Budżet nie może być ujemny";
-    return newErrors;
-  };
+    const validate = () => {
+        const newErrors = {};
+        if (!formData.name.trim()) newErrors.name = "Nazwa projektu jest wymagana";
+        if (!formData.status) newErrors.status = "Status projektu jest wymagany";
+        if (formData.budget && Number(formData.budget) < 0)
+            newErrors.budget = "Budżet nie może być ujemny";
+        return newErrors;
+    };
 
-  const createProject = async (data) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${PROJECT_BACKEND_URL}projects/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-        body: JSON.stringify(data),
-      });
+    const createProject = async (data) => {
+        setLoading(true);
+        try {
+            const response = await fetch(`${PROJECT_BACKEND_URL}projects/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Token ${token}`,
+                },
+                body: JSON.stringify(data),
+            });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Błąd:", errorData);
-        setLoading(false);
-        return;
-      }
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Błąd:", errorData);
+                return;
+            }
 
-      const responseData = await response.json();
-      console.log("Project created successfully:", responseData);
-      setSuccessMessage("Projekt został utworzony pomyślnie");
-    } catch (error) {
-      console.error("Error creating project:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+            const responseData = await response.json();
+            console.log("Project created successfully:", responseData);
+            setSuccessMessage("Projekt został utworzony pomyślnie");
+        } catch (error) {
+            console.error("Error creating project:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        setFormData((prev) => ({...prev, [name]: value}));
+    };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const validationErrors = validate();
-    setErrors(validationErrors);
-    if (Object.keys(validationErrors).length === 0) {
-      createProject(formData);
-    }
-  };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const validationErrors = validate();
+        setErrors(validationErrors);
+        if (Object.keys(validationErrors).length === 0) {
+            createProject(formData);
+        }
+    };
 
-  return (
-    <div>
-      {!successMessage && (
-        <>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="name">Nazwa projektu</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                disabled={loading}
-                required
-              />
-              {errors.name && (
-                <p>{errors.name}</p>
-              )}
-            </div>
+    return (
+        <Box sx={{maxWidth: 600, mx: "auto", mt: 4}}>
+            {!successMessage && (
+                <form onSubmit={handleSubmit}>
+                    <Stack spacing={3}>
+                        <Typography variant="h5">Utwórz projekt</Typography>
 
-            <div>
-              <label htmlFor="description">Opis</label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                rows={4}
-                disabled={loading}
-              />
-            </div>
+                        <TextField
+                            label="Nazwa projektu"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            required
+                            error={!!errors.name}
+                            helperText={errors.name}
+                            disabled={loading}
+                        />
 
-            <div>
-              <label htmlFor="version">Wersja</label>
-              <input
-                type="text"
-                id="version"
-                name="version"
-                value={formData.version}
-                onChange={handleChange}
-                disabled={loading}
-              />
-            </div>
+                        <TextField
+                            label="Opis"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            multiline
+                            rows={4}
+                            disabled={loading}
+                        />
 
-            <div>
-              <label htmlFor="status">Status</label>
-              <select
-                id="status"
-                name="status"
-                value={formData.status}
-                onChange={handleChange}
-                disabled={loading}
-                required
-              >
-                <option value="">-- Wybierz status --</option>
-                <option value="active">Aktywny</option>
-                <option value="completed">Ukończony</option>
-                <option value="paused">Wstrzymany</option>
-              </select>
-              {errors.status && (
-                <p>{errors.status}</p>
-              )}
-            </div>
+                        <TextField
+                            label="Wersja"
+                            name="version"
+                            value={formData.version}
+                            onChange={handleChange}
+                            disabled={loading}
+                        />
 
-            <div>
-              <label htmlFor="budget">Budżet</label>
-              <input
-                type="number"
-                id="budget"
-                name="budget"
-                value={formData.budget}
-                onChange={handleChange}
-                disabled={loading}
-              />
-              {errors.budget && (
-                <p>{errors.budget}</p>
-              )}
-            </div>
+                        <FormControl fullWidth error={!!errors.status} disabled={loading}>
+                            <InputLabel id="status-label">Status</InputLabel>
+                            <Select
+                                labelId="status-label"
+                                name="status"
+                                value={formData.status}
+                                label="Status"
+                                onChange={handleChange}
+                                required
+                            >
+                                <MenuItem value="">-- Wybierz status --</MenuItem>
+                                <MenuItem value="active">Aktywny</MenuItem>
+                                <MenuItem value="completed">Ukończony</MenuItem>
+                                <MenuItem value="paused">Wstrzymany</MenuItem>
+                            </Select>
+                            {errors.status && <FormHelperText>{errors.status}</FormHelperText>}
+                        </FormControl>
 
-            <div>
-              <label htmlFor="client">Klient</label>
-              <input
-                type="text"
-                id="client"
-                name="client"
-                value={formData.client}
-                onChange={handleChange}
-                disabled={loading}
-              />
-            </div>
+                        <TextField
+                            label="Budżet (PLN)"
+                            name="budget"
+                            type="number"
+                            value={formData.budget}
+                            onChange={handleChange}
+                            error={!!errors.budget}
+                            helperText={errors.budget}
+                            disabled={loading}
+                        />
 
-            <div>
-              <label htmlFor="collaborators">Współpracownicy</label>
-              <input
-                type="text"
-                id="collaborators"
-                name="collaborators"
-                value={formData.collaborators}
-                onChange={handleChange}
-                disabled={loading}
-              />
-            </div>
+                        <TextField
+                            label="Klient"
+                            name="client"
+                            value={formData.client}
+                            onChange={handleChange}
+                            disabled={loading}
+                        />
 
-            <button type="submit" disabled={loading}>
-              Zapisz projekt
-            </button>
-          </form>
+                        <TextField
+                            label="Współpracownicy"
+                            name="collaborators"
+                            value={formData.collaborators}
+                            onChange={handleChange}
+                            disabled={loading}
+                        />
 
-          {Object.keys(errors).length > 0 && (
-            <div>
-              {Object.values(errors).map((err, idx) => (
-                <p key={idx}>{err}</p>
-              ))}
-            </div>
-          )}
-        </>
-      )}
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            disabled={loading}
+                        >
+                            {loading ? <CircularProgress size={24}/> : "Zapisz projekt"}
+                        </Button>
+                    </Stack>
+                </form>
+            )}
 
-      {loading && "working..."}
-
-      {successMessage && (
-        <div>
-          <h1>{successMessage}</h1>
-        </div>
-      )}
-    </div>
-  );
+            {successMessage && (
+                <Alert severity="success" sx={{mt: 3}}>
+                    {successMessage}
+                </Alert>
+            )}
+        </Box>
+    );
 };
 
 export default ProjectForm;

@@ -31,7 +31,19 @@ class TaskViewSet(ModelViewSet):
     serializer_class = TaskSerializer
 
     def get_queryset(self):
-        return Task.objects.filter(user=self.request.user)
+        queryset = Task.objects.filter(user=self.request.user)
+        project_id = self.request.query_params.get("project")
+        parent_task_id = self.request.query_params.get("parent_task")
+
+        if project_id:
+            queryset = queryset.filter(project_id=project_id)
+
+        if parent_task_id == "null":
+            queryset = queryset.filter(parent_task__isnull=True)
+        elif parent_task_id:
+            queryset = queryset.filter(parent_task_id=parent_task_id)
+
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

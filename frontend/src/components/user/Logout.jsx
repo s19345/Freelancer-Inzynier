@@ -1,14 +1,14 @@
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 import useAuthStore from "../../zustand_store/authStore";
 
 const Logout = () => {
-  const logoutUser = useAuthStore((state) => state.logout);
+    const logoutUser = useAuthStore((state) => state.logout);
 
-  useEffect(() => {
-    logoutUser();
-  }, [logoutUser]);
+    useEffect(() => {
+        logoutUser();
+    }, [logoutUser]);
 
-  return null;
+    return null;
 };
 
 export default Logout;
