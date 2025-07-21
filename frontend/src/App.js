@@ -24,7 +24,6 @@ import TaskList from "./components/task/UserTaskList";
 import CreateTaskForm from "./components/task/CreateTask";
 import TaskDetails from "./components/task/TaskDetails";
 import EditTask from "./components/task/EditTask";
-import CreateSubtaskPage from "./components/task/subtask/CreateSubtask"
 
 
 function App() {
@@ -54,7 +53,7 @@ function App() {
                             <Route path="/project/:projectId/create-task" element={<CreateTaskForm/>}/>
                             <Route path="/task/:taskId" element={<TaskDetails/>}/>
                             <Route path="/task/:taskId/edit" element={<EditTask/>}/>
-                            <Route path="/tasks/:taskId/subtasks/create" element={<CreateSubtaskPage/>}/>
+                            <Route path="/project/:projectId/task/:taskId/subtasks/create" element={<CreateTaskForm/>}/>
 
 
                         </Route>

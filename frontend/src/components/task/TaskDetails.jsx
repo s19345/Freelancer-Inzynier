@@ -31,14 +31,10 @@ const TaskDetails = () => {
     const [task, setTask] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    console.log("Task ID:", taskId);
-    console.log("Token:", token);
-    console.log("error:", error);
 
     const fetchTask = async () => {
         setLoading(true);
         setError(null);
-        console.log("Fetching task with ID:", taskId);
         try {
             const res = await fetch(`${PROJECT_BACKEND_URL}tasks/${taskId}/`, {
                 headers: {
@@ -52,7 +48,6 @@ const TaskDetails = () => {
             }
 
             const data = await res.json();
-            console.log("Fetched task data:", data);
             setTask(data);
         } catch (err) {
             setError(err.message);
@@ -153,7 +148,7 @@ const TaskDetails = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => navigate(`/tasks/${taskId}/subtasks/create`)}
+                        onClick={() => navigate(`/project/${task.project.id}/task/${taskId}/subtasks/create`)}
                     >
                         Dodaj podzadanie
                     </Button>

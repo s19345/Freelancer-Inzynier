@@ -5,8 +5,9 @@ import {PROJECT_BACKEND_URL, USERS_LIST_URL} from "../../settings";
 import {useParams} from "react-router";
 
 const CreateTaskForm = ({projectId: propProjectId}) => {
-    const {projectId: paramProjectId} = useParams();
+    const {projectId: paramProjectId, taskId: paramTaskId} = useParams();
     const projectId = propProjectId || paramProjectId;
+    const parentTaskId = paramTaskId || null;
 
     const [formData, setFormData] = useState({
         title: "",
@@ -81,11 +82,10 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
             };
 
 
-            if (formData.parent_task) {
-                payload.parent_task_id = formData.parent_task;
+            if (parentTaskId) {
+                payload.parent_task_id = parentTaskId;
             }
 
-            console.log("Wysyłane dane do API:", JSON.stringify(payload, null, 2));
 
             try {
                 const response = await fetch(`${PROJECT_BACKEND_URL}tasks/`, {
