@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useParams, Link, useNavigate} from "react-router";
+import {useParams, Link, useNavigate, Link as RouterLink} from "react-router";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
 import {
@@ -15,6 +15,14 @@ import {
     Divider
 } from "@mui/material";
 
+const ReturnButton = ({to, text}) => {
+    return (
+        <Button component={Link} to={to} variant="outlined">
+            {text}
+        </Button>
+    );
+}
+
 const TaskDetails = () => {
     const {taskId} = useParams();
     const token = useAuthStore((state) => state.token);
@@ -23,10 +31,14 @@ const TaskDetails = () => {
     const [task, setTask] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    console.log("Task ID:", taskId);
+    console.log("Token:", token);
+    console.log("error:", error);
 
     const fetchTask = async () => {
         setLoading(true);
         setError(null);
+        console.log("Fetching task with ID:", taskId);
         try {
             const res = await fetch(`${PROJECT_BACKEND_URL}tasks/${taskId}/`, {
                 headers: {
@@ -40,6 +52,7 @@ const TaskDetails = () => {
             }
 
             const data = await res.json();
+            console.log("Fetched task data:", data);
             setTask(data);
         } catch (err) {
             setError(err.message);
@@ -84,18 +97,17 @@ const TaskDetails = () => {
             <Typography><strong>Projekt:</strong> {task.project?.name || "Brak"}</Typography>
 
             {task.parent_task && (
-                <Typography><strong>Zadanie nadrzędne (ID):</strong> {task.parent_task}</Typography>
+                <Typography><strong>Zadanie nadrzędne:</strong> {task.parent_task.title}</Typography>
             )}
 
-            <Box mt={4}>
-                <Typography variant="h6" gutterBottom>
-                    Podzadania ({task.subtasks?.length || 0})
-                </Typography>
-
-                {task.subtasks?.length > 0 ? (
+            {task.subtasks?.length > 0 &&
+                <Box mt={4}>
+                    <Typography variant="h6" gutterBottom>
+                        Podzadania ({task.subtasks?.length})
+                    </Typography>
                     <List disablePadding>
                         {task.subtasks.map((subtask) => (
-                            <React.Fragment key={subtask.id}>
+                            <React.Fragment key={subtask?.id}>
                                 <ListItem
                                     sx={{
                                         display: "flex",
@@ -108,6 +120,14 @@ const TaskDetails = () => {
                                         primary={subtask.title}
                                         secondary={`Termin: ${subtask.due_date}`}
                                     />
+                                    <Button
+                                        component={RouterLink}
+                                        to={`/task/${subtask.id}`}
+                                        size="small"
+                                        sx={{mr: 1}}
+                                    >
+                                        Szczegóły
+                                    </Button>
                                     <Chip
                                         label={statusLabels[subtask.status]}
                                         color={
@@ -124,29 +144,23 @@ const TaskDetails = () => {
                             </React.Fragment>
                         ))}
                     </List>
-                ) : (
-                    <Typography variant="body2" color="text.secondary">
-                        Brak podzadań.
-                    </Typography>
-                )}
-            </Box>
-
-            <Box mt={4} display="flex" gap={2} flexWrap="wrap">
-                <Button component={Link} to={`/project/${task.project?.id}/tasks`} variant="outlined">
-
-                    &larr; Powrót do listy zadań
-                </Button>
-
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => navigate(`/tasks/${taskId}/subtasks/create`)}
-                >
-                    Dodaj podzadanie
-                </Button>
-            </Box>
+                </Box>
+            }
+            {task.parent_task ? (
+                    <ReturnButton to={`/task/${task.parent_task.id}`} text="Powrót do zadania nadrzędnego"/>) :
+                (<Box mt={3} display="flex" gap={2} flexWrap="wrap">
+                    <ReturnButton to={`/project/${task.project.id}/tasks`} text="Powrót do listy zadań"/>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => navigate(`/tasks/${taskId}/subtasks/create`)}
+                    >
+                        Dodaj podzadanie
+                    </Button>
+                </Box>)}
         </Box>
-    );
+    )
+        ;
 };
 
 export default TaskDetails;
