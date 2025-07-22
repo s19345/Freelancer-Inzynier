@@ -13,6 +13,7 @@ import {
     Alert,
     Stack,
 } from "@mui/material";
+import paths from "../../paths";
 
 const UserProjectsList = () => {
     const token = useAuthStore(state => state.token);
@@ -65,7 +66,7 @@ const UserProjectsList = () => {
                                 <Typography
                                     variant="h6"
                                     component={Link}
-                                    to={`/project/${project.id}/tasks`}
+                                    to={paths.project(project.id)}
                                     sx={{
                                         textDecoration: 'none',
                                         color: 'primary.main',
@@ -83,16 +84,6 @@ const UserProjectsList = () => {
                                     <Typography variant="body2">Budżet: {project.budget} zł</Typography>
                                 )}
 
-                                <Box>
-                                    <Button
-                                        component={Link}
-                                        to={`/project/${project.id}/edit`}
-                                        variant="outlined"
-                                        size="small"
-                                    >
-                                        Edytuj projekt
-                                    </Button>
-                                </Box>
                             </Stack>
                         </Paper>
                     </ListItem>

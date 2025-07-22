@@ -1,0 +1,25 @@
+const paths = {
+    home: "/",
+    login: "/login",
+    logout: "/logout",
+    register: "/register",
+    profile: "/profile",
+    passwordReset: "/password-reset/:uid/:token",
+    editProfile: "/edit-profile",
+    changePassword: "/change-password",
+    clients: "/clients",
+    client: (clientId = ":clientId") => `/client/${clientId}`,
+    createClient: "/create-client",
+    editClient: (clientId = ":clientId") => `/client/${clientId}/edit`,
+    projectList: "/project",
+    createProject: "/project/create",
+    project: (projectId = ":projectId") => `/project/${projectId}`,
+    editProject: (projectId = ":projectId") => `/project/${projectId}/edit`,
+    projectTasks: (projectId = ":projectId") => `/project/${projectId}/tasks`,
+    createTask: (projectId = ":projectId") => `/project/${projectId}/task/create`,
+    taskDetails: (projectId = ":projectId", taskId = ":taskId") => `/project/${projectId}/task/${taskId}`,
+    editTask: (projectId = ":projectId", taskId = ":taskId") => `/project/${projectId}/task/${taskId}/edit`,
+    createSubtask: (projectId = ":projectId", taskId = ":taskId") => `/project/${projectId}/task/${taskId}/subtasks/create`,
+};
+
+export default paths;

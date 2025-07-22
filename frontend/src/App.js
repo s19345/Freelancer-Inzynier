@@ -24,6 +24,7 @@ import TaskList from "./components/task/UserTaskList";
 import CreateTaskForm from "./components/task/CreateTask";
 import TaskDetails from "./components/task/TaskDetails";
 import EditTask from "./components/task/EditTask";
+import paths from "./paths";
 
 
 function App() {
@@ -33,29 +34,26 @@ function App() {
                 <PersistGate loading={null} persistor={persistor}>
                     <Routes>
                         <Route element={<Home/>}>
-                            <Route path="/" element={<Dashboard/>}/>
-                            <Route path="/login" element={<Login/>}/>
-                            <Route path="/logout" element={<Logout/>}/>
-                            <Route path="/register" element={<Register/>}/>
-                            <Route path="/profile" element={<UserProfile/>}/>
-                            <Route path="password-reset/:uid/:token" element={<PasswordResetConfirm/>}/>
-                            <Route path="/edit-profile" element={<EditProfile/>}/>
-                            <Route path="/change-password" element={<ChangePassword/>}/>
-                            <Route path="/create-project" element={<CreateProject/>}/>
-                            <Route path="/create-client" element={<CreateClient/>}/>
-                            <Route path="/project" element={<UserProjectsList/>}/>
-                            <Route path="/project/:projectId" element={<ProjectDetails/>}/>
-                            <Route path="/project/:projectId/edit" element={<EditProject/>}/>
-                            <Route path="/clients" element={<ClientList/>}/>
-                            <Route path="/client/:clientId" element={<ClientDetails/>}/>
-                            <Route path="/client/:clientId/edit" element={<EditClient/>}/>
-                            <Route path="/project/:projectId/tasks" element={<TaskList/>}/>
-                            <Route path="/project/:projectId/create-task" element={<CreateTaskForm/>}/>
-                            <Route path="/task/:taskId" element={<TaskDetails/>}/>
-                            <Route path="/task/:taskId/edit" element={<EditTask/>}/>
-                            <Route path="/project/:projectId/task/:taskId/subtasks/create" element={<CreateTaskForm/>}/>
-
-
+                            <Route path={paths.home} element={<Dashboard/>}/>
+                            <Route path={paths.login} element={<Login/>}/>
+                            <Route path={paths.logout} element={<Logout/>}/>
+                            <Route path={paths.register} element={<Register/>}/>
+                            <Route path={paths.profile} element={<UserProfile/>}/>
+                            <Route path={paths.passwordReset} element={<PasswordResetConfirm/>}/>
+                            <Route path={paths.editProfile} element={<EditProfile/>}/>
+                            <Route path={paths.changePassword} element={<ChangePassword/>}/>
+                            <Route path={paths.clients} element={<ClientList/>}/>
+                            <Route path={paths.client()} element={<ClientDetails/>}/>
+                            <Route path={paths.createClient} element={<CreateClient/>}/>
+                            <Route path={paths.editClient()} element={<EditClient/>}/>
+                            <Route path={paths.projectList} element={<UserProjectsList/>}/>
+                            <Route path={paths.createProject} element={<CreateProject/>}/>
+                            <Route path={paths.project()} element={<ProjectDetails/>}/>
+                            <Route path={paths.editProject()} element={<EditProject/>}/>
+                            <Route path={paths.createTask()} element={<CreateTaskForm/>}/>
+                            <Route path={paths.taskDetails()} element={<TaskDetails/>}/>
+                            <Route path={paths.editTask()} element={<EditTask/>}/>
+                            <Route path={paths.createSubtask()} element={<CreateTaskForm/>}/>
                         </Route>
                     </Routes>
                 </PersistGate>

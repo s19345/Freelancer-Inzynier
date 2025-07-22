@@ -11,6 +11,8 @@ import {
     CircularProgress,
     Alert,
 } from "@mui/material";
+import TaskList from "../task/UserTaskList";
+import paths from "../../paths"
 
 const ProjectDetails = () => {
     const {projectId} = useParams();
@@ -73,6 +75,7 @@ const ProjectDetails = () => {
                     variant="outlined"
                     component={Link}
                     to={`/project/${projectId}/edit`}
+                    to={paths.editProject(projectId)}
                 >
                     Edytuj projekt
                 </Button>
@@ -86,6 +89,7 @@ const ProjectDetails = () => {
                     Dodaj nowe zadanie
                 </Button>
             </Box>
+            <TaskList/>
 
             {showCreateTask && (
                 <Box mt={3}>

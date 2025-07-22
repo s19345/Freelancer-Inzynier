@@ -16,6 +16,7 @@ import {
     TableCell,
     Paper,
 } from "@mui/material";
+import paths from "../../paths";
 
 const TaskList = () => {
     const {projectId} = useParams();
@@ -101,7 +102,7 @@ const TaskList = () => {
     return (
         <Box sx={{p: 3}}>
             <Typography variant="h5" gutterBottom>
-                Lista zadań {project ? `dla projektu ${project.name}` : ""}
+                Lista zadań
             </Typography>
 
             {tasks.length === 0 ? (
@@ -128,19 +129,11 @@ const TaskList = () => {
                                     <TableCell>
                                         <Button
                                             component={RouterLink}
-                                            to={`/task/${task.id}`}
+                                            to={paths.taskDetails(projectId, task.id)}
                                             size="small"
                                             sx={{mr: 1}}
                                         >
                                             Szczegóły
-                                        </Button>
-                                        <Button
-                                            component={RouterLink}
-                                            to={`/task/${task.id}/edit`}
-                                            size="small"
-                                            sx={{mr: 1}}
-                                        >
-                                            Edytuj
                                         </Button>
                                         <DeleteTask
                                             taskId={task.id}
@@ -158,7 +151,7 @@ const TaskList = () => {
                 <Button
                     variant="contained"
                     component={RouterLink}
-                    to={`/project/${projectId}/create-task`}
+                    to={paths.createTask(projectId)}
                 >
                     Dodaj zadanie do projektu
                 </Button>

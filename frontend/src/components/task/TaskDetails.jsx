@@ -14,6 +14,8 @@ import {
     Chip,
     Divider
 } from "@mui/material";
+import DeleteTask from "./DeleteTask";
+import paths from "../../paths";
 
 const ReturnButton = ({to, text}) => {
     return (
@@ -24,7 +26,7 @@ const ReturnButton = ({to, text}) => {
 }
 
 const TaskDetails = () => {
-    const {taskId} = useParams();
+    const {taskId, projectId} = useParams();
     const token = useAuthStore((state) => state.token);
     const navigate = useNavigate();
 
@@ -60,6 +62,17 @@ const TaskDetails = () => {
         fetchTask();
     }, [taskId, token]);
 
+    useEffect(() => {
+        console.log(task)
+    }, [task]);
+
+    const handleDeleteSuccess = (deletedId) => {
+        setTask(prev => ({
+            ...prev,
+            subtasks: prev.subtasks.filter(subtask => subtask.id !== deletedId),
+        }));
+    };
+
     const statusLabels = {
         to_do: "Do zrobienia",
         in_progress: "W trakcie",
@@ -78,9 +91,19 @@ const TaskDetails = () => {
 
     return (
         <Box sx={{maxWidth: 700, mx: "auto", p: 3}}>
-            <Typography variant="h5" gutterBottom>
-                Szczegóły zadania
-            </Typography>
+            <Box display="flex" justifyContent="flex-start" alignItems="center" mb={2}>
+                <Typography variant="h5">
+                    Szczegóły zadania
+                </Typography>
+                <Button
+                    component={RouterLink}
+                    to={paths.editTask(projectId, task.id)}
+                    size="small"
+                    sx={{ml: 2}}
+                >
+                    Edytuj
+                </Button>
+            </Box>
 
             <Typography><strong>Tytuł:</strong> {task.title}</Typography>
             <Typography><strong>Opis:</strong> {task.description || "Brak opisu"}</Typography>
@@ -117,12 +140,24 @@ const TaskDetails = () => {
                                     />
                                     <Button
                                         component={RouterLink}
-                                        to={`/task/${subtask.id}`}
+                                        to={paths.taskDetails(projectId, subtask.id)}
                                         size="small"
                                         sx={{mr: 1}}
                                     >
                                         Szczegóły
                                     </Button>
+                                    <Button
+                                        component={RouterLink}
+                                        to={paths.editTask(projectId, subtask.id)}
+                                        size="small"
+                                        sx={{mr: 1}}
+                                    >
+                                        Edytuj
+                                    </Button>
+                                    <DeleteTask
+                                        taskId={subtask.id}
+                                        onDeleteSuccess={() => handleDeleteSuccess(subtask.id)}
+                                    />
                                     <Chip
                                         label={statusLabels[subtask.status]}
                                         color={
@@ -142,13 +177,14 @@ const TaskDetails = () => {
                 </Box>
             }
             {task.parent_task ? (
-                    <ReturnButton to={`/task/${task.parent_task.id}`} text="Powrót do zadania nadrzędnego"/>) :
+                    <ReturnButton to={paths.taskDetails(projectId, task.parent_task.id)}
+                                  text="Powrót do zadania nadrzędnego"/>) :
                 (<Box mt={3} display="flex" gap={2} flexWrap="wrap">
-                    <ReturnButton to={`/project/${task.project.id}/tasks`} text="Powrót do listy zadań"/>
+                    <ReturnButton to={paths.project(projectId)} text="Powrót do projektu"/>
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => navigate(`/project/${task.project.id}/task/${taskId}/subtasks/create`)}
+                        onClick={() => navigate(paths.createSubtask(projectId, taskId))}
                     >
                         Dodaj podzadanie
                     </Button>

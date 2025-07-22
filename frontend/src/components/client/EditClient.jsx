@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useParams, useNavigate} from 'react-router';
+import {useParams, useNavigate, Link} from 'react-router';
 import useAuthStore from '../../zustand_store/authStore';
 import {PROJECT_BACKEND_URL} from '../../settings';
 import DeleteClient from './DeleteClient';
@@ -12,6 +12,7 @@ import {
     Alert,
     Stack,
 } from '@mui/material';
+import paths from "../../paths";
 
 const EditClient = () => {
     const {clientId} = useParams();
@@ -153,6 +154,14 @@ const EditClient = () => {
                             size="large"
                         >
                             Zapisz zmiany
+                        </Button>
+                        <Button
+                            component={Link}
+                            to={paths.clients}
+                            variant="outlined"
+                            color="secondary"
+                        >
+                            Anuluj
                         </Button>
 
                         <DeleteClient clientId={clientId}/>

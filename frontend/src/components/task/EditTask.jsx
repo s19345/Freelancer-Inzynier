@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {useParams, Link} from 'react-router';
 import useAuthStore from '../../zustand_store/authStore';
-import { PROJECT_BACKEND_URL } from '../../settings';
-import { useNavigate } from 'react-router';
+import {PROJECT_BACKEND_URL} from '../../settings';
+import {useNavigate} from 'react-router';
 import {
     Box,
     TextField,
@@ -12,9 +12,11 @@ import {
     CircularProgress,
     Alert
 } from '@mui/material';
+import paths from "../../paths";
+
 
 const EditTask = () => {
-    const { taskId } = useParams();
+    const {taskId, projectId} = useParams();
     const token = useAuthStore(state => state.token);
     const navigate = useNavigate();
 
@@ -62,8 +64,8 @@ const EditTask = () => {
     }, [taskId, token]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setFormData(prev => ({...prev, [name]: value}));
     };
 
     const handleSubmit = async (e) => {
@@ -93,7 +95,7 @@ const EditTask = () => {
         }
     };
 
-    if (loading) return <CircularProgress />;
+    if (loading) return <CircularProgress/>;
     if (error) return <Alert severity="error">{error}</Alert>;
 
     return (
@@ -149,7 +151,7 @@ const EditTask = () => {
                 type="date"
                 value={formData.due_date}
                 onChange={handleChange}
-                InputLabelProps={{ shrink: true }}
+                InputLabelProps={{shrink: true}}
                 required
                 fullWidth
             />
@@ -176,9 +178,19 @@ const EditTask = () => {
                 <MenuItem value="high">Wysoki</MenuItem>
             </TextField>
 
-            <Button type="submit" variant="contained" color="primary" disabled={loading}>
-                Zapisz zmiany
-            </Button>
+            <Box display="flex" justifyContent="flex-end" gap={2}>
+                <Button type="submit" variant="contained" color="primary" disabled={loading}>
+                    Zapisz zmiany
+                </Button>
+                <Button
+                    component={Link}
+                    to={paths.taskDetails(projectId, taskId)}
+                    variant="outlined"
+                    color="secondary"
+                >
+                    Anuluj
+                </Button>
+            </Box>
         </Box>
     );
 };

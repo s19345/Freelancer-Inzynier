@@ -2,7 +2,8 @@ import React, {useState, useEffect} from "react";
 import {Box, TextField, Button, Typography, Alert, MenuItem} from '@mui/material';
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL, USERS_LIST_URL} from "../../settings";
-import {useParams} from "react-router";
+import {Link, useParams} from "react-router";
+import paths from "../../paths";
 
 const CreateTaskForm = ({projectId: propProjectId}) => {
     const {projectId: paramProjectId, taskId: paramTaskId} = useParams();
@@ -25,6 +26,7 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
     const [statusType, setStatusType] = useState("success");
     const [users, setUsers] = useState([]);
     const token = useAuthStore(state => state.token);
+    const returnUrl = parentTaskId ? paths.taskDetails(projectId, parentTaskId) : paths.project(projectId)
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -229,6 +231,14 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
 
             <Button type="submit" variant="contained" color="primary" fullWidth>
                 Utwórz zadanie
+            </Button>
+            <Button
+                component={Link}
+                to={returnUrl}
+                variant="outlined"
+                color="secondary"
+            >
+                Anuluj
             </Button>
 
             {statusMsg && (
