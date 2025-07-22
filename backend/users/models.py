@@ -4,6 +4,7 @@ from django.db import models
 
 class CustomUser(AbstractUser):
     bio = models.TextField(blank=True)
+    profile_picture = models.URLField(blank=True, null=True)
 
 
 class Friend(models.Model):
