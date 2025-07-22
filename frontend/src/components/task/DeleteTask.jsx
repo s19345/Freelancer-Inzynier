@@ -17,7 +17,6 @@ const DeleteTask = ({ taskId, onDeleteSuccess }) => {
       });
 
       if (response.ok) {
-        console.log("Zadanie zostało usunięte");
         if (onDeleteSuccess) onDeleteSuccess();
       } else {
         const errorData = await response.json();

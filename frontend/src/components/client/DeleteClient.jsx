@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
+import {useNavigate} from 'react-router'
 import {PROJECT_BACKEND_URL} from "../../settings";
 import {
     Button,
@@ -9,11 +10,13 @@ import {
     DialogContentText,
     DialogTitle,
 } from "@mui/material";
+import paths from "../../paths";
 
 const DeleteClient = ({clientId}) => {
     const token = useAuthStore((state) => state.token);
     const [open, setOpen] = useState(false);
     const [deleting, setDeleting] = useState(false);
+    const navigate = useNavigate();
 
     const handleDelete = async () => {
         setDeleting(true);
@@ -27,6 +30,7 @@ const DeleteClient = ({clientId}) => {
 
             if (response.ok) {
                 setOpen(false);
+                navigate(paths.clients)
             } else {
                 const errorData = await response.json();
                 console.error("Błąd podczas usuwania klienta:", errorData);
