@@ -65,6 +65,5 @@ class Task(models.Model):
 
 class TimeLog(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="timelogs")
-    start_time = models.DateTimeField()
+    start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField()
-
