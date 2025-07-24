@@ -25,16 +25,19 @@ class UserSearchListAPIView(ListAPIView):
 
 class FriendListAPIView(ListAPIView):
     """ApiView to list all friends of the authenticated user."""
-    queryset = CustomUser.objects.all()
     serializer_class = FriendListSerializer
-    # todo dokoñczyæ i przetestowaæ
+
+    def get_queryset(self):
+        return self.request.user.friends.all()
 
 
 class FriendDetailsAPIView(RetrieveAPIView):
-    """ApiView to retrieve details of a specific user if user is a friend of authenticated user."""
-    queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-    # todo dokoñczyæ i przetestowaæ
+
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        return self.request.user.friends.all()
 
 
 class FriendRequestSenderAPIView(generics.GenericAPIView):
