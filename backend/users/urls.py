@@ -1,6 +1,7 @@
 from django.urls import path
 from django.urls.conf import include
-from .views import UserListAPIView
+from .views import UserSearchListAPIView, FriendRequestSenderAPIView, FriendRequestReceiverAPIView, \
+    FriendRequestDeleteAPIView
 from users.views import password_reset_confirm_redirect
 
 urlpatterns = [
@@ -8,5 +9,8 @@ urlpatterns = [
     path('auth/registration/', include('dj_rest_auth.registration.urls')),
     path("/auth/password/reset/confirm/<str:uidb64>/<str:token>/", password_reset_confirm_redirect,
          name="password_reset_confirm"),
-    path('', UserListAPIView.as_view(), name='user-list'),
+    path('', UserSearchListAPIView.as_view(), name='user-list'),
+    path('friend-request-send/', FriendRequestSenderAPIView.as_view(), name='friend-request-send'),
+    path('friend-request-receive/', FriendRequestReceiverAPIView.as_view(), name='friend-request-receive'),
+    path('friend-request-delete/<int:id>/', FriendRequestDeleteAPIView.as_view(), name='friend-request-delete'),
 ]

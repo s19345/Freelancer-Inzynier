@@ -1,15 +1,144 @@
 from django.http.response import HttpResponseRedirect
 from django.conf import settings
-from rest_framework.generics import ListAPIView
+from django.db import IntegrityError
+from rest_framework import status, generics
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
-from .models import CustomUser
-from .serializers import CustomUserSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import CustomUser, FriendRequest
+from .serializers import CustomUserSerializer, FriendListSerializer, GetSentFriendRequestSerializer, \
+    FriendRequestSendSerializer, FriendRequestAcceptSerializer, GetReceivedFriendRequestSerializer
+from rest_framework.pagination import PageNumberPagination
 
 
-class UserListAPIView(ListAPIView):
+class UserSearchListAPIView(ListAPIView):
+    """ApiView to list all users except the authenticated user."""
+    queryset = CustomUser.objects.all()
+    serializer_class = FriendListSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        return CustomUser.objects.exclude(id=self.request.user.id)
+
+
+class FriendListAPIView(ListAPIView):
+    """ApiView to list all friends of the authenticated user."""
+    queryset = CustomUser.objects.all()
+    serializer_class = FriendListSerializer
+    # todo dokoñczyæ i przetestowaæ
+
+
+class FriendDetailsAPIView(RetrieveAPIView):
+    """ApiView to retrieve details of a specific user if user is a friend of authenticated user."""
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+    # todo dokoñczyæ i przetestowaæ
+
+
+class FriendRequestSenderAPIView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = FriendRequestSendSerializer
+    queryset = FriendRequest.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return FriendRequestSendSerializer
+        return GetSentFriendRequestSerializer
+
+    def get(self, request, *args, **kwargs):
+        """Zwraca wys³ane zaproszenia."""
+        friend_requests = FriendRequest.objects.filter(sender=request.user)
+        serializer = GetSentFriendRequestSerializer(friend_requests, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        serializer = FriendRequestSendSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        receiver_id = serializer.validated_data['receiver']
+
+        if str(request.user.id) == str(receiver_id):
+            return Response({'error': 'Nie mo¿esz wys³aæ zaproszenia do siebie samego.'},
+                            status=status.HTTP_418_IM_A_TEAPOT)
+
+        try:
+            receiver = CustomUser.objects.get(id=receiver_id)
+        except CustomUser.DoesNotExist:
+            return Response({'error': 'Nie znaleziono odbiorcy zaproszenia.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if request.user.friends.filter(id=receiver_id).exists():
+            return Response({'error': 'Ten u¿ytkownik ju¿ jest Twoim znajomym.'}, status=status.HTTP_409_CONFLICT)
+
+        if FriendRequest.objects.filter(sender=receiver, receiver=request.user).exists():
+            return Response({'error': 'Ten u¿ytkownik ju¿ wys³a³ Ci zaproszenie.'}, status=status.HTTP_409_CONFLICT)
+
+        try:
+            FriendRequest.objects.create(sender=request.user, receiver=receiver)
+            return Response({'success': 'Zaproszenie wys³ane.'}, status=status.HTTP_201_CREATED)
+        except IntegrityError:
+            return Response({'error': 'Zaproszenie zosta³o ju¿ wcze¶niej wys³ane.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FriendRequestReceiverAPIView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = FriendRequest.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return FriendRequestAcceptSerializer
+        return GetReceivedFriendRequestSerializer
+
+    def get(self, request, *args, **kwargs):
+        """Zwraca zaproszenia otrzymane."""
+        friend_requests = FriendRequest.objects.filter(receiver=request.user)
+        serializer = GetReceivedFriendRequestSerializer(friend_requests, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        """
+        Akceptuje zaproszenie.
+        """
+        serializer = FriendRequestAcceptSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        friend_request_id = serializer.validated_data['id']
+
+        try:
+            friend_request = FriendRequest.objects.get(id=friend_request_id, receiver=request.user)
+        except FriendRequest.DoesNotExist:
+            return Response({'error': 'Nie znaleziono zaproszenia.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if request.user.friends.filter(id=friend_request.sender.id).exists():
+            return Response({'error': 'Ten u¿ytkownik ju¿ jest Twoim znajomym.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            friend = CustomUser.objects.get(id=friend_request.sender.id)
+            request.user.friends.add(friend)
+            friend_request.delete()
+            return Response({'success': 'Zaakceptowano zaproszenie.'}, status=status.HTTP_200_OK)
+        except IntegrityError:
+            return Response({'error': 'Zaproszenie zosta³o ju¿ zaakceptowane.'}, status=status.HTTP_400_BAD_REQUEST)
+        except CustomUser.DoesNotExist:
+            return Response({'error': 'Nie znaleziono u¿ytkownika który wys³a³ zaproszenie.'},
+                            status=status.HTTP_404_NOT_FOUND)
+
+
+class FriendRequestDeleteAPIView(APIView):
+
+    def delete(self, request, *args, **kwargs):
+        """Delete a friend request"""
+        friend_request_id = kwargs.get('id')
+
+        try:
+            friend_request = FriendRequest.objects.get(id=friend_request_id)
+            is_user_sender = request.user == friend_request.sender
+            friend_request.delete()
+            if is_user_sender:
+                return Response({'success': 'Zaproszenie zosta³o anulowane.'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'success': 'Zaproszenie zosta³o odrzucone.'}, status=status.HTTP_200_OK)
+        except FriendRequest.DoesNotExist:
+            return Response({'error': 'Nie znaleziono zaproszenia.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 def password_reset_confirm_redirect(request, uidb64, token):
