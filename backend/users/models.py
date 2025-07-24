@@ -8,8 +8,8 @@ class CustomUser(AbstractUser):
 
 
 class Friend(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friends')
-    friend = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friend_of')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user')
+    friend = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friend')
 
     class Meta:
         unique_together = ('user', 'friend')
