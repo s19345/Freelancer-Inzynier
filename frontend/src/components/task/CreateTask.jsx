@@ -27,6 +27,8 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
     const [users, setUsers] = useState([]);
     const token = useAuthStore(state => state.token);
     const returnUrl = parentTaskId ? paths.taskDetails(projectId, parentTaskId) : paths.project(projectId)
+    const contextText = parentTaskId ? "podzadanie" : "zadanie";
+    const successMessage = parentTaskId ? "Podzadanie zostało utworzone" : "Zadanie zostało utworzone";
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -102,7 +104,7 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
                 const data = await response.json();
 
                 if (response.ok) {
-                    setStatusMsg("Zadanie zostało utworzone");
+                    setStatusMsg(successMessage);
                     setStatusType("success");
                     setFormData({
                         title: "",
@@ -142,7 +144,7 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
             }}
         >
             <Typography variant="h5" component="h2" textAlign="center">
-                Dodaj zadanie
+                Dodaj {contextText}
             </Typography>
 
             <TextField
@@ -230,7 +232,7 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
             </TextField>
 
             <Button type="submit" variant="contained" color="primary" fullWidth>
-                Utwórz zadanie
+                utwórz {contextText}
             </Button>
             <Button
                 component={Link}
