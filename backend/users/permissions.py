@@ -13,8 +13,4 @@ class IsFriend(BasePermission):
         return True
 
     def has_object_permission(self, request, view, obj):
-        print("*-" * 50)
-        print(f"Checking if {request.user} is a friend of {obj}")
-        print(f"view = {view}")
-        print("*-" * 50)
         return obj.friend_of.filter(user=request.user).exists()
