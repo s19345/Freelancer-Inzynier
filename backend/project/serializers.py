@@ -62,7 +62,44 @@ class TaskSerializer(serializers.ModelSerializer):
         return TaskSimpleSerializer(subtasks, many=True, context=self.context).data
 
 
-class TimeLogSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TimeLog
-        fields = '__all__'
+class BaseTimeLogSerializer(serializers.Serializer):
+    task_id = serializers.IntegerField()
+
+    def validate_task_exists_and_permissions(self, task_id):
+        request = self.context['request']
+
+        try:
+            task = Task.objects.get(id=task_id)
+        except Task.DoesNotExist:
+            raise serializers.ValidationError('Nie znaleziono zadania.')
+
+        if task.project.manager != request.user:
+            raise serializers.ValidationError('Nie masz uprawnieñ do tego zadania.')
+
+        return task
+
+
+class TimeLogCreateSerializer(BaseTimeLogSerializer):
+    def validate(self, attrs):
+        task_id = attrs.get('task_id')
+        task = self.validate_task_exists_and_permissions(task_id)
+
+        if TimeLog.objects.filter(task=task, end_time__isnull=True).exists():
+            raise serializers.ValidationError('To zadanie zosta³o ju¿ rozpoczête.')
+
+        attrs['task'] = task
+        return attrs
+
+
+class TimeLogStopSerializer(BaseTimeLogSerializer):
+    def validate(self, attrs):
+        task_id = attrs.get('task_id')
+        task = self.validate_task_exists_and_permissions(task_id)
+
+        try:
+            timelog = TimeLog.objects.get(task=task, end_time__isnull=True)
+        except TimeLog.DoesNotExist:
+            raise serializers.ValidationError('To zadanie nie zosta³o jeszcze rozpoczête.')
+        attrs['task'] = task
+        attrs['timelog'] = timelog
+        return attrs

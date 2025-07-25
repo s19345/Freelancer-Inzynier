@@ -1,8 +1,11 @@
-from rest_framework.views import APIView
+from rest_framework import status, generics
 from rest_framework.response import Response
-from .models import Client, Project, Task, TimeLog
-from .serializers import ClientSerializer, ProjectSerializer, TaskSerializer, TimeLogSerializer
 from rest_framework.viewsets import ModelViewSet
+from django.utils import timezone
+
+from .models import Client, Project, Task, TimeLog
+from .serializers import ClientSerializer, ProjectSerializer, TaskSerializer, TimeLogCreateSerializer, \
+    TimeLogStopSerializer
 
 
 class ProjectViewSet(ModelViewSet):
@@ -49,11 +52,51 @@ class TaskViewSet(ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class TimeLogViewSet(ModelViewSet):
-    serializer_class = TimeLogSerializer
+class BaseTaskTimeLogView(generics.GenericAPIView):
+    """Base class for task time log actions."""
+    serializer_class = None
+    new_status = None
+    success_message = None
 
-    def get_queryset(self):
-        return TimeLog.objects.filter(user=self.request.user)
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        task = serializer.validated_data['task']
+        timelog = serializer.validated_data['timelog'] if 'timelog' in serializer.validated_data else None
+
+        if self.new_status:
+            task.status = self.new_status
+            task.save(update_fields=['status'])
+
+        if timelog:
+            timelog.end_time = timezone.now()
+            timelog.save(update_fields=['end_time'])
+        else:
+            timelog = TimeLog.objects.create(task=task, start_time=timezone.now(), end_time=None)
+
+        return Response({
+            'success': self.success_message.format(status=task.get_status_display()),
+            'timelog_id': timelog.id,
+            'start_time': timelog.start_time,
+            'end_time': timelog.end_time,
+            'task.status': task.get_status_display()
+        }, status=status.HTTP_200_OK)
+
+
+class StartTaskTimeLogView(BaseTaskTimeLogView):
+    serializer_class = TimeLogCreateSerializer
+    new_status = 'in_progress'
+    success_message = 'Zadanie zosta³o rozpoczête, status zosta³ ustawiony na {status}.'
+
+
+class StopTaskTimeLogView(BaseTaskTimeLogView):
+    serializer_class = TimeLogStopSerializer
+    new_status = 'to_do'
+    success_message = 'Zadanie zosta³o wstrzymane a status zosta³ ustawiony na {status}.'
+
+
+class EndTaskTimeLogView(BaseTaskTimeLogView):
+    serializer_class = TimeLogStopSerializer
+    new_status = 'completed'
+    success_message = 'Zadanie zosta³o zakoñczone a status zosta³ ustawiony na {status}.'
