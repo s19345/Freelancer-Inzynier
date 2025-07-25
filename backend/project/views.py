@@ -1,6 +1,7 @@
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from django.db.models import Q
 from django.utils import timezone
 
 from .models import Client, Project, Task, TimeLog
@@ -14,7 +15,9 @@ class ProjectViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return Project.objects.filter(manager=user)
+        return Project.objects.filter(
+            Q(manager=user) | Q(collabolators=user)
+        ).distinct()
 
     def perform_create(self, serializer):
         serializer.save(manager=self.request.user)
