@@ -1,8 +1,10 @@
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.exceptions import NotFound
 from django.db.models import Q
 from django.utils import timezone
+from django.http import Http404
 
 from .models import Client, Project, Task, TimeLog
 from .serializers import ClientSerializer, ProjectSerializer, TaskSerializer, TimeLogCreateSerializer, \
@@ -22,6 +24,12 @@ class ProjectViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(manager=self.request.user)
 
+    def get_object(self):
+        try:
+            return super().get_object()
+        except Http404:
+            raise NotFound(detail=('Nie znaleziono projektu.'))
+
 
 class ClientViewSet(ModelViewSet):
     serializer_class = ClientSerializer
@@ -31,6 +39,12 @@ class ClientViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def get_object(self):
+        try:
+            return super().get_object()
+        except Http404:
+            raise NotFound(detail=('Nie znaleziono klienta.'))
 
 
 class TaskViewSet(ModelViewSet):
@@ -53,6 +67,12 @@ class TaskViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def get_object(self):
+        try:
+            return super().get_object()
+        except Http404:
+            raise NotFound(detail=('Nie znaleziono zadania.'))
 
 
 class BaseTaskTimeLogView(generics.GenericAPIView):
