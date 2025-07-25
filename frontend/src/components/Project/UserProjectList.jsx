@@ -36,7 +36,7 @@ const UserProjectsList = () => {
                 }
 
                 const data = await res.json();
-                setProjects(data);
+                setProjects(data.results);
             } catch (err) {
                 setError(err.message);
             } finally {

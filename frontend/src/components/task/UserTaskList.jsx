@@ -22,40 +22,8 @@ const TaskList = () => {
     const {projectId} = useParams();
     const token = useAuthStore(state => state.token);
     const [tasks, setTasks] = useState([]);
-    const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    useEffect(() => {
-        setProject(null);
-    }, [projectId]);
-
-
-    useEffect(() => {
-        const fetchProject = async () => {
-            if (!projectId) return;
-
-            try {
-                const res = await fetch(`${PROJECT_BACKEND_URL}projects/${projectId}/`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Token ${token}`,
-                    },
-                });
-
-                if (!res.ok) {
-                    throw new Error("Nie udało się pobrać projektu");
-                }
-
-                const data = await res.json();
-                setProject(data);
-            } catch (err) {
-                console.error("Błąd ładowania projektu:", err);
-            }
-        };
-
-        fetchProject();
-    }, [projectId, token]);
 
 
     useEffect(() => {
@@ -78,7 +46,8 @@ const TaskList = () => {
 
                 const data = await res.json();
 
-                const onlyRootTasks = data.filter(task => !task.parent_task);
+                const results = data.results
+                const onlyRootTasks = results.filter(task => !task.parent_task);
 
                 setTasks(onlyRootTasks);
             } catch (err) {

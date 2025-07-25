@@ -37,6 +37,7 @@ const ProjectDetails = () => {
                 }
 
                 const data = await response.json();
+                console.log(" pobieram projekt w pr detProjekt:", data);
                 setProject(data);
             } catch (err) {
                 console.error("Błąd:", err);
