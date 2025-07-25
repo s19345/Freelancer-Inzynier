@@ -7,7 +7,6 @@ import {
     Typography,
     Button,
     Stack,
-    Box,
 } from '@mui/material';
 
 const Header = () => {
@@ -31,9 +30,11 @@ const Header = () => {
                 </Typography>
 
                 <Stack direction="row" spacing={2}>
-                    <Button component={Link} to="/" sx={{color: 'white'}}>
-                        Dashboard
-                    </Button>
+                    {isLoggedIn && (
+                        <Button component={Link} to="/" sx={{color: 'white'}}>
+                            Dashboard
+                        </Button>
+                    )}
 
                     {!isLoggedIn ? (
                         <>
