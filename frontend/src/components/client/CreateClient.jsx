@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import {PROJECT_BACKEND_URL} from "../../settings";
 import useAuthStore from "../../zustand_store/authStore";
-import {Box, TextField, Button, Typography, Alert} from '@mui/material';
+import {Box, TextField, Button, Typography} from '@mui/material';
+import AutoDismissAlert from "../common/AutoDismissAlert";
 
 
 const CreateClientForm = () => {
@@ -70,7 +71,7 @@ const CreateClientForm = () => {
                 const data = await response.json();
 
                 if (response.ok) {
-                    setStatus("Klient został utworzony pomyślnie");
+                    setStatus({text: "Klient został utworzony pomyślnie", id: Date.now()});
                     setStatusType("success");
                     setFormData({
                         company_name: "",
@@ -84,12 +85,12 @@ const CreateClientForm = () => {
                     const errorMessage = typeof data === "object"
                         ? Object.values(data).flat().join(" ")
                         : "Wystąpił błąd podczas tworzenia klienta";
-                    setStatus(errorMessage);
+                    setStatus({text: errorMessage, id: Date.now()});
                     setStatusType("error");
                 }
             } catch (error) {
                 console.error("Błąd sieci:", error);
-                setStatus("Błąd połączenia z serwerem");
+                setStatus({text: "Błąd połączenia z serwerem", id: Date.now()});
                 setStatusType("error");
             }
         }
@@ -177,9 +178,11 @@ const CreateClientForm = () => {
             </Button>
 
             {status && (
-                <Alert variant="filled" severity={statusType}>
-                    {status}
-                </Alert>
+                <AutoDismissAlert
+                    messageObj={status}
+                    severity={statusType}
+                    duration={3000}
+                />
             )}
 
         </Box>
