@@ -90,16 +90,16 @@ class BaseTaskTimeLogView(generics.GenericAPIView):
 class StartTaskTimeLogView(BaseTaskTimeLogView):
     serializer_class = TimeLogCreateSerializer
     new_status = 'in_progress'
-    success_message = 'Zadanie zosta≥o rozpoczÍte, status zosta≥ ustawiony na {status}.'
+    success_message = 'Zadanie zosta≈Ço rozpoczƒôte, status zosta≈Ç ustawiony na {status}.'
 
 
 class StopTaskTimeLogView(BaseTaskTimeLogView):
     serializer_class = TimeLogStopSerializer
     new_status = 'to_do'
-    success_message = 'Zadanie zosta≥o wstrzymane a status zosta≥ ustawiony na {status}.'
+    success_message = 'Zadanie zosta≈Ço wstrzymane a status zosta≈Ç ustawiony na {status}.'
 
 
 class EndTaskTimeLogView(BaseTaskTimeLogView):
     serializer_class = TimeLogStopSerializer
     new_status = 'completed'
-    success_message = 'Zadanie zosta≥o zakoÒczone a status zosta≥ ustawiony na {status}.'
+    success_message = 'Zadanie zosta≈Ço zako≈Ñczone a status zosta≈Ç ustawiony na {status}.'

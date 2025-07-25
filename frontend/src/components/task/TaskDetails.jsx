@@ -19,7 +19,7 @@ import paths from "../../paths";
 import EditTask from "./EditTask";
 
 
-const ReturnButton = ({to, text}) => {
+const ReturnButton = ({to, text, finishEditing}) => {
     return (
         <Button component={Link} to={to} variant="outlined" onClick={finishEditing}>
             {text}

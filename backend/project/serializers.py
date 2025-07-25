@@ -74,7 +74,7 @@ class BaseTimeLogSerializer(serializers.Serializer):
             raise serializers.ValidationError('Nie znaleziono zadania.')
 
         if task.project.manager != request.user:
-            raise serializers.ValidationError('Nie masz uprawnieñ do tego zadania.')
+            raise serializers.ValidationError('Nie masz uprawnieÅ„ do tego zadania.')
 
         return task
 
@@ -85,7 +85,7 @@ class TimeLogCreateSerializer(BaseTimeLogSerializer):
         task = self.validate_task_exists_and_permissions(task_id)
 
         if TimeLog.objects.filter(task=task, end_time__isnull=True).exists():
-            raise serializers.ValidationError('To zadanie zosta³o ju¿ rozpoczête.')
+            raise serializers.ValidationError('To zadanie zostaÅ‚o juÅ¼ rozpoczÄ™te.')
 
         attrs['task'] = task
         return attrs
@@ -99,7 +99,7 @@ class TimeLogStopSerializer(BaseTimeLogSerializer):
         try:
             timelog = TimeLog.objects.get(task=task, end_time__isnull=True)
         except TimeLog.DoesNotExist:
-            raise serializers.ValidationError('To zadanie nie zosta³o jeszcze rozpoczête.')
+            raise serializers.ValidationError('To zadanie nie zostaÅ‚o jeszcze rozpoczÄ™te.')
         attrs['task'] = task
         attrs['timelog'] = timelog
         return attrs

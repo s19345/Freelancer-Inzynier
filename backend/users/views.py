@@ -51,7 +51,7 @@ class FriendRequestSenderAPIView(generics.GenericAPIView):
         return GetSentFriendRequestSerializer
 
     def get(self, request, *args, **kwargs):
-        """Zwraca wys≥ane zaproszenia."""
+        """Zwraca wys≈Çane zaproszenia."""
         friend_requests = FriendRequest.objects.filter(sender=request.user)
         serializer = GetSentFriendRequestSerializer(friend_requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -62,7 +62,7 @@ class FriendRequestSenderAPIView(generics.GenericAPIView):
         receiver_id = serializer.validated_data['receiver']
 
         if str(request.user.id) == str(receiver_id):
-            return Response({'error': 'Nie moøesz wys≥aÊ zaproszenia do siebie samego.'},
+            return Response({'error': 'Nie mo≈ºesz wys≈Çaƒá zaproszenia do siebie samego.'},
                             status=status.HTTP_418_IM_A_TEAPOT)
 
         try:
@@ -71,16 +71,16 @@ class FriendRequestSenderAPIView(generics.GenericAPIView):
             return Response({'error': 'Nie znaleziono odbiorcy zaproszenia.'}, status=status.HTTP_404_NOT_FOUND)
 
         if request.user.friends.filter(id=receiver_id).exists():
-            return Response({'error': 'Ten uøytkownik juø jest Twoim znajomym.'}, status=status.HTTP_409_CONFLICT)
+            return Response({'error': 'Ten u≈ºytkownik ju≈º jest Twoim znajomym.'}, status=status.HTTP_409_CONFLICT)
 
         if FriendRequest.objects.filter(sender=receiver, receiver=request.user).exists():
-            return Response({'error': 'Ten uøytkownik juø wys≥a≥ Ci zaproszenie.'}, status=status.HTTP_409_CONFLICT)
+            return Response({'error': 'Ten u≈ºytkownik ju≈º wys≈Ça≈Ç Ci zaproszenie.'}, status=status.HTTP_409_CONFLICT)
 
         try:
             FriendRequest.objects.create(sender=request.user, receiver=receiver)
-            return Response({'success': 'Zaproszenie wys≥ane.'}, status=status.HTTP_201_CREATED)
+            return Response({'success': 'Zaproszenie wys≈Çane.'}, status=status.HTTP_201_CREATED)
         except IntegrityError:
-            return Response({'error': 'Zaproszenie zosta≥o juø wcze∂niej wys≥ane.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Zaproszenie zosta≈Ço ju≈º wcze≈õniej wys≈Çane.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class FriendRequestReceiverAPIView(generics.GenericAPIView):
@@ -112,7 +112,7 @@ class FriendRequestReceiverAPIView(generics.GenericAPIView):
             return Response({'error': 'Nie znaleziono zaproszenia.'}, status=status.HTTP_404_NOT_FOUND)
 
         if request.user.friends.filter(id=friend_request.sender.id).exists():
-            return Response({'error': 'Ten uøytkownik juø jest Twoim znajomym.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Ten u≈ºytkownik ju≈º jest Twoim znajomym.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             friend = CustomUser.objects.get(id=friend_request.sender.id)
@@ -120,9 +120,9 @@ class FriendRequestReceiverAPIView(generics.GenericAPIView):
             friend_request.delete()
             return Response({'success': 'Zaakceptowano zaproszenie.'}, status=status.HTTP_200_OK)
         except IntegrityError:
-            return Response({'error': 'Zaproszenie zosta≥o juø zaakceptowane.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Zaproszenie zosta≈Ço ju≈º zaakceptowane.'}, status=status.HTTP_400_BAD_REQUEST)
         except CustomUser.DoesNotExist:
-            return Response({'error': 'Nie znaleziono uøytkownika ktÛry wys≥a≥ zaproszenie.'},
+            return Response({'error': 'Nie znaleziono u≈ºytkownika kt√≥ry wys≈Ça≈Ç zaproszenie.'},
                             status=status.HTTP_404_NOT_FOUND)
 
 
@@ -137,9 +137,9 @@ class FriendRequestDeleteAPIView(APIView):
             is_user_sender = request.user == friend_request.sender
             friend_request.delete()
             if is_user_sender:
-                return Response({'success': 'Zaproszenie zosta≥o anulowane.'}, status=status.HTTP_200_OK)
+                return Response({'success': 'Zaproszenie zosta≈Ço anulowane.'}, status=status.HTTP_200_OK)
             else:
-                return Response({'success': 'Zaproszenie zosta≥o odrzucone.'}, status=status.HTTP_200_OK)
+                return Response({'success': 'Zaproszenie zosta≈Ço odrzucone.'}, status=status.HTTP_200_OK)
         except FriendRequest.DoesNotExist:
             return Response({'error': 'Nie znaleziono zaproszenia.'}, status=status.HTTP_404_NOT_FOUND)
 

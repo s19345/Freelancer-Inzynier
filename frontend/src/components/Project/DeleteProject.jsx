@@ -1,12 +1,22 @@
-import React from "react";
+import React, {useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
+import {
+    Button,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
+    Alert
+} from "@mui/material";
 
 const DeleteProject = ({projectId}) => {
     const token = useAuthStore(state => state.token);
+    const [open, setOpen] = useState(false);
+    const [statusMessage, setStatusMessage] = useState(null);
 
     const handleDelete = async () => {
-
         try {
             const response = await fetch(`${PROJECT_BACKEND_URL}projects/${projectId}/`, {
                 method: "DELETE",
@@ -16,22 +26,46 @@ const DeleteProject = ({projectId}) => {
             });
 
             if (response.ok) {
-                console.log("Projekt został usunięty");
+                setStatusMessage("Projekt został usunięty.");
+
             } else {
                 const errorData = await response.json();
-                console.error("Błąd podczas usuwania projektu:", errorData);
+                setStatusMessage(`Błąd: ${errorData.detail || "Nie udało się usunąć projektu."}`);
             }
         } catch (error) {
-            console.error("Błąd sieci:", error);
+            setStatusMessage("Błąd sieci: " + error.message);
+        } finally {
+            setOpen(false);
         }
     };
 
     return (
-        <button
-            onClick={handleDelete}
-        >
-            Usuń projekt
-        </button>
+        <>
+            {statusMessage && (
+                <Alert severity={statusMessage.startsWith("Błąd") ? "error" : "success"} sx={{mt: 2}}>
+                    {statusMessage}
+                </Alert>
+            )}
+
+            <Button variant="outlined" color="error" onClick={() => setOpen(true)} sx={{mt: 2}}>
+                Usuń projekt
+            </Button>
+
+            <Dialog open={open} onClose={() => setOpen(false)}>
+                <DialogTitle>Potwierdzenie usunięcia</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Czy na pewno chcesz usunąć ten projekt? Tej operacji nie można cofnąć.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpen(false)}>Anuluj</Button>
+                    <Button onClick={handleDelete} color="error" variant="contained">
+                        Usuń
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 };
 

@@ -3,6 +3,15 @@ import useAuthStore from "../../zustand_store/authStore";
 import {useParams} from "react-router";
 import {PROJECT_BACKEND_URL} from "../../settings";
 import DeleteProject from "./DeleteProject";
+import {
+    Box,
+    TextField,
+    Typography,
+    Button,
+    CircularProgress,
+    Alert,
+    MenuItem,
+} from "@mui/material";
 
 const EditProject = () => {
     const {projectId} = useParams();
@@ -101,116 +110,97 @@ const EditProject = () => {
         }
     };
 
-    if (loading) return <p>Ładowanie danych projektu...</p>;
-    if (error) return <p>Błąd: {error}</p>;
+    if (loading) return <CircularProgress/>;
+    if (error) return <Alert severity="error">{error}</Alert>;
 
     return (
-        <div>
-            {loading && "working..."}
+        <Box sx={{maxWidth: 600, mx: "auto", mt: 4, p: 3}}>
+            <Typography variant="h5" gutterBottom>
+                Edytuj projekt
+            </Typography>
 
-            {submitStatus === "Projekt został zaktualizowany pomyślnie!" ? (
-                <div>
-                    <h1>{submitStatus}</h1>
-                </div>
-            ) : (
-                <form onSubmit={handleSubmit}>
-                    <h2>Edytuj projekt</h2>
-
-                    <label>
-                        Nazwa projektu
-                        <input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-
-                    <label>
-                        Opis
-                        <textarea
-                            name="description"
-                            value={formData.description}
-                            onChange={handleChange}
-                            rows={4}
-                        />
-                    </label>
-
-                    <label>
-                        Wersja
-                        <input
-                            type="text"
-                            name="version"
-                            value={formData.version}
-                            onChange={handleChange}
-                        />
-                    </label>
-
-
-                    <label>
-                        Status
-                        <select
-                            name="status"
-                            value={formData.status}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value="">-- Wybierz status --</option>
-                            <option value="active">Aktywny</option>
-                            <option value="completed">Ukończony</option>
-                            <option value="paused">Wstrzymany</option>
-                        </select>
-                    </label>
-
-                    <label>
-                        Budżet
-                        <input
-                            type="number"
-                            name="budget"
-                            value={formData.budget}
-                            onChange={handleChange}
-                        />
-                    </label>
-
-                    <label>
-                        Klient (ID)
-                        <input
-                            type="text"
-                            name="client"
-                            value={formData.client}
-                            onChange={handleChange}
-                        />
-                    </label>
-
-                    <label>
-                        Współpracownicy
-                        <input
-                            type="text"
-                            name="collaborators"
-                            value={formData.collaborators.join(", ")}
-                            onChange={handleChange}
-                        />
-                    </label>
-
-                    <button
-                        type="submit"
-                    >
-                        Zapisz zmiany
-                    </button>
-
-                    {submitStatus && submitStatus.startsWith("Błąd") && (
-                        <div>
-                            <h1>{submitStatus}</h1>
-                        </div>
-                    )}
-                </form>
+            {submitStatus && (
+                <Alert severity={submitStatus.startsWith("Błąd") ? "error" : "success"} sx={{mb: 2}}>
+                    {submitStatus}
+                </Alert>
             )}
 
-            <DeleteProject projectId={projectId}/>
+            <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={2}>
 
-        </div>
+                <TextField
+                    label="Nazwa projektu"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    fullWidth
+                />
+
+                <TextField
+                    label="Opis"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    multiline
+                    rows={4}
+                    fullWidth
+                />
+
+                <TextField
+                    label="Wersja"
+                    name="version"
+                    value={formData.version}
+                    onChange={handleChange}
+                    fullWidth
+                />
+
+                <TextField
+                    select
+                    label="Status"
+                    name="status"
+                    value={formData.status}
+                    onChange={handleChange}
+                    required
+                    fullWidth
+                >
+                    <MenuItem value="active">Aktywny</MenuItem>
+                    <MenuItem value="completed">Ukończony</MenuItem>
+                    <MenuItem value="paused">Wstrzymany</MenuItem>
+                </TextField>
+
+                <TextField
+                    label="Budżet"
+                    name="budget"
+                    type="number"
+                    value={formData.budget}
+                    onChange={handleChange}
+                    fullWidth
+                />
+
+                <TextField
+                    label="Klient (ID)"
+                    name="client"
+                    value={formData.client}
+                    onChange={handleChange}
+                    fullWidth
+                />
+
+                <TextField
+                    label="Współpracownicy (oddziel przecinkami)"
+                    name="collaborators"
+                    value={formData.collaborators.join(", ")}
+                    onChange={handleChange}
+                    fullWidth
+                />
+
+                <Button variant="contained" type="submit">
+                    Zapisz zmiany
+                </Button>
+            </Box>
+
+            <Box mt={4}>
+                <DeleteProject projectId={projectId}/>
+            </Box>
+        </Box>
     );
 };
-
-export default EditProject;
