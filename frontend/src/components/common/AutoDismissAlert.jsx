@@ -8,8 +8,6 @@ const AutoDismissAlert = ({duration = 3000}) => {
     const type = useGlobalInfoStore((state) => state.type);
     const clearMessage = useGlobalInfoStore((state) => state.clearMessage);
     const resetType = useGlobalInfoStore((state) => state.resetType);
-    const timeoutId = useGlobalInfoStore((state) => state.timeoutId);
-    const setTimeoutId = useGlobalInfoStore((state) => state.setTimeoutId);
 
     useEffect(() => {
         if (message) {
@@ -36,7 +34,7 @@ const AutoDismissAlert = ({duration = 3000}) => {
         <Box
             sx={{
                 position: "fixed",
-                top: "50%",
+                top: "5%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
                 zIndex: 1500,

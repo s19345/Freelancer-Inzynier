@@ -12,6 +12,7 @@ import {
 import TaskList from "../task/UserTaskList";
 import EditProject from "./EditProject";
 import AutoDismissAlert from "../common/AutoDismissAlert";
+import DeleteProject from "./DeleteProject";
 
 const ProjectDetails = () => {
     const {projectId} = useParams();
@@ -72,6 +73,9 @@ const ProjectDetails = () => {
                 >
                     Edytuj
                 </Button>
+                <Box flex={1}>
+                    <DeleteProject projectId={projectId}/>
+                </Box>
             </Box>
 
             {!isEditing ? (

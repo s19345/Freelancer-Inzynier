@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {useNavigate} from "react-router";
+import {Link, useNavigate} from "react-router";
 import useAuthStore from "../../zustand_store/authStore";
 import useGlobalStore from '../../zustand_store/globalInfoStore';
 import {PROJECT_BACKEND_URL} from "../../settings";
@@ -173,23 +173,31 @@ const ProjectForm = () => {
                             disabled={loading}
                         />
 
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            disabled={loading}
-                        >
-                            {loading ? <CircularProgress size={24}/> : "Zapisz projekt"}
-                        </Button>
+                        {loading ? <CircularProgress size={24}/> :
+                            <Box display="flex" justifyContent="space-between" gap={2} alignItems="stretch">
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    disabled={loading}
+                                    fullWidth
+                                >
+                                    Zapisz projekt
+                                </Button>
+                                <Button
+                                    component={Link}
+                                    to={paths.projectList}
+                                    variant="outlined"
+                                    color="secondary"
+                                    fullWidth
+                                >
+                                    Anuluj
+                                </Button>
+                            </Box>}
                     </Stack>
                 </form>
             )}
 
-            {successMessage && (
-                <Alert severity="success" sx={{mt: 3}}>
-                    {successMessage}
-                </Alert>
-            )}
         </Box>
     );
 };

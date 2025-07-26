@@ -100,14 +100,6 @@ const ClientList = () => {
                                         >
                                             Szczegóły
                                         </Button>
-                                        <Button
-                                            component={RouterLink}
-                                            to={`/client/${client.id}/edit`}
-                                            variant="contained"
-                                            size="small"
-                                        >
-                                            Edytuj
-                                        </Button>
                                     </Stack>
                                 </TableCell>
                             </TableRow>

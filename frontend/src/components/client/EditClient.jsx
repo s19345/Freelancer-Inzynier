@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useParams, useNavigate, Link} from 'react-router';
+import {useParams, useNavigate, Link, Link as RouterLink} from 'react-router';
 import useAuthStore from '../../zustand_store/authStore';
 import {PROJECT_BACKEND_URL} from '../../settings';
 import DeleteClient from './DeleteClient';
@@ -168,8 +168,6 @@ const EditClient = () => {
                         >
                             Anuluj
                         </Button>
-
-                        <DeleteClient clientId={clientId}/>
                     </Box>
                 </Stack>
             </Box>

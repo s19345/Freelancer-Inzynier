@@ -11,6 +11,8 @@ import {
     Stack
 } from '@mui/material';
 import AutoDismissAlert from "../common/AutoDismissAlert";
+import paths from "../../paths";
+import DeleteClient from "./DeleteClient";
 
 
 const ClientDetails = () => {
@@ -73,9 +75,20 @@ const ClientDetails = () => {
 
     return (
         <Box mt={4}>
-            <Typography variant="h5" gutterBottom>
-                Szczegóły klienta
-            </Typography>
+            <Box display="flex" justifyContent="flex-start" alignItems="center" mb={2}>
+                <Typography variant="h5" gutterBottom>
+                    Szczegóły klienta
+                </Typography>
+                <Button
+                    component={RouterLink}
+                    to={paths.editClient(clientId)}
+                    size="small"
+                    sx={{ml: 2}}
+                >
+                    Edytuj
+                </Button>
+                <DeleteClient clientId={clientId}/>
+            </Box>
 
             <Stack spacing={1} mb={3}>
                 <Typography><strong>Nazwa firmy:</strong> {client.company_name}</Typography>

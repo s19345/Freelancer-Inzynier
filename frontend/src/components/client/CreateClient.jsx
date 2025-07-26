@@ -5,7 +5,7 @@ import {Box, TextField, Button, Typography} from '@mui/material';
 import AutoDismissAlert from "../common/AutoDismissAlert";
 import useGlobalStore from '../../zustand_store/globalInfoStore';
 import paths from "../../paths";
-import {useNavigate} from "react-router";
+import {Link, useNavigate} from "react-router";
 
 
 const CreateClientForm = () => {
@@ -174,9 +174,19 @@ const CreateClientForm = () => {
                 fullWidth
             />
 
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-                Utwórz klienta
-            </Button>
+            <Box display="flex" justifyContent="space-between" gap={2}>
+                <Button type="submit" variant="contained" color="primary" fullWidth>
+                    Utwórz klienta
+                </Button>
+                <Button
+                    component={Link}
+                    to={paths.clients}
+                    variant="outlined"
+                    color="secondary"
+                >
+                    Anuluj
+                </Button>
+            </Box>
 
             {status && (
                 <AutoDismissAlert
