@@ -38,7 +38,7 @@ export default function Sidebar() {
                     <ListItem button component="a" href="#dashboard">
                         <ListItemText primary="Dashboard"/>
                     </ListItem>
-                    <ListItem button component={RouterLink} to={paths.project}>
+                    <ListItem button component={RouterLink} to={paths.projectList}>
                         <ListItemText primary="Projects"/>
                     </ListItem>
                     <ListItem button component={RouterLink} to={paths.clients}>
