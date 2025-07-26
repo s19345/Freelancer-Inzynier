@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-$yvonl-x+2296zrz$$xb2ay@)^8h_rt+--dfi7x7040*w12(s$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*", ]
 
 # Application definition
 
@@ -180,7 +180,7 @@ CORS_ALLOWED_ORIGINS = [
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_CONFIRM_EMAIL_ON_GET = False
 
-FRONTEND_URL = 'http://172.27.0.20:3000'
+FRONTEND_HOST = 'http://localhost:3000/'
 
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
 EMAIL_HOST = os.getenv('EMAIL_HOST')
@@ -189,4 +189,4 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
-PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = 'http://localhost:3000/password-reset/'
+PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = f'{FRONTEND_HOST}password-reset/'
