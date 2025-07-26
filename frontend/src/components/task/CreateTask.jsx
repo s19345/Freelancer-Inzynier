@@ -43,7 +43,7 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
                 if (!res.ok) throw new Error("Nie udało się pobrać użytkowników");
 
                 const data = await res.json();
-                setUsers(data);
+                setUsers(data.results);
             } catch (err) {
                 console.error("Błąd ładowania użytkowników:", err);
             }
