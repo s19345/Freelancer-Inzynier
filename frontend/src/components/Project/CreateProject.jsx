@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router";
 import useAuthStore from "../../zustand_store/authStore";
 import useGlobalStore from '../../zustand_store/globalInfoStore';
@@ -39,6 +39,9 @@ const ProjectForm = () => {
     const [errors, setErrors] = useState({});
     const [successMessage, setSuccessMessage] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [clients, setClients] = useState([]);
+    const [clietnsFethingError, setClientsFetchingError] = useState(null);
+    const [clientsFetchingLoading, setClientsFetchingLoading] = useState(false);
 
     const validate = () => {
         const newErrors = {};
@@ -48,6 +51,38 @@ const ProjectForm = () => {
             newErrors.budget = "Budżet nie może być ujemny";
         return newErrors;
     };
+
+    const params = new URLSearchParams({
+        page_size: 10000,
+    });
+
+    useEffect(() => {
+        setClientsFetchingLoading(true);
+        const fetchClients = async () => {
+            try {
+                const res = await fetch(`${PROJECT_BACKEND_URL}clients/?${params}`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Token ${token}`,
+                    },
+                });
+
+                if (!res.ok) {
+                    throw new Error("Nie udało się pobrać klientów");
+                }
+
+                const data = await res.json();
+                setClients(data.results);
+            } catch (err) {
+                setClientsFetchingError(err.message);
+            } finally {
+                setClientsFetchingLoading(false);
+            }
+        };
+
+        fetchClients();
+    }, [token]);
+
 
     const createProject = async (data) => {
         setLoading(true);
@@ -157,13 +192,23 @@ const ProjectForm = () => {
                             disabled={loading}
                         />
 
-                        <TextField
-                            label="Klient"
-                            name="client"
-                            value={formData.client}
-                            onChange={handleChange}
-                            disabled={loading}
-                        />
+                        <FormControl fullWidth error={!!errors.client} disabled={loading}>
+                            <InputLabel id="status-label">Klient</InputLabel>
+                            <Select
+                                labelId="status-label"
+                                name="client"
+                                value={formData.client}
+                                label="Klient"
+                                onChange={handleChange}
+                            >
+                                {clients.map((client) => (
+                                    <MenuItem key={client.id} value={client.id}>
+                                        {client.company_name} - {client.contact_person}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            {errors.status && <FormHelperText>{errors.status}</FormHelperText>}
+                        </FormControl>
 
                         <TextField
                             label="Współpracownicy"
