@@ -20,10 +20,10 @@ import UserProjectsList from "./components/Project/UserProjectList";
 import ClientList from "./components/client/ClientList";
 import ClientDetails from './components/client/ClientDetails';
 import EditClient from './components/client/EditClient';
-import TaskList from "./components/task/UserTaskList";
 import CreateTaskForm from "./components/task/CreateTask";
 import TaskDetails from "./components/task/TaskDetails";
 import EditTask from "./components/task/EditTask";
+import InvitationList from "./components/invitations/InvitationList";
 import paths from "./paths";
 
 
@@ -54,6 +54,11 @@ function App() {
                             <Route path={paths.taskDetails()} element={<TaskDetails/>}/>
                             <Route path={paths.editTask()} element={<EditTask/>}/>
                             <Route path={paths.createSubtask()} element={<CreateTaskForm/>}/>
+                            <Route path={paths.friends} element={<FriendsList/>}/>
+                            <Route path={paths.statistics} element={<div>Statistics Page</div>}/>
+                            <Route path={paths.finances} element={<div>Finances Page</div>}/>
+                            <Route path={paths.calendar} element={<div>Calendar Page</div>}/>
+                            <Route path={paths.invitationList} element={<InvitationList/>}/>
                         </Route>
                     </Routes>
                 </PersistGate>

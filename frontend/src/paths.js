@@ -1,9 +1,14 @@
 const paths = {
     home: "/",
+    dashboard: "/dashboard",
     login: "/login",
     logout: "/logout",
     register: "/register",
     profile: "/profile",
+    statistics: "/statistics",
+    finances: "/finances",
+    invitationList: "/invitations",
+    calendar: "/calendar",
     passwordReset: "/password-reset/:uid/:token",
     editProfile: "/edit-profile",
     changePassword: "/change-password",
@@ -15,11 +20,11 @@ const paths = {
     createProject: "/project/create",
     project: (projectId = ":projectId") => `/project/${projectId}`,
     editProject: (projectId = ":projectId") => `/project/${projectId}/edit`,
-    projectTasks: (projectId = ":projectId") => `/project/${projectId}/tasks`,
     createTask: (projectId = ":projectId") => `/project/${projectId}/task/create`,
     taskDetails: (projectId = ":projectId", taskId = ":taskId") => `/project/${projectId}/task/${taskId}`,
     editTask: (projectId = ":projectId", taskId = ":taskId") => `/project/${projectId}/task/${taskId}/edit`,
     createSubtask: (projectId = ":projectId", taskId = ":taskId") => `/project/${projectId}/task/${taskId}/subtasks/create`,
+    friends: "/friends",
 };
 
 export default paths;
