@@ -37,7 +37,7 @@ const ClientList = () => {
                 }
 
                 const data = await res.json();
-                setClients(data);
+                setClients(data.results);
             } catch (err) {
                 setError(err.message);
             } finally {
