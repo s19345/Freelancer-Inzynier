@@ -100,7 +100,6 @@ const UserProjectsList = () => {
                     Utwórz nowy projekt
                 </Button>
             </Box>
-            <AutoDismissAlert/>
         </Box>
     );
 };

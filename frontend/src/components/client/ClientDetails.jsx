@@ -105,7 +105,6 @@ const ClientDetails = () => {
             >
                 &larr; Powrót do listy klientów
             </Button>
-            <AutoDismissAlert/>
         </Box>
     );
 };

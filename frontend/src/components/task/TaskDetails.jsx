@@ -209,7 +209,6 @@ const TaskDetails = () => {
 
                         </Box>
                     )}
-            <AutoDismissAlert/>
         </Box>
     );
 };

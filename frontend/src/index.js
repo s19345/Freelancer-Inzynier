@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import {CssBaseline} from "@mui/material";
 import theme from "./theme"
 import {ThemeProvider} from "@mui/material/styles";
+import AutoDismissAlert from "./components/common/AutoDismissAlert";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,6 +14,7 @@ root.render(
         <ThemeProvider theme={theme}>
             <CssBaseline/>
             <App/>
+            <AutoDismissAlert/>
         </ThemeProvider>
     </React.StrictMode>
 );

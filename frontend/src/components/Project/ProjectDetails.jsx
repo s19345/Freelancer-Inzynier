@@ -92,7 +92,6 @@ const ProjectDetails = () => {
 
             )}
             <TaskList/>
-            <AutoDismissAlert/>
         </Box>
     );
 };

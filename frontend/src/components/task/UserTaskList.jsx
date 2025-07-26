@@ -126,7 +126,6 @@ const TaskList = () => {
                     Dodaj zadanie do projektu
                 </Button>
             </Box>
-            <AutoDismissAlert/>
         </Box>
     );
 };

@@ -2,12 +2,16 @@ import React, {useEffect, useState} from "react";
 import useGlobalInfoStore from '../../zustand_store/globalInfoStore';
 import {Alert, Box, Collapse} from "@mui/material";
 
-const AutoDismissAlert = ({duration = 3000}) => {
+const AutoDismissAlert = ({duration = 3000, key}) => {
     const [open, setOpen] = useState(false);
     const message = useGlobalInfoStore((state) => state.message);
     const type = useGlobalInfoStore((state) => state.type);
     const clearMessage = useGlobalInfoStore((state) => state.clearMessage);
     const resetType = useGlobalInfoStore((state) => state.resetType);
+
+    if (!key) {
+        key = Math.random().toString(36).substring(2, 15);
+    }
 
     useEffect(() => {
         if (message) {
@@ -32,6 +36,7 @@ const AutoDismissAlert = ({duration = 3000}) => {
 
     return (
         <Box
+            key={1}
             sx={{
                 position: "fixed",
                 top: "5%",

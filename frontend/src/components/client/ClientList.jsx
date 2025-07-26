@@ -117,7 +117,6 @@ const ClientList = () => {
                     Dodaj Klienta
                 </Button>
             </Box>
-            <AutoDismissAlert/>
         </Box>
     );
 };
