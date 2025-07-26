@@ -204,3 +204,5 @@ const EditProject = () => {
         </Box>
     );
 };
+
+export default EditProject;

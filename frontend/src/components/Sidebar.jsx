@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link as RouterLink} from 'react-router';
+import paths from '../paths';
 import {
     Drawer,
     List,
@@ -37,19 +38,19 @@ export default function Sidebar() {
                     <ListItem button component="a" href="#dashboard">
                         <ListItemText primary="Dashboard"/>
                     </ListItem>
-                    <ListItem button component={RouterLink} to="/project">
+                    <ListItem button component={RouterLink} to={paths.project}>
                         <ListItemText primary="Projects"/>
                     </ListItem>
-                    <ListItem button component="a" href="/clients">
+                    <ListItem button component={RouterLink} to={paths.clients}>
                         <ListItemText primary="Clients"/>
                     </ListItem>
                     <ListItem button component="a" href="#calendar">
                         <ListItemText primary="Calendar"/>
                     </ListItem>
-                    <ListItem button component="a" href="/create-project">
+                    <ListItem button component={RouterLink} to={paths.createProject}>
                         <ListItemText primary="Stwórz projekt"/>
                     </ListItem>
-                    <ListItem button component="a" href="/create-client">
+                    <ListItem button component={RouterLink} to={paths.createClient}>
                         <ListItemText primary="Stwórz klienta"/>
                     </ListItem>
                 </List>
