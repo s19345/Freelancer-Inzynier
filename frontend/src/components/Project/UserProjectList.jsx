@@ -8,7 +8,6 @@ import {
     ListItem,
     Paper,
     Box,
-    Button,
     CircularProgress,
     Alert,
     Stack, Button,
@@ -50,8 +49,6 @@ const UserProjectsList = () => {
 
     if (loading) return <CircularProgress sx={{m: 4}}/>;
     if (error) return <Alert severity="error">{error}</Alert>;
-    if (projects.length === 0)
-        return <Typography mt={4}>Brak projektów do wyświetlenia.</Typography>;
 
     return (
         <Box mt={4}>
@@ -84,7 +81,6 @@ const UserProjectsList = () => {
                                 {project.budget && (
                                     <Typography variant="body2">Budżet: {project.budget} zł</Typography>
                                 )}
-
                             </Stack>
                         </Paper>
                     </ListItem>

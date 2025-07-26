@@ -2,7 +2,7 @@ import './App.css';
 import {BrowserRouter, Routes, Route} from "react-router";
 import {Provider} from 'react-redux'
 import {store, persistor} from './redux/store'
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./components/layout/Dashboard";
 import Login from "./components/user/Login";
 import Logout from "./components/user/Logout";
 import Register from "./components/user/Register";

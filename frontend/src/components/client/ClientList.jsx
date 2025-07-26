@@ -15,7 +15,6 @@ import {
     Alert,
     Stack
 } from "@mui/material";
-import AutoDismissAlert from "../common/AutoDismissAlert";
 import paths from "../../paths";
 
 const ClientList = () => {

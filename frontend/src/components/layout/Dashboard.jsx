@@ -1,6 +1,6 @@
 import React from 'react';
-import Sidebar from './Sidebar';
-import SearchField from './SearchField';
+import Sidebar from '../Sidebar'
+import SearchField from '../SearchField'
 import {
     AppBar,
     Box,
@@ -15,7 +15,7 @@ export default function Dashboard() {
     return (
         <Box sx={{display: 'flex'}}>
             {/* Sidebar */}
-            <Sidebar/>
+            {/*<Sidebar />*/}
 
             {/* Main content area */}
             <Box component="main" sx={{flexGrow: 1, p: 3}}>
