@@ -55,6 +55,7 @@ const TaskDetails = () => {
             }
 
             const data = await res.json();
+            console.log("pobieram zadanie w Task:", data);
             setTask(data);
         } catch (err) {
             setError(err.message);
@@ -68,8 +69,8 @@ const TaskDetails = () => {
     }, [taskId, token]);
 
     useEffect(() => {
-        if (task && 'subtasks' in task) {
-            if (task.subtasks?.length > 0) {
+        if (task && 'parent_task' in task) {
+            if (task.parent_task == null) {
                 setContextText("zadania");
             } else {
                 setContextText("podzadania");
