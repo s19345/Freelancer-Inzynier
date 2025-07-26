@@ -13,7 +13,7 @@ import {
     MenuItem,
 } from "@mui/material";
 
-const EditProject = () => {
+const EditProject = ({finishEditing, handleUpdate}) => {
     const {projectId} = useParams();
     const token = useAuthStore((state) => state.token);
 
@@ -104,9 +104,13 @@ const EditProject = () => {
 
             await response.json();
             setSubmitStatus("Projekt został zaktualizowany pomyślnie!");
+            handleUpdate(formData)
 
         } catch (err) {
             setSubmitStatus(`Błąd: ${err.message}`);
+        } finally {
+            setLoading(false);
+            finishEditing()
         }
     };
 
@@ -115,9 +119,6 @@ const EditProject = () => {
 
     return (
         <Box sx={{maxWidth: 600, mx: "auto", mt: 4, p: 3}}>
-            <Typography variant="h5" gutterBottom>
-                Edytuj projekt
-            </Typography>
 
             {submitStatus && (
                 <Alert severity={submitStatus.startsWith("Błąd") ? "error" : "success"} sx={{mb: 2}}>
@@ -192,14 +193,38 @@ const EditProject = () => {
                     onChange={handleChange}
                     fullWidth
                 />
-
-                <Button variant="contained" type="submit">
-                    Zapisz zmiany
-                </Button>
-            </Box>
-
-            <Box mt={4}>
-                <DeleteProject projectId={projectId}/>
+                <Box display="flex" justifyContent="space-between" gap={2} alignItems="stretch">
+                    {loading ? (
+                        <CircularProgress size={24}/>
+                    ) : (
+                        <>
+                            <Box flex={1}>
+                                <DeleteProject projectId={projectId}/>
+                            </Box>
+                            <Box flex={1}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    disabled={loading}
+                                    fullWidth
+                                >
+                                    Zapisz zmiany
+                                </Button>
+                            </Box>
+                            <Box flex={1}>
+                                <Button
+                                    onClick={finishEditing}
+                                    variant="outlined"
+                                    color="secondary"
+                                    fullWidth
+                                >
+                                    Anuluj
+                                </Button>
+                            </Box>
+                        </>
+                    )}
+                </Box>
             </Box>
         </Box>
     );

@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {useNavigate} from "react-router";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
 import {
@@ -15,6 +16,7 @@ import {
     FormControl,
     FormHelperText
 } from "@mui/material";
+import paths from "../../paths";
 
 const ProjectForm = () => {
     const token = useAuthStore(state => state.token);
@@ -62,8 +64,8 @@ const ProjectForm = () => {
             }
 
             const responseData = await response.json();
-            console.log("Project created successfully:", responseData);
             setSuccessMessage("Projekt został utworzony pomyślnie");
+            navigate(paths.projectList)
         } catch (error) {
             console.error("Error creating project:", error);
         } finally {

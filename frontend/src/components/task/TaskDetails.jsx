@@ -5,7 +5,6 @@ import {PROJECT_BACKEND_URL} from "../../settings";
 import {
     Box,
     Typography,
-    CircularProgress,
     Alert,
     Button,
     List,
@@ -103,7 +102,6 @@ const TaskDetails = () => {
         high: "Wysoki",
     };
 
-    if (loading) return <CircularProgress/>;
     if (error) return <Alert severity="error">{error}</Alert>;
     if (!task) return <Typography>Nie znaleziono zadania.</Typography>;
 
@@ -114,8 +112,6 @@ const TaskDetails = () => {
                     Szczegóły {contextText}
                 </Typography>
                 <Button
-                    // component={RouterLink}
-                    // to={paths.editTask(projectId, task.id)}
                     onClick={() => setIsEditing(!isEditing)}
                     size="small"
                     sx={{ml: 2}}
@@ -171,14 +167,6 @@ const TaskDetails = () => {
                                     >
                                         Szczegóły
                                     </Button>
-                                    {/*<Button*/}
-                                    {/*    component={RouterLink}*/}
-                                    {/*    to={paths.editTask(projectId, subtask.id)}*/}
-                                    {/*    size="small"*/}
-                                    {/*    sx={{mr: 1}}*/}
-                                    {/*>*/}
-                                    {/*    Edytuj*/}
-                                    {/*</Button>*/}
                                     <DeleteTask
                                         taskId={subtask.id}
                                         onDeleteSuccess={() => handleDeleteSuccess(subtask.id)}

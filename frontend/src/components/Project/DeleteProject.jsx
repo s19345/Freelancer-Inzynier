@@ -42,12 +42,12 @@ const DeleteProject = ({projectId}) => {
     return (
         <>
             {statusMessage && (
-                <Alert severity={statusMessage.startsWith("Błąd") ? "error" : "success"} sx={{mt: 2}}>
+                <Alert severity={statusMessage.startsWith("Błąd") ? "error" : "success"}>
                     {statusMessage}
                 </Alert>
             )}
 
-            <Button variant="outlined" color="error" onClick={() => setOpen(true)} sx={{mt: 2}}>
+            <Button variant="outlined" color="error" onClick={() => setOpen(true)}>
                 Usuń projekt
             </Button>
 

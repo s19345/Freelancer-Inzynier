@@ -2,13 +2,14 @@ import React, {useState, useEffect} from "react";
 import {Box, TextField, Button, Typography, Alert, MenuItem} from '@mui/material';
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL, USERS_LIST_URL} from "../../settings";
-import {Link, useParams} from "react-router";
+import {Link, useParams, useNavigate} from "react-router";
 import paths from "../../paths";
 
 const CreateTaskForm = ({projectId: propProjectId}) => {
     const {projectId: paramProjectId, taskId: paramTaskId} = useParams();
     const projectId = propProjectId || paramProjectId;
     const parentTaskId = paramTaskId || null;
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         title: "",
@@ -104,18 +105,7 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
                 const data = await response.json();
 
                 if (response.ok) {
-                    setStatusMsg(successMessage);
-                    setStatusType("success");
-                    setFormData({
-                        title: "",
-                        description: "",
-                        status: "to_do",
-                        due_date: "",
-                        project_version: "",
-                        priority: "medium",
-                        user: "",
-                        parent_task: "",
-                    });
+                    navigate(returnUrl)
                 } else {
                     const errorMessage = typeof data === "object"
                         ? Object.values(data).flat().join(" ")

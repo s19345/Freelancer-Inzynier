@@ -11,7 +11,7 @@ import {
     Button,
     CircularProgress,
     Alert,
-    Stack,
+    Stack, Button,
 } from "@mui/material";
 import paths from "../../paths";
 
@@ -89,6 +89,16 @@ const UserProjectsList = () => {
                     </ListItem>
                 ))}
             </List>
+            <Box mt={2}>
+                <Button
+                    component={Link}
+                    to={paths.createProject}
+                    variant="contained"
+                    color="primary"
+                >
+                    Utwórz nowy projekt
+                </Button>
+            </Box>
         </Box>
     );
 };
