@@ -86,6 +86,7 @@ class FriendRequestSenderAPIView(generics.GenericAPIView):
 class FriendRequestReceiverAPIView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     queryset = FriendRequest.objects.all()
+    pagination_class = PageNumberPagination
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -93,9 +94,15 @@ class FriendRequestReceiverAPIView(generics.GenericAPIView):
         return GetReceivedFriendRequestSerializer
 
     def get(self, request, *args, **kwargs):
-        """Zwraca zaproszenia otrzymane."""
-        friend_requests = FriendRequest.objects.filter(receiver=request.user)
-        serializer = GetReceivedFriendRequestSerializer(friend_requests, many=True)
+        """Zwraca zaproszenia otrzymane z paginacją."""
+        queryset = FriendRequest.objects.filter(receiver=request.user)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
