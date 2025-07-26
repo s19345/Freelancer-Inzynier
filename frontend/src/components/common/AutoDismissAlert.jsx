@@ -1,18 +1,36 @@
 import React, {useEffect, useState} from "react";
+import useGlobalInfoStore from '../../zustand_store/globalInfoStore';
 import {Alert, Box, Collapse} from "@mui/material";
 
-const AutoDismissAlert = ({messageObj, severity = "info", duration = 4000}) => {
+const AutoDismissAlert = ({duration = 3000}) => {
     const [open, setOpen] = useState(false);
+    const message = useGlobalInfoStore((state) => state.message);
+    const type = useGlobalInfoStore((state) => state.type);
+    const clearMessage = useGlobalInfoStore((state) => state.clearMessage);
+    const resetType = useGlobalInfoStore((state) => state.resetType);
+    const timeoutId = useGlobalInfoStore((state) => state.timeoutId);
+    const setTimeoutId = useGlobalInfoStore((state) => state.setTimeoutId);
 
     useEffect(() => {
-        if (messageObj?.id) {
+        if (message) {
             setOpen(true);
-            const timer = setTimeout(() => setOpen(false), duration);
-            return () => clearTimeout(timer);
-        }
-    }, [messageObj?.id, duration]);
+            const closeTimer = setTimeout(() => {
+                setOpen(false);
+            }, duration);
 
-    if (!messageObj) return null;
+            const cleanupTimer = setTimeout(() => {
+                clearMessage();
+                resetType();
+            }, duration + 500);
+
+            return () => {
+                clearTimeout(closeTimer);
+                clearTimeout(cleanupTimer);
+            };
+        }
+    }, [message, duration, clearMessage, resetType]);
+
+    if (!message) return null;
 
     return (
         <Box
@@ -27,13 +45,12 @@ const AutoDismissAlert = ({messageObj, severity = "info", duration = 4000}) => {
             }}
         >
             <Collapse in={open}>
-                <Alert variant="filled" severity={severity} sx={{minWidth: 300, boxShadow: 3}}>
-                    {messageObj.content ? messageObj.content : messageObj.text}
+                <Alert variant="filled" severity={type} sx={{minWidth: 300, boxShadow: 3}}>
+                    {message}
                 </Alert>
             </Collapse>
         </Box>
     );
 };
-
 
 export default AutoDismissAlert;

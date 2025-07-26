@@ -12,10 +12,13 @@ import {
     Alert,
     MenuItem,
 } from "@mui/material";
+import useGlobalStore from "../../zustand_store/globalInfoStore";
 
 const EditProject = ({finishEditing, handleUpdate}) => {
     const {projectId} = useParams();
     const token = useAuthStore((state) => state.token);
+    const setMessage = useGlobalStore((state) => state.setMessage);
+    const setType = useGlobalStore((state) => state.setType);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -103,7 +106,8 @@ const EditProject = ({finishEditing, handleUpdate}) => {
             }
 
             await response.json();
-            setSubmitStatus("Projekt został zaktualizowany pomyślnie!");
+            setMessage("Projekt został zaktualizowany pomyślnie");
+            setType("success");
             handleUpdate(formData)
 
         } catch (err) {

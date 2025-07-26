@@ -13,11 +13,14 @@ import {
     Stack,
 } from '@mui/material';
 import paths from "../../paths";
+import useGlobalStore from "../../zustand_store/globalInfoStore";
 
 const EditClient = () => {
     const {clientId} = useParams();
     const token = useAuthStore(state => state.token);
     const navigate = useNavigate();
+    const setMessage = useGlobalStore((state) => state.setMessage);
+    const setType = useGlobalStore((state) => state.setType);
 
     const [formData, setFormData] = useState({
         company_name: '',
@@ -82,7 +85,9 @@ const EditClient = () => {
                 throw new Error(errorData.detail || 'Błąd podczas aktualizacji klienta');
             }
 
-            navigate(`/client/${clientId}`);
+            setMessage("Dane klienta zostały zaktualizowane")
+            setType("success")
+            navigate(paths.client(clientId));
         } catch (err) {
             setError(err.message);
             setLoading(false);

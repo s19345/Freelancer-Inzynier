@@ -10,6 +10,8 @@ import {
     Button,
     Stack
 } from '@mui/material';
+import AutoDismissAlert from "../common/AutoDismissAlert";
+
 
 const ClientDetails = () => {
     const {clientId} = useParams();
@@ -90,6 +92,7 @@ const ClientDetails = () => {
             >
                 &larr; Powrót do listy klientów
             </Button>
+            <AutoDismissAlert/>
         </Box>
     );
 };

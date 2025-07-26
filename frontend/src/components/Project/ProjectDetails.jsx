@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import TaskList from "../task/UserTaskList";
 import EditProject from "./EditProject";
+import AutoDismissAlert from "../common/AutoDismissAlert";
 
 const ProjectDetails = () => {
     const {projectId} = useParams();
@@ -87,6 +88,7 @@ const ProjectDetails = () => {
 
             )}
             <TaskList/>
+            <AutoDismissAlert/>
         </Box>
     );
 };

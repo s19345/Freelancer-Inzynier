@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router";
 import useAuthStore from "../../zustand_store/authStore";
+import useGlobalStore from '../../zustand_store/globalInfoStore';
 import {PROJECT_BACKEND_URL} from "../../settings";
 import {
     Box,
@@ -20,6 +21,9 @@ import paths from "../../paths";
 
 const ProjectForm = () => {
     const token = useAuthStore(state => state.token);
+    const navigate = useNavigate()
+    const setMessage = useGlobalStore((state) => state.setMessage);
+    const setType = useGlobalStore((state) => state.setType);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -64,7 +68,8 @@ const ProjectForm = () => {
             }
 
             const responseData = await response.json();
-            setSuccessMessage("Projekt został utworzony pomyślnie");
+            setMessage("Projekt został utworzony pomyślnie");
+            setType("success");
             navigate(paths.projectList)
         } catch (error) {
             console.error("Error creating project:", error);

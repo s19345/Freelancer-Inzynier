@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
-import {Link as RouterLink} from "react-router";
+import {Link, Link as RouterLink} from "react-router";
 import {
     Box,
     CircularProgress,
@@ -15,6 +15,8 @@ import {
     Alert,
     Stack
 } from "@mui/material";
+import AutoDismissAlert from "../common/AutoDismissAlert";
+import paths from "../../paths";
 
 const ClientList = () => {
     const token = useAuthStore(state => state.token);
@@ -113,6 +115,17 @@ const ClientList = () => {
                     </TableBody>
                 </Table>
             )}
+            <Box mt={2}>
+                <Button
+                    component={Link}
+                    to={paths.createClient}
+                    variant="contained"
+                    color="primary"
+                >
+                    Dodaj Klienta
+                </Button>
+            </Box>
+            <AutoDismissAlert/>
         </Box>
     );
 };

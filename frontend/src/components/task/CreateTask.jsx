@@ -3,13 +3,17 @@ import {Box, TextField, Button, Typography, Alert, MenuItem} from '@mui/material
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL, USERS_LIST_URL} from "../../settings";
 import {Link, useParams, useNavigate} from "react-router";
+import useGlobalStore from '../../zustand_store/globalInfoStore';
 import paths from "../../paths";
+import AutoDismissAlert from "../common/AutoDismissAlert";
 
 const CreateTaskForm = ({projectId: propProjectId}) => {
     const {projectId: paramProjectId, taskId: paramTaskId} = useParams();
     const projectId = propProjectId || paramProjectId;
     const parentTaskId = paramTaskId || null;
     const navigate = useNavigate();
+    const setMessage = useGlobalStore((state) => state.setMessage);
+    const setType = useGlobalStore((state) => state.setType);
 
     const [formData, setFormData] = useState({
         title: "",
@@ -105,6 +109,8 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
                 const data = await response.json();
 
                 if (response.ok) {
+                    setMessage(successMessage, "zrobione");
+                    setType("success")
                     navigate(returnUrl)
                 } else {
                     const errorMessage = typeof data === "object"

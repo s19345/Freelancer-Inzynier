@@ -10,10 +10,13 @@ import {
     CircularProgress,
     Alert
 } from '@mui/material';
+import useGlobalStore from "../../zustand_store/globalInfoStore";
 
 const EditTask = ({finishEditing, handleTaskUpdate}) => {
         const {taskId, projectId} = useParams();
         const token = useAuthStore(state => state.token);
+        const setMessage = useGlobalStore((state) => state.setMessage);
+        const setType = useGlobalStore((state) => state.setType);
 
         const [formData, setFormData] = useState({
             title: '',
@@ -82,6 +85,8 @@ const EditTask = ({finishEditing, handleTaskUpdate}) => {
                     const errorData = await res.json();
                     throw new Error(errorData.detail || 'Błąd podczas aktualizacji zadania');
                 }
+                setMessage('Zadanie zostało zaktualizowane pomyślnie');
+                setType('success');
                 handleTaskUpdate(await res.json());
             } catch (err) {
                 setError(err.message);

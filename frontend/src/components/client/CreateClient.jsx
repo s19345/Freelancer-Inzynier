@@ -3,6 +3,9 @@ import {PROJECT_BACKEND_URL} from "../../settings";
 import useAuthStore from "../../zustand_store/authStore";
 import {Box, TextField, Button, Typography} from '@mui/material';
 import AutoDismissAlert from "../common/AutoDismissAlert";
+import useGlobalStore from '../../zustand_store/globalInfoStore';
+import paths from "../../paths";
+import {useNavigate} from "react-router";
 
 
 const CreateClientForm = () => {
@@ -19,6 +22,9 @@ const CreateClientForm = () => {
     const [status, setStatus] = useState(null);
     const [statusType, setStatusType] = useState("success");
     const token = useAuthStore(state => state.token);
+    const navigate = useNavigate();
+    const setMessage = useGlobalStore((state) => state.setMessage);
+    const setType = useGlobalStore((state) => state.setType);
 
     const validate = () => {
         const newErrors = {};
@@ -73,14 +79,9 @@ const CreateClientForm = () => {
                 if (response.ok) {
                     setStatus({text: "Klient został utworzony pomyślnie", id: Date.now()});
                     setStatusType("success");
-                    setFormData({
-                        company_name: "",
-                        industry: "",
-                        contact_person: "",
-                        email: "",
-                        phone: "",
-                        notes: ""
-                    });
+                    setMessage("Klient został utworzony pomyślnie");
+                    setType("success");
+                    navigate(paths.clients)
                 } else {
                     const errorMessage = typeof data === "object"
                         ? Object.values(data).flat().join(" ")

@@ -17,6 +17,7 @@ import {
     Paper,
 } from "@mui/material";
 import paths from "../../paths";
+import AutoDismissAlert from "../common/AutoDismissAlert";
 
 const TaskList = () => {
     const {projectId} = useParams();
@@ -125,6 +126,7 @@ const TaskList = () => {
                     Dodaj zadanie do projektu
                 </Button>
             </Box>
+            <AutoDismissAlert/>
         </Box>
     );
 };
