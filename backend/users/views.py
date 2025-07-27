@@ -9,7 +9,8 @@ from rest_framework.response import Response
 from project.pagination import CustomPageNumberPagination
 from .models import CustomUser, FriendRequest
 from .serializers import CustomUserSerializer, FriendListSerializer, GetSentFriendRequestSerializer, \
-    FriendRequestSendSerializer, FriendRequestAcceptSerializer, GetReceivedFriendRequestSerializer
+    FriendRequestSendSerializer, FriendRequestAcceptSerializer, GetReceivedFriendRequestSerializer, \
+    FriendDetailSerializer
 from rest_framework.pagination import PageNumberPagination
 
 
@@ -33,12 +34,17 @@ class FriendListAPIView(ListAPIView):
 
 
 class FriendDetailsAPIView(RetrieveAPIView):
-    serializer_class = CustomUserSerializer
+    serializer_class = FriendDetailSerializer
 
     lookup_field = 'id'
 
     def get_queryset(self):
         return self.request.user.friends.all()
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 
 class FriendRequestSenderAPIView(generics.GenericAPIView):

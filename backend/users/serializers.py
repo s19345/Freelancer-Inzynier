@@ -1,11 +1,18 @@
 from rest_framework import serializers
-from .models import CustomUser, FriendRequest
+from .models import CustomUser, FriendRequest, FriendNotes
+
+
+class FriendNotesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FriendNotes
+        fields = ['notes', 'rate']
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'bio', 'profile_picture', ]
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'bio', 'profile_picture', 'phone_number',
+                  'location', 'timezone']
 
 
 class FriendListSerializer(serializers.ModelSerializer):
@@ -15,9 +22,23 @@ class FriendListSerializer(serializers.ModelSerializer):
 
 
 class FriendDetailSerializer(serializers.ModelSerializer):
+    friend_notes = serializers.SerializerMethodField()
+
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'bio', 'profile_picture', ]
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'bio', 'profile_picture', 'phone_number',
+                  'location', 'timezone', 'friend_notes']
+
+        def get_friend_notes(self, obj):
+            request = self.context.get('request')
+            if not request or not request.user.is_authenticated:
+                return None
+
+            try:
+                meta = FriendNotes.objects.get(owner=request.user, friend=obj)
+                return FriendNotesSerializer(meta).data
+            except FriendNotes.DoesNotExist:
+                return None
 
 
 class GetSentFriendRequestSerializer(serializers.ModelSerializer):
