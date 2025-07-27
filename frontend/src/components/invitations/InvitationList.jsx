@@ -1,5 +1,5 @@
 import useAuthStore from "../../zustand_store/authStore";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {USERS_LIST_URL} from "../../settings";
 import InvitationsDump from "./InvitationListDump";
 import useGlobalStore from "../../zustand_store/globalInfoStore";
@@ -34,7 +34,6 @@ const InvitationList = () => {
                 }
 
                 const data = await res.json();
-                console.log(data);
                 setFriendsInvitations(data.results);
                 setPagination({
                     next: data.next,
@@ -104,7 +103,6 @@ const InvitationList = () => {
 // ******************************************************************************
 // todo: tymczasowe zdjêcia ? zamieniæ na prawdziwe zdjêcia userów
     const fetchFriendsWithPhotos = async () => {
-        console.log(`Fetching photos for ${isSelectedReceived ? "received" : "sent"} invitations`);
         const user = isSelectedReceived ? "sender" : "receiver";
         try {
             const res = await fetch("https://picsum.photos/v2/list");
