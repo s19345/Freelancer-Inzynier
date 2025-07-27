@@ -8,7 +8,6 @@ const AutoDismissAlert = ({duration = 3000, key}) => {
     const type = useGlobalInfoStore((state) => state.type);
     const clearMessage = useGlobalInfoStore((state) => state.clearMessage);
     const resetType = useGlobalInfoStore((state) => state.resetType);
-
     if (!key) {
         key = Math.random().toString(36).substring(2, 15);
     }
@@ -16,6 +15,7 @@ const AutoDismissAlert = ({duration = 3000, key}) => {
     useEffect(() => {
         if (message) {
             setOpen(true);
+
             const closeTimer = setTimeout(() => {
                 setOpen(false);
             }, duration);

@@ -49,7 +49,6 @@ const ProjectDetails = () => {
 
         fetchProject();
     }, [projectId, token]);
-
     const handleUpdate = (updatedTask) => {
         setProject(updatedTask);
     };
@@ -57,6 +56,7 @@ const ProjectDetails = () => {
     const finishEditing = () => {
         setIsEditing(false);
     }
+
     if (error) return <Alert severity="error">Błąd: {error}</Alert>;
     if (!project) return <Alert severity="warning">Projekt nie został znaleziony</Alert>;
 
@@ -77,9 +77,9 @@ const ProjectDetails = () => {
                     <DeleteProject projectId={projectId}/>
                 </Box>
             </Box>
-
             {!isEditing ? (
                 <>
+
                     <Typography variant="h4" gutterBottom>{project.name || "Bez nazwy"}</Typography>
                     <Typography><strong>Status:</strong> {project.status}</Typography>
                     <Typography><strong>Wersja:</strong> {project.version}</Typography>
@@ -89,7 +89,6 @@ const ProjectDetails = () => {
             ) : (<EditProject finishEditing={finishEditing} handleUpdate={handleUpdate}/>)}
             {project.client && (
                 <Typography><strong>Klient ID:</strong> {project.client}</Typography>
-
             )}
             <TaskList/>
         </Box>

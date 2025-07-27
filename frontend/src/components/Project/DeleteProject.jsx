@@ -20,6 +20,7 @@ const DeleteProject = ({projectId}) => {
     const setType = useGlobalStore((state) => state.setType);
     const navigate = useNavigate()
 
+
     const handleDelete = async () => {
         try {
             const response = await fetch(`${PROJECT_BACKEND_URL}projects/${projectId}/`, {
@@ -33,7 +34,6 @@ const DeleteProject = ({projectId}) => {
                 setMessage("Projekt został pomyślnie usunięty.");
                 setType("success");
                 navigate(paths.projectList)
-
             } else {
                 const errorData = await response.json();
                 setMessage(errorData.detail || "Nie udało się usunąć projektu.");
@@ -49,7 +49,6 @@ const DeleteProject = ({projectId}) => {
 
     return (
         <>
-
             <Button variant="outlined" color="error" onClick={() => setOpen(true)}>
                 Usuń projekt
             </Button>

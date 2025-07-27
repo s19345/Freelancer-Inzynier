@@ -93,8 +93,6 @@ const InvitationList = () => {
     }, [token, isSelectedReceived]);
 
 
-    // ******************************************************************************
-    // todo: tymczasowe zdjêcia ? zamieniæ na prawdziwe zdjêcia userów
     const fetchFriendsWithPhotos = async () => {
         const user = isSelectedReceived ? "sender" : "receiver";
         try {

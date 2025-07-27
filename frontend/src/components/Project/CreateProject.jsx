@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router";
 import useAuthStore from "../../zustand_store/authStore";
 import useGlobalStore from '../../zustand_store/globalInfoStore';
-import {PROJECT_BACKEND_URL} from "../../settings";
+import {PROJECT_BACKEND_URL, USERS_LIST_URL} from "../../settings";
 import {
     Box,
     Button,
@@ -21,7 +21,7 @@ import paths from "../../paths";
 
 const ProjectForm = () => {
     const token = useAuthStore(state => state.token);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const setMessage = useGlobalStore((state) => state.setMessage);
     const setType = useGlobalStore((state) => state.setType);
 
@@ -33,7 +33,7 @@ const ProjectForm = () => {
         status: "",
         budget: "",
         client: "",
-        collaborators: "",
+        collaborators: [], // teraz to tablica
     });
 
     const [errors, setErrors] = useState({});
@@ -42,6 +42,9 @@ const ProjectForm = () => {
     const [clients, setClients] = useState([]);
     const [clietnsFethingError, setClientsFetchingError] = useState(null);
     const [clientsFetchingLoading, setClientsFetchingLoading] = useState(false);
+    const [friends, setFriends] = useState([]);
+    const [friendsFetchingError, setFriendsFetchingError] = useState(null);
+    const [friendsFetchingLoading, setFriendsFetchingLoading] = useState(false);
 
     const validate = () => {
         const newErrors = {};
@@ -52,9 +55,7 @@ const ProjectForm = () => {
         return newErrors;
     };
 
-    const params = new URLSearchParams({
-        page_size: 10000,
-    });
+    const params = new URLSearchParams({page_size: 10000});
 
     useEffect(() => {
         setClientsFetchingLoading(true);
@@ -67,10 +68,7 @@ const ProjectForm = () => {
                     },
                 });
 
-                if (!res.ok) {
-                    throw new Error("Nie udało się pobrać klientów");
-                }
-
+                if (!res.ok) throw new Error("Nie udało się pobrać klientów");
                 const data = await res.json();
                 setClients(data.results);
             } catch (err) {
@@ -79,10 +77,31 @@ const ProjectForm = () => {
                 setClientsFetchingLoading(false);
             }
         };
-
         fetchClients();
     }, [token]);
 
+    useEffect(() => {
+        setFriendsFetchingLoading(true);
+        const fetchFriends = async () => {
+            try {
+                const res = await fetch(`${USERS_LIST_URL}friends/?${params}`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Token ${token}`,
+                    },
+                });
+
+                if (!res.ok) throw new Error("Nie udało się pobrać znajomych");
+                const data = await res.json();
+                setFriends(data.results);
+            } catch (err) {
+                setFriendsFetchingError(err.message);
+            } finally {
+                setFriendsFetchingLoading(false);
+            }
+        };
+        fetchFriends();
+    }, [token]);
 
     const createProject = async (data) => {
         setLoading(true);
@@ -105,7 +124,7 @@ const ProjectForm = () => {
             const responseData = await response.json();
             setMessage("Projekt został utworzony pomyślnie");
             setType("success");
-            navigate(paths.projectList)
+            navigate(paths.projectList);
         } catch (error) {
             console.error("Error creating project:", error);
         } finally {
@@ -129,6 +148,13 @@ const ProjectForm = () => {
 
     return (
         <Box sx={{maxWidth: 600, mx: "auto", mt: 4}}>
+            {clietnsFethingError && (
+                <Alert severity="error">Błąd pobierania klientów: {clietnsFethingError}</Alert>
+            )}
+            {friendsFetchingError && (
+                <Alert severity="error">Błąd pobierania znajomych: {friendsFetchingError}</Alert>
+            )}
+
             {!successMessage && (
                 <form onSubmit={handleSubmit}>
                     <Stack spacing={3}>
@@ -193,9 +219,9 @@ const ProjectForm = () => {
                         />
 
                         <FormControl fullWidth error={!!errors.client} disabled={loading}>
-                            <InputLabel id="status-label">Klient</InputLabel>
+                            <InputLabel id="client-label">Klient</InputLabel>
                             <Select
-                                labelId="status-label"
+                                labelId="client-label"
                                 name="client"
                                 value={formData.client}
                                 label="Klient"
@@ -207,24 +233,49 @@ const ProjectForm = () => {
                                     </MenuItem>
                                 ))}
                             </Select>
-                            {errors.status && <FormHelperText>{errors.status}</FormHelperText>}
+                            {errors.client && <FormHelperText>{errors.client}</FormHelperText>}
                         </FormControl>
 
-                        <TextField
-                            label="Współpracownicy"
-                            name="collaborators"
-                            value={formData.collaborators}
-                            onChange={handleChange}
-                            disabled={loading}
-                        />
+                        <FormControl fullWidth error={!!errors.collaborators} disabled={loading}>
+                            <InputLabel id="collaborators-label">Współpracownicy</InputLabel>
+                            <Select
+                                labelId="collaborators-label"
+                                name="collaborators"
+                                multiple
+                                value={formData.collaborators}
+                                onChange={(e) =>
+                                    setFormData((prev) => ({
+                                        ...prev,
+                                        collaborators: e.target.value,
+                                    }))
+                                }
+                                label="Współpracownicy"
+                                renderValue={(selected) =>
+                                    friends
+                                        .filter((f) => selected.includes(f.id))
+                                        .map((f) => f.username)
+                                        .join(", ")
+                                }
+                            >
+                                {friends.map((friend) => (
+                                    <MenuItem key={friend.id} value={friend.id}>
+                                        {friend.username}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            {errors.collaborators && (
+                                <FormHelperText>{errors.collaborators}</FormHelperText>
+                            )}
+                        </FormControl>
 
-                        {loading ? <CircularProgress size={24}/> :
-                            <Box display="flex" justifyContent="space-between" gap={2} alignItems="stretch">
+                        {loading ? (
+                            <CircularProgress size={24}/>
+                        ) : (
+                            <Box display="flex" justifyContent="space-between" gap={2}>
                                 <Button
                                     type="submit"
                                     variant="contained"
                                     color="primary"
-                                    disabled={loading}
                                     fullWidth
                                 >
                                     Zapisz projekt
@@ -238,11 +289,11 @@ const ProjectForm = () => {
                                 >
                                     Anuluj
                                 </Button>
-                            </Box>}
+                            </Box>
+                        )}
                     </Stack>
                 </form>
             )}
-
         </Box>
     );
 };

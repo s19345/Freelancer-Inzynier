@@ -197,6 +197,8 @@ const EditProject = ({finishEditing, handleUpdate}) => {
                     onChange={handleChange}
                     fullWidth
                 />
+
+
                 <Box display="flex" justifyContent="space-between" gap={2} alignItems="stretch">
                     {loading ? (
                         <CircularProgress size={24}/>
@@ -231,7 +233,8 @@ const EditProject = ({finishEditing, handleUpdate}) => {
                 </Box>
             </Box>
         </Box>
-    );
+    )
+        ;
 };
 
 export default EditProject;

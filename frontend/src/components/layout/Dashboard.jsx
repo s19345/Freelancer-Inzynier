@@ -1,6 +1,6 @@
 import React from 'react';
-import Sidebar from '../Sidebar'
-import SearchField from '../SearchField'
+import Sidebar from '../Sidebar';
+import SearchField from '../SearchField';
 import {
     AppBar,
     Box,

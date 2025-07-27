@@ -39,8 +39,6 @@ const collaborators = [
 
 const CollaboratorBox = ({collaborator}) => (
     <Stack alignItems="center" spacing={1}>
-
-
         <Box
             component="img"
             src={collaborator.profile_picture}
@@ -60,10 +58,8 @@ const CollaboratorBox = ({collaborator}) => (
         >
             {collaborator.username}
         </Typography>
-
     </Stack>
 );
-
 
 const Box1 = ({collaborators, pagination, handleChange}) => {
     return (
@@ -179,6 +175,7 @@ const Box1 = ({collaborators, pagination, handleChange}) => {
                     >
                         Worked with
                     </Typography>
+
 
                 </Stack>
 

@@ -20,6 +20,7 @@ const PaginationFrame = ({pagination, handleChange}) => {
                     // Custom renderer for pagination items
                     if (item.type === "previous") {
                         return (
+                            // przycisk poprzedniej strony
                             <PaginationItem
                                 {...item}
                                 component={Typography}
@@ -40,6 +41,7 @@ const PaginationFrame = ({pagination, handleChange}) => {
                     }
                     if (item.type === "next") {
                         return (
+                            // przycisk nastêpnej strony
                             <PaginationItem
                                 {...item}
                                 component={Typography}
@@ -59,6 +61,7 @@ const PaginationFrame = ({pagination, handleChange}) => {
                         );
                     }
                     return (
+                        // numerki strony
                         <PaginationItem
                             {...item}
                             sx={{

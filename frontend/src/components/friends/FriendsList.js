@@ -71,6 +71,7 @@ const FriendList = () => {
         fetchFriendsWithPhotos();
     }, [friends]);
 
+
     return <FriendsDump collaborators={friends} pagination={pagination} handleChange={handlePageChange}/>
 }
 
