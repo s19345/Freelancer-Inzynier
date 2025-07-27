@@ -45,6 +45,7 @@ class FriendRequestSenderAPIView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FriendRequestSendSerializer
     queryset = FriendRequest.objects.all()
+    pagination_class = CustomPageNumberPagination
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -52,9 +53,15 @@ class FriendRequestSenderAPIView(generics.GenericAPIView):
         return GetSentFriendRequestSerializer
 
     def get(self, request, *args, **kwargs):
-        """Zwraca wysłane zaproszenia."""
-        friend_requests = FriendRequest.objects.filter(sender=request.user)
-        serializer = GetSentFriendRequestSerializer(friend_requests, many=True)
+        """Returns sent friend requests with pagination."""
+        queryset = FriendRequest.objects.filter(sender=request.user)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
@@ -95,7 +102,7 @@ class FriendRequestReceiverAPIView(generics.GenericAPIView):
         return GetReceivedFriendRequestSerializer
 
     def get(self, request, *args, **kwargs):
-        """Zwraca zaproszenia otrzymane z paginacją."""
+        """Returns received friend requests with pagination."""
         queryset = FriendRequest.objects.filter(receiver=request.user)
 
         page = self.paginate_queryset(queryset)
@@ -107,9 +114,7 @@ class FriendRequestReceiverAPIView(generics.GenericAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        """
-        Akceptuje zaproszenie.
-        """
+        """Accepts a friend request."""
         serializer = FriendRequestAcceptSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         friend_request_id = serializer.validated_data['id']

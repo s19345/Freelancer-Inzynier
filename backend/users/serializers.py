@@ -21,6 +21,8 @@ class FriendDetailSerializer(serializers.ModelSerializer):
 
 
 class GetSentFriendRequestSerializer(serializers.ModelSerializer):
+    receiver = FriendListSerializer(read_only=True)
+
     class Meta:
         model = FriendRequest
 

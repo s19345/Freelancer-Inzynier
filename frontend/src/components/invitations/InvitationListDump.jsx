@@ -1,5 +1,4 @@
 import DeleteIcon from "@mui/icons-material/Delete";
-import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import {
     Box,
     Button,
@@ -8,27 +7,20 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
-import React from "react";
+import React, {useState} from "react";
 import PaginationFrame from "../layout/Pagination";
 
-const projects = [
-    {
-        id: 1,
-        name: "Project 1",
-        icon: <LightbulbIcon/>,
-    },
-    {
-        id: 2,
-        name: "Project 2",
-        icon: <LightbulbIcon/>,
-    },
-];
 
-const InvitationBox = ({invitations, handleAccept, pagination, handleChange}) => {
+const InvitationBox = ({
+                           invitations,
+                           handleAccept,
+                           pagination,
+                           handleChange,
+                           handleDelete,
+                           setIsSelectedReceived
+                       }) => {
+    const [activeTab, setActiveTab] = useState("received");
 
-    const handleDelete = (projectId) => {
-        console.log(`Deleted project ${projectId}`);
-    };
 
     return (
         <Box
@@ -43,79 +35,117 @@ const InvitationBox = ({invitations, handleAccept, pagination, handleChange}) =>
                 p: 2,
             }}
         >
+            <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 2, width: "100%"}}>
+                <Stack direction="row" spacing={0}>
+                    {["received", "sent"].map((tab) => (
+                        <Button
+                            key={tab}
+                            variant={activeTab === tab ? "contained" : "outlined"}
+                            onClick={() => {
+                                setActiveTab(tab);
+                                setIsSelectedReceived(tab === "received");
+                            }}
+                            sx={{
+                                borderRadius: 0,
+                                textTransform: "none",
+                                fontFamily: "Inter, sans-serif",
+                                fontWeight: 500,
+                                fontSize: "1rem",
+                                border: "none",
+                                borderBottom: activeTab === tab ? "3px solid" : "none",
+                                borderColor: "primary.main",
+                                color: activeTab === tab ? "primary.main" : "text.secondary",
+                                bgcolor: activeTab === tab ? "rgba(25, 118, 210, 0.1)" : "transparent",
+                                px: 3,
+                                py: 0.5,
+                                width: "50%",
+                            }}
+                        >
+                            {tab === "received" ? "Otrzymane" : "Wys³ane"}
+                        </Button>
+                    ))}
+                </Stack>
+            </Box>
+
+
             <Stack spacing={2} sx={{mt: 2, maxHeight: "80vh"}}>
-                {invitations.map((invitation) => (
-                    <Card
-                        key={invitation.id}
-                        sx={{
-                            height: 88,
-                            borderRadius: "15px",
-                            boxShadow: "2",
-                            position: "relative",
-                            border: "1px solid rgba(0, 0, 0, 0.05)",
-                            display: "flex",
-                            alignItems: "center",
-                        }}
-                    >
-                        <CardContent sx={{width: "100%", p: 1, "&:last-child": {pb: 1}}}>
-                            <Stack
-                                direction="row"
-                                alignItems="center"
-                                justifyContent="space-between"
-                                sx={{height: "100%"}}
+                {invitations.map((invitation) => {
+                        const user = invitation.sender || invitation.receiver;
+                        return (
+                            <Card
+                                key={invitation.id}
+                                sx={{
+                                    height: 88,
+                                    borderRadius: "15px",
+                                    boxShadow: "2",
+                                    position: "relative",
+                                    border: "1px solid rgba(0, 0, 0, 0.05)",
+                                    display: "flex",
+                                    alignItems: "center",
+                                }}
                             >
-                                <Stack
-                                    direction="row"
-                                    alignItems="center"
-                                    spacing={1}
-                                    sx={{ml: 1}}
-                                >
-                                    <Box
-                                        component="img"
-                                        src={invitation.sender.profile_picture}
-                                        alt={`${invitation.sender.username} avatar`}
-                                        sx={{
-                                            width: 50,
-                                            height: 50,
-                                            objectFit: "cover",
-                                            borderRadius: "50%",
-                                        }}
-                                    />
-                                    <Typography
-                                        variant="subtitle1"
-                                        fontWeight="bold"
-                                        fontFamily="Montserrat, sans-serif"
-                                        fontSize="0.875rem"
+                                <CardContent sx={{width: "100%", p: 1, "&:last-child": {pb: 1}}}>
+                                    <Stack
+                                        direction="row"
+                                        alignItems="center"
+                                        justifyContent="space-between"
+                                        sx={{height: "100%"}}
                                     >
-                                        {invitation.sender.username}
-                                    </Typography>
-                                </Stack>
-                                <Stack direction="row" spacing={2} alignItems="center">
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        sx={{
-                                            borderRadius: "15px",
-                                            textTransform: "none",
-                                            fontFamily: "Inter, sans-serif",
-                                            fontWeight: 500,
-                                            fontSize: "1.125rem",
-                                        }}
-                                        onClick={() => handleAccept(invitation.id)}
-                                    >
-                                        Akceptuj
-                                    </Button>
-                                    <Button
-                                        onClick={() => handleDelete(invitation.id)}
-                                        sx={{minWidth: 45, height: 40, color: "error.main"}}
-                                    >
-                                        <DeleteIcon/>
-                                    </Button>
-                                </Stack>
-                            </Stack>
-                        </CardContent>
-                    </Card>
-                ))}
+                                        <Stack
+                                            direction="row"
+                                            alignItems="center"
+                                            spacing={1}
+                                            sx={{ml: 1}}
+                                        >
+                                            <Box
+                                                component="img"
+                                                src={user.profile_picture}
+                                                alt={`${user.username} avatar`}
+                                                sx={{
+                                                    width: 50,
+                                                    height: 50,
+                                                    objectFit: "cover",
+                                                    borderRadius: "50%",
+                                                }}
+                                            />
+                                            <Typography
+                                                variant="subtitle1"
+                                                fontWeight="bold"
+                                                fontFamily="Montserrat, sans-serif"
+                                                fontSize="0.875rem"
+                                            >
+                                                {user.username}
+                                            </Typography>
+                                        </Stack>
+                                        <Stack direction="row" spacing={2} alignItems="center">
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                sx={{
+                                                    borderRadius: "15px",
+                                                    textTransform: "none",
+                                                    fontFamily: "Inter, sans-serif",
+                                                    fontWeight: 500,
+                                                    fontSize: "1.125rem",
+                                                }}
+                                                onClick={() => handleAccept(invitation.id)}
+                                            >
+                                                Akceptuj
+                                            </Button>
+                                            <Button
+                                                onClick={() => handleDelete(invitation.id)}
+                                                sx={{minWidth: 45, height: 40, color: "error.main"}}
+                                            >
+                                                <DeleteIcon/>
+                                            </Button>
+                                        </Stack>
+                                    </Stack>
+                                </CardContent>
+                            </Card>
+                        )
+                    }
+                )
+                }
             </Stack>
             <PaginationFrame pagination={pagination} handleChange={handleChange}/>
         </Box>
