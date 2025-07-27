@@ -7,33 +7,41 @@ import {
     DialogTitle,
     DialogContent,
     DialogContentText,
-    DialogActions,
-    Alert
+    DialogActions
 } from "@mui/material";
+import useGlobalStore from "../../zustand_store/globalInfoStore";
+import {useNavigate} from "react-router";
+import paths from "../../paths";
 
 const DeleteProject = ({projectId}) => {
     const token = useAuthStore(state => state.token);
     const [open, setOpen] = useState(false);
-    const [statusMessage, setStatusMessage] = useState(null);
+    const setMessage = useGlobalStore((state) => state.setMessage);
+    const setType = useGlobalStore((state) => state.setType);
+    const navigate = useNavigate()
 
     const handleDelete = async () => {
         try {
             const response = await fetch(`${PROJECT_BACKEND_URL}projects/${projectId}/`, {
                 method: "DELETE",
                 headers: {
-                    Authorization: `Token ${token}`,
-                },
+                    Authorization: `Token ${token}`
+                }
             });
 
             if (response.ok) {
-                setStatusMessage("Projekt został usunięty.");
+                setMessage("Projekt został pomyślnie usunięty.");
+                setType("success");
+                navigate(paths.projectList)
 
             } else {
                 const errorData = await response.json();
-                setStatusMessage(`Błąd: ${errorData.detail || "Nie udało się usunąć projektu."}`);
+                setMessage(errorData.detail || "Nie udało się usunąć projektu.");
+                setType("error");
             }
         } catch (error) {
-            setStatusMessage("Błąd sieci: " + error.message);
+            setMessage("Wystąpił błąd podczas usuwania projektu.");
+            setType("error");
         } finally {
             setOpen(false);
         }
@@ -41,11 +49,6 @@ const DeleteProject = ({projectId}) => {
 
     return (
         <>
-            {statusMessage && (
-                <Alert severity={statusMessage.startsWith("Błąd") ? "error" : "success"}>
-                    {statusMessage}
-                </Alert>
-            )}
 
             <Button variant="outlined" color="error" onClick={() => setOpen(true)}>
                 Usuń projekt
