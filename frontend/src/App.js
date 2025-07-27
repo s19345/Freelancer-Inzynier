@@ -23,6 +23,7 @@ import EditClient from './components/client/EditClient';
 import CreateTaskForm from "./components/task/CreateTask";
 import TaskDetails from "./components/task/TaskDetails";
 import EditTask from "./components/task/EditTask";
+import FriendsList from "./components/friends/FriendsList";
 import InvitationList from "./components/invitations/InvitationList";
 import paths from "./paths";
 

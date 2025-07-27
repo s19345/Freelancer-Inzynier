@@ -29,16 +29,16 @@ class FriendDetailSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'bio', 'profile_picture', 'phone_number',
                   'location', 'timezone', 'friend_notes']
 
-        def get_friend_notes(self, obj):
-            request = self.context.get('request')
-            if not request or not request.user.is_authenticated:
-                return None
+    def get_friend_notes(self, obj):
+        request = self.context.get('request')
+        if not request or not request.user.is_authenticated:
+            return None
 
-            try:
-                meta = FriendNotes.objects.get(owner=request.user, friend=obj)
-                return FriendNotesSerializer(meta).data
-            except FriendNotes.DoesNotExist:
-                return None
+        try:
+            meta = FriendNotes.objects.get(owner=request.user, friend=obj)
+            return FriendNotesSerializer(meta).data
+        except FriendNotes.DoesNotExist:
+            return None
 
 
 class GetSentFriendRequestSerializer(serializers.ModelSerializer):
@@ -46,7 +46,6 @@ class GetSentFriendRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FriendRequest
-
         fields = ['id', 'receiver', 'created_at']
 
 

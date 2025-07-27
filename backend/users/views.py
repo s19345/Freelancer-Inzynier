@@ -11,6 +11,7 @@ from .models import CustomUser, FriendRequest
 from .serializers import CustomUserSerializer, FriendListSerializer, GetSentFriendRequestSerializer, \
     FriendRequestSendSerializer, FriendRequestAcceptSerializer, GetReceivedFriendRequestSerializer, \
     FriendDetailSerializer
+
 from rest_framework.pagination import PageNumberPagination
 
 
@@ -34,8 +35,8 @@ class FriendListAPIView(ListAPIView):
 
 
 class FriendDetailsAPIView(RetrieveAPIView):
+    """ApiView to retrieve details of a specific friend."""
     serializer_class = FriendDetailSerializer
-
     lookup_field = 'id'
 
     def get_queryset(self):

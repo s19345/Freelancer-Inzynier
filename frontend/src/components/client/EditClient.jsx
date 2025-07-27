@@ -84,7 +84,6 @@ const EditClient = () => {
                 const errorData = await res.json();
                 throw new Error(errorData.detail || 'Błąd podczas aktualizacji klienta');
             }
-
             setMessage("Dane klienta zostały zaktualizowane")
             setType("success")
             navigate(paths.client(clientId));
@@ -106,7 +105,6 @@ const EditClient = () => {
             <Typography variant="h5" mb={3}>
                 Edytuj klienta
             </Typography>
-
             {error && (
                 <Alert severity="error" sx={{mb: 2}}>
                     Błąd: {error}
@@ -168,6 +166,8 @@ const EditClient = () => {
                         >
                             Anuluj
                         </Button>
+
+
                     </Box>
                 </Stack>
             </Box>

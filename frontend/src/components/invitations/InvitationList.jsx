@@ -17,40 +17,34 @@ const InvitationList = () => {
     const [pagination, setPagination] = useState({next: null, prev: null, pages: 0, currentPage: 1});
     const [isSelectedReceived, setIsSelectedReceived] = useState(true);
 
-
     const fetchInvitations = async (url, page) => {
-            try {
-                const res = await fetch(`${url}/?page=${page}`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Token ${token}`,
-                    },
-                });
+        try {
+            const res = await fetch(`${url}/?page=${page}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Token ${token}`,
+                },
+            });
 
-                if (
-                    !res.ok
-                ) {
-                    throw new Error("Nie uda³o siê pobraæ zaproszeñ");
-                }
-
-                const data = await res.json();
-                setFriendsInvitations(data.results);
-                setPagination({
-                    next: data.next,
-                    prev: data.previous,
-                    pages: data.total_pages,
-                    currentPage: data.current_page
-                });
-
-            } catch
-                (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-
+            if (!res.ok) {
+                throw new Error("Nie uda³o siê pobraæ zaproszeñ");
             }
+
+            const data = await res.json();
+            setFriendsInvitations(data.results);
+            setPagination({
+                next: data.next,
+                prev: data.previous,
+                pages: data.total_pages,
+                currentPage: data.current_page
+            });
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+
         }
-    ;
+    };
 
     const deleteFriendInvitation = async (id) => {
         try {
@@ -93,15 +87,14 @@ const InvitationList = () => {
     }
 
     useEffect(() => {
-            isSelectedReceived ?
-                fetchInvitations(backendReceivedURL, pagination.currentPage) :
-                fetchInvitations(backendSentURL, pagination.currentPage);
-        }, [token, isSelectedReceived]
-    );
+        isSelectedReceived ?
+            fetchInvitations(backendReceivedURL, pagination.currentPage) :
+            fetchInvitations(backendSentURL, pagination.currentPage);
+    }, [token, isSelectedReceived]);
 
 
-// ******************************************************************************
-// todo: tymczasowe zdjêcia ? zamieniæ na prawdziwe zdjêcia userów
+    // ******************************************************************************
+    // todo: tymczasowe zdjêcia ? zamieniæ na prawdziwe zdjêcia userów
     const fetchFriendsWithPhotos = async () => {
         const user = isSelectedReceived ? "sender" : "receiver";
         try {
@@ -124,7 +117,7 @@ const InvitationList = () => {
     useEffect(() => {
         fetchFriendsWithPhotos()
     }, [isSelectedReceived]);
-// ******************************************************************************
+    // ******************************************************************************
 
 
     const acceptFriendInvitations = async (id) => {
@@ -172,3 +165,5 @@ const InvitationList = () => {
         />
     )
 };
+
+export default InvitationList;

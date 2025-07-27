@@ -2,11 +2,10 @@ import React, {useState} from "react";
 import {PROJECT_BACKEND_URL} from "../../settings";
 import useAuthStore from "../../zustand_store/authStore";
 import {Box, TextField, Button, Typography} from '@mui/material';
-import AutoDismissAlert from "../common/AutoDismissAlert";
 import useGlobalStore from '../../zustand_store/globalInfoStore';
+import AutoDismissAlert from "../common/AutoDismissAlert";
 import paths from "../../paths";
 import {Link, useNavigate} from "react-router";
-
 
 const CreateClientForm = () => {
     const [formData, setFormData] = useState({
@@ -88,6 +87,7 @@ const CreateClientForm = () => {
                         : "Wystąpił błąd podczas tworzenia klienta";
                     setStatus({text: errorMessage, id: Date.now()});
                     setStatusType("error");
+
                 }
             } catch (error) {
                 console.error("Błąd sieci:", error);
@@ -173,7 +173,6 @@ const CreateClientForm = () => {
                 rows={4}
                 fullWidth
             />
-
             <Box display="flex" justifyContent="space-between" gap={2}>
                 <Button type="submit" variant="contained" color="primary" fullWidth>
                     Utwórz klienta
@@ -187,7 +186,6 @@ const CreateClientForm = () => {
                     Anuluj
                 </Button>
             </Box>
-
             {status && (
                 <AutoDismissAlert
                     messageObj={status}
@@ -198,7 +196,6 @@ const CreateClientForm = () => {
 
         </Box>
     );
-
 };
 
 export default CreateClientForm;
