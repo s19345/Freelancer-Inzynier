@@ -18,8 +18,8 @@ import paths from "../../paths";
 import EditTask from "./EditTask";
 import AutoDismissAlert from "../common/AutoDismissAlert";
 
-
 const ReturnButton = ({to, text, finishEditing}) => {
+
     return (
         <Button component={Link} to={to} variant="outlined" onClick={finishEditing}>
             {text}
@@ -139,6 +139,7 @@ const TaskDetails = () => {
                 )
             }
 
+
             {
                 task.subtasks?.length > 0 &&
                 <Box mt={4}>
@@ -198,17 +199,17 @@ const TaskDetails = () => {
                             finishEditing={finishEditing}
                         />) :
                     (<Box mt={3} display="flex" gap={2} flexWrap="wrap">
-                            <ReturnButton to={paths.project(projectId)} text="Powrót projektu"/>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => navigate(paths.createSubtask(projectId, taskId))}
-                            >
-                                Dodaj podzadanie
-                            </Button>
+                        <ReturnButton to={paths.project(projectId)} text="Powrót projektu"/>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => navigate(paths.createSubtask(projectId, taskId))}
+                        >
+                            Dodaj podzadanie
+                        </Button>
 
-                        </Box>
-                    )}
+                    </Box>)
+            }
         </Box>
     );
 };

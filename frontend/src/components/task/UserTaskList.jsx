@@ -46,10 +46,8 @@ const TaskList = () => {
                 }
 
                 const data = await res.json();
-
                 const results = data.results
                 const onlyRootTasks = results.filter(task => !task.parent_task);
-
                 setTasks(onlyRootTasks);
             } catch (err) {
                 setError(err.message);
@@ -127,8 +125,8 @@ const TaskList = () => {
                 </Button>
             </Box>
         </Box>
+
     );
 };
 
 export default TaskList;
-

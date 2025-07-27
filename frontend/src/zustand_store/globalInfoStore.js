@@ -6,6 +6,7 @@ const useGlobalInfoStore = create((set) => ({
 
     setMessage: (message) => set({message}),
     clearMessage: () => set({message: null}),
+
     setType: (type) => set({type}),
     resetType: () => set({type: 'info'}),
 }));

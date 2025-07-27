@@ -226,10 +226,10 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
                     </MenuItem>
                 ))}
             </TextField>
-
             <Button type="submit" variant="contained" color="primary" fullWidth>
                 utwórz {contextText}
             </Button>
+
             <Button
                 component={Link}
                 to={returnUrl}
@@ -249,4 +249,3 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
 };
 
 export default CreateTaskForm;
-
