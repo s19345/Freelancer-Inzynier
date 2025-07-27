@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import PersonIcon from '@mui/icons-material/Person';
+import PaginationFrame from "../layout/Pagination";
 
 
 const imageUrls = {
@@ -64,7 +65,7 @@ const CollaboratorBox = ({collaborator}) => (
 );
 
 
-const Box1 = ({collaborators}) => {
+const Box1 = ({collaborators, pagination, handleChange}) => {
     return (
         <Box sx={{width: 664, height: 703}}>
             <Paper
@@ -190,6 +191,7 @@ const Box1 = ({collaborators}) => {
                     ))}
                 </Grid>
             </Paper>
+            <PaginationFrame pagination={pagination} handleChange={handleChange}/>
         </Box>
     );
 };

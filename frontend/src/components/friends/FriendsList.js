@@ -8,33 +8,47 @@ const FriendList = () => {
     const [friends, setFriends] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [pagination, setPagination] = useState({next: null, prev: null, pages: 0, currentPage: 1});
+
+    const fetchFriends = async (page) => {
+        try {
+            const res = await fetch(`${USERS_LIST_URL}friends/?page=${page}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Token ${token}`,
+                },
+            });
+
+            if (!res.ok) {
+                throw new Error("Nie uda³o siê pobraæ klientów");
+            }
+
+            const data = await res.json();
+            setFriends(data.results);
+            setPagination({
+                next: data.next,
+                prev: data.previous,
+                pages: data.total_pages,
+                currentPage: data.current_page
+            });
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchClients = async () => {
-            try {
-                const res = await fetch(`${USERS_LIST_URL}friends/`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Token ${token}`,
-                    },
-                });
-
-                if (!res.ok) {
-                    throw new Error("Nie uda³o siê pobraæ klientów");
-                }
-
-                const data = await res.json();
-                setFriends(data.results);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchClients();
+        fetchFriends(pagination.currentPage);
     }, [token]);
 
+    const handlePageChange = (page) => {
+        setPagination((prev) => ({
+            ...prev,
+            currentPage: page,
+        }));
+        fetchFriends(page);
+    }
 
     useEffect(() => {
         // todo, tymczasowy kod do pobierania zdjêæ profilowych z otwartego api. zamieniæ na prawdziwe zdjêcia userów
@@ -55,9 +69,9 @@ const FriendList = () => {
         };
 
         fetchFriendsWithPhotos();
-    }, []);
+    }, [friends]);
 
-    return <FriendsDump collaborators={friends}/>
+    return <FriendsDump collaborators={friends} pagination={pagination} handleChange={handlePageChange}/>
 }
 
 export default FriendList;
