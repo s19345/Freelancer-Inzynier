@@ -1,9 +1,9 @@
 import {Box, Pagination, PaginationItem, Typography} from "@mui/material";
 import React from "react";
 
-const PaginationFrame = () => {
+const PaginationFrame = ({pagination, handleChange}) => {
     return (
-        <Box id="pagination-box" sx={{
+        <Box id="pagination-box" key={pagination.pages} sx={{
             width: "100%",
             maxWidth: 1053,
             padding: "40px",
@@ -11,8 +11,11 @@ const PaginationFrame = () => {
             justifyContent: "center",
         }}>
             <Pagination
-                count={3}
-                page={1}
+                count={pagination.pages}
+                page={pagination.currentPage}
+                onChange={(p, value) => {
+                    handleChange(value)
+                }}
                 renderItem={(item) => {
                     // Custom renderer for pagination items
                     if (item.type === "previous") {

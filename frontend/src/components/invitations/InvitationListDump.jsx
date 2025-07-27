@@ -9,7 +9,7 @@ import {
     Typography,
 } from "@mui/material";
 import React from "react";
-import PaginationFrame from "../layout/Pagintion";
+import PaginationFrame from "../layout/Pagination";
 
 const projects = [
     {
@@ -24,7 +24,7 @@ const projects = [
     },
 ];
 
-const InvitationBox = ({invitations, handleAccept}) => {
+const InvitationBox = ({invitations, handleAccept, pagination, handleChange}) => {
 
     const handleDelete = (projectId) => {
         console.log(`Deleted project ${projectId}`);
@@ -117,7 +117,7 @@ const InvitationBox = ({invitations, handleAccept}) => {
                     </Card>
                 ))}
             </Stack>
-            <PaginationFrame/>
+            <PaginationFrame pagination={pagination} handleChange={handleChange}/>
         </Box>
     );
 };

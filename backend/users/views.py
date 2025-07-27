@@ -6,6 +6,7 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from project.pagination import CustomPageNumberPagination
 from .models import CustomUser, FriendRequest
 from .serializers import CustomUserSerializer, FriendListSerializer, GetSentFriendRequestSerializer, \
     FriendRequestSendSerializer, FriendRequestAcceptSerializer, GetReceivedFriendRequestSerializer
@@ -86,7 +87,7 @@ class FriendRequestSenderAPIView(generics.GenericAPIView):
 class FriendRequestReceiverAPIView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     queryset = FriendRequest.objects.all()
-    pagination_class = PageNumberPagination
+    pagination_class = CustomPageNumberPagination
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
