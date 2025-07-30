@@ -1,8 +1,12 @@
 from django.urls import path
 from django.urls.conf import include
 from .views import UserSearchListAPIView, FriendRequestSenderAPIView, FriendRequestReceiverAPIView, \
-    FriendRequestDeleteAPIView, FriendListAPIView, FriendDetailsAPIView
+FriendRequestDeleteAPIView, FriendListAPIView, FriendDetailsAPIView, SkillViewSet
+from rest_framework.routers import DefaultRouter
 from users.views import password_reset_confirm_redirect
+
+router = DefaultRouter()
+router.register(r'skills', SkillViewSet, basename='skills')
 
 urlpatterns = [
     path('auth/', include('dj_rest_auth.urls')),
@@ -15,4 +19,5 @@ urlpatterns = [
     path('friend-request-delete/<int:id>/', FriendRequestDeleteAPIView.as_view(), name='friend-request-delete'),
     path('friends/', FriendListAPIView.as_view(), name='friend-list'),
     path('friends/<int:id>/', FriendDetailsAPIView.as_view(), name='friend-details'),
+    path('', include(router.urls)),
 ]

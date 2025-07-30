@@ -4,14 +4,10 @@ import {useParams, Link} from "react-router";
 import {PROJECT_BACKEND_URL} from "../../settings";
 
 import {
-    Box,
-    Typography,
-    Button,
-    Alert,
+    Box, Typography, Button, Alert,
 } from "@mui/material";
 import TaskList from "../task/UserTaskList";
 import EditProject from "./EditProject";
-import AutoDismissAlert from "../common/AutoDismissAlert";
 import DeleteProject from "./DeleteProject";
 
 const ProjectDetails = () => {
@@ -27,8 +23,7 @@ const ProjectDetails = () => {
             try {
                 const response = await fetch(`${PROJECT_BACKEND_URL}projects/${projectId}/`, {
                     headers: {
-                        Authorization: `Token ${token}`,
-                        "Content-Type": "application/json"
+                        Authorization: `Token ${token}`, "Content-Type": "application/json"
                     }
                 });
 
@@ -58,10 +53,11 @@ const ProjectDetails = () => {
     }
 
     if (error) return <Alert severity="error">Błąd: {error}</Alert>;
-    if (!project) return <Alert severity="warning">Projekt nie został znaleziony</Alert>;
 
-    return (
-        <Box sx={{p: 3}}>
+
+    return (<Box sx={{p: 3}}>
+        {project && (<>
+
             <Box display="flex" justifyContent="flex-start" alignItems="center" mb={2}>
                 <Typography variant="h5">
                     Szczegóły Projektu
@@ -77,22 +73,17 @@ const ProjectDetails = () => {
                     <DeleteProject projectId={projectId}/>
                 </Box>
             </Box>
-            {!isEditing ? (
-                <>
-
-                    <Typography variant="h4" gutterBottom>{project.name || "Bez nazwy"}</Typography>
-                    <Typography><strong>Status:</strong> {project.status}</Typography>
-                    <Typography><strong>Wersja:</strong> {project.version}</Typography>
-                    <Typography><strong>Budżet:</strong> {project.budget} zł</Typography>
-                    <Typography><strong>Opis:</strong> {project.description}</Typography>
-                </>
-            ) : (<EditProject finishEditing={finishEditing} handleUpdate={handleUpdate}/>)}
-            {project.client && (
-                <Typography><strong>Klient ID:</strong> {project.client}</Typography>
-            )}
+            {!isEditing ? (<>
+                <Typography variant="h4" gutterBottom>{project.name || "Bez nazwy"}</Typography>
+                <Typography><strong>Status:</strong> {project.status}</Typography>
+                <Typography><strong>Wersja:</strong> {project.version}</Typography>
+                <Typography><strong>Budżet:</strong> {project.budget} zł</Typography>
+                <Typography><strong>Opis:</strong> {project.description}</Typography>
+            </>) : (<EditProject finishEditing={finishEditing} handleUpdate={handleUpdate}/>)}
+            {project.client && (<Typography><strong>Klient ID:</strong> {project.client}</Typography>)}
             <TaskList/>
-        </Box>
-    );
+        </>)}
+    </Box>);
 };
 
 export default ProjectDetails;

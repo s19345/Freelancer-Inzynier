@@ -22,6 +22,7 @@ import TaskDetails from "./components/task/TaskDetails";
 import EditTask from "./components/task/EditTask";
 import FriendsList from "./components/friends/FriendsList";
 import InvitationList from "./components/invitations/InvitationList";
+import FriendDetails from "./components/friends/FriendDetails";
 import paths from "./paths";
 
 
@@ -35,7 +36,7 @@ function App() {
                     <Route path={paths.login} element={<Login/>}/>
                     <Route path={paths.logout} element={<Logout/>}/>
                     <Route path={paths.register} element={<Register/>}/>
-                    <Route path={paths.profile} element={<UserProfile/>}/>
+                    <Route path={paths.userProfile} element={<UserProfile/>}/>
                     <Route path={paths.passwordReset} element={<PasswordResetConfirm/>}/>
                     <Route path={paths.editProfile} element={<EditProfile/>}/>
                     <Route path={paths.changePassword} element={<ChangePassword/>}/>
@@ -52,6 +53,7 @@ function App() {
                     <Route path={paths.editTask()} element={<EditTask/>}/>
                     <Route path={paths.createSubtask()} element={<CreateTaskForm/>}/>
                     <Route path={paths.friends} element={<FriendsList/>}/>
+                    <Route path={paths.friendDetails()} element={<FriendDetails/>}/>
                     <Route path={paths.statistics} element={<div>Statistics Page</div>}/>
                     <Route path={paths.finances} element={<div>Finances Page</div>}/>
                     <Route path={paths.calendar} element={<div>Calendar Page</div>}/>

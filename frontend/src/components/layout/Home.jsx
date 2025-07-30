@@ -7,14 +7,18 @@ import Sidebar from "./Sidebar";
 export default function Home() {
     return (
         <>
-            {/*<Header/>*/}
-            <Box sx={{display: 'flex', flexDirection: 'row', position: "absolute",}}>
+            <Box sx={{display: 'flex', flexDirection: 'row', position: 'relative', height: '100vh'}}>
+                {/* Sidebar po lewej */}
                 <Sidebar/>
-                <Container maxWidth="lg">
-                    <Box component="main" py={4}>
+
+                {/* Prawa czê¶æ: Header na górze, Outlet pod spodem */}
+                <Box sx={{flexGrow: 1, display: 'flex', flexDirection: 'column', width: '100%'}}>
+                    <Header/>
+
+                    <Container maxWidth="lg" sx={{flexGrow: 1, overflowY: 'auto', py: 4}}>
                         <Outlet/>
-                    </Box>
-                </Container>
+                    </Container>
+                </Box>
             </Box>
         </>
     );

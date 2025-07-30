@@ -12,6 +12,8 @@ import {
 import React from "react";
 import PersonIcon from '@mui/icons-material/Person';
 import PaginationFrame from "../layout/Pagination";
+import {Link} from "react-router";
+import paths from "../../paths";
 
 
 const imageUrls = {
@@ -26,30 +28,24 @@ const imageUrls = {
     bubble: "/bubble.svg",
 };
 
-const collaborators = [
-    {id: 1, name: "Addodle", image: imageUrls.imagem, row: 1, col: 1},
-    {id: 2, name: "Marketplace.", image: imageUrls.imagem2, row: 1, col: 2},
-    {id: 3, name: "Von Dracula", image: imageUrls.imagem4, row: 1, col: 3},
-    {id: 4, name: "Von Dracula", image: imageUrls.imagem6, row: 1, col: 4},
-    {id: 5, name: "John Joestar", image: imageUrls.image, row: 2, col: 1},
-    {id: 6, name: "Akali Jin", image: imageUrls.imagem3, row: 2, col: 2},
-    {id: 7, name: "Kayn Vampyr", image: imageUrls.imagem5, row: 2, col: 3},
-    {id: 8, name: "Kayn Vampyr", image: imageUrls.imagem7, row: 2, col: 4},
-];
-
 const CollaboratorBox = ({collaborator}) => (
     <Stack alignItems="center" spacing={1}>
         <Box
-            component="img"
-            src={collaborator.profile_picture}
-            alt={`${collaborator.username} avatar`}
-            sx={{
-                width: 100,
-                height: 100,
-                objectFit: "cover",
-                borderRadius: "50%",
-            }}
-        />
+            component={Link}
+            to={paths.friendDetails(collaborator.id)}
+        >
+            <Box
+                component="img"
+                src={collaborator.profile_picture}
+                alt={`${collaborator.username} avatar`}
+                sx={{
+                    width: 100,
+                    height: 100,
+                    objectFit: "cover",
+                    borderRadius: "50%",
+                }}
+            />
+        </Box>
         <Typography
             variant="body2"
             color="#4b4b4b"
@@ -62,6 +58,7 @@ const CollaboratorBox = ({collaborator}) => (
 );
 
 const Box1 = ({collaborators, pagination, handleChange}) => {
+
     return (
         <Box sx={{width: 664, height: 703}}>
             <Paper
@@ -75,7 +72,8 @@ const Box1 = ({collaborators, pagination, handleChange}) => {
                     p: 3,
                 }}
             >
-                {/* Header */}
+                {/* Header */
+                }
                 <Stack
                     direction="row"
                     justifyContent="space-between"
@@ -154,6 +152,7 @@ const Box1 = ({collaborators, pagination, handleChange}) => {
                         }}
                     >
                         Lorem Ispum is the best sentence in the world of dummy text
+
                     </Typography>
                 </Box>
 
@@ -164,22 +163,11 @@ const Box1 = ({collaborators, pagination, handleChange}) => {
                     alignItems="center"
                     mb={2}
                 >
-                    <Typography
-                        variant="body1"
-                        sx={{
-                            fontFamily: "Roboto, sans-serif",
-                            fontWeight: 700,
-                            color: "#4b4b4b",
-                            fontSize: "16px",
-                        }}
-                    >
-                        Worked with
-                    </Typography>
-
 
                 </Stack>
 
-                {/* Collaborators Grid */}
+                {/* Collaborators Grid */
+                }
                 <Grid container spacing={2}>
                     {collaborators.map((collaborator) => (
                         <Grid item xs={3} key={collaborator.id}>

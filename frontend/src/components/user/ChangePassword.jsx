@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import useAuthStore from "../../zustand_store/authStore";
-import {Box, Typography, TextField, Button, Alert} from '@mui/material';
+import {Box, Typography, TextField, Button, Alert, Stack} from '@mui/material';
 
 const ChangePassword = () => {
     const {loading, error, successMessage, resetError, changePassword} = useAuthStore();
@@ -8,6 +8,7 @@ const ChangePassword = () => {
     const [newPassword1, setNewPassword1] = useState("");
     const [newPassword2, setNewPassword2] = useState("");
     const [localError, setLocalError] = useState(null);
+    const [isEdited, setIsEdited] = useState(false);
 
     useEffect(() => {
         return () => {
@@ -27,59 +28,76 @@ const ChangePassword = () => {
 
     return (
         <Box
-            sx={{
-                p: 3,
-                maxWidth: 400,
-                mx: 'auto',
-                mt: 4,
-                border: '1px solid',
-                borderColor: 'grey.300',
-                borderRadius: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-            }}
-            component="form"
-            onSubmit={handleSubmit}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="10vh"
         >
-            <Typography variant="h5" component="h2" gutterBottom>
-                Zmieñ has³o
-            </Typography>
+            {!isEdited ? (
+                <Button variant="contained" onClick={() => setIsEdited(true)}>
+                    Zmieñ has³o
+                </Button>
+            ) : (
+                <Box
+                    sx={{
+                        p: 3,
+                        maxWidth: 400,
+                        mx: 'auto',
+                        mt: 4,
+                        border: '1px solid',
+                        borderColor: 'grey.300',
+                        borderRadius: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                    }}
+                    component="form"
+                    onSubmit={handleSubmit}
+                >
+                    <Typography variant="h5" component="h2" gutterBottom>
+                        Zmieñ has³o
+                    </Typography>
 
-            <TextField
-                label="Aktualne has³o"
-                type="password"
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
-                required
-                fullWidth
-            />
+                    <TextField
+                        label="Aktualne has³o"
+                        type="password"
+                        value={oldPassword}
+                        onChange={(e) => setOldPassword(e.target.value)}
+                        required
+                        fullWidth
+                    />
 
-            <TextField
-                label="Nowe has³o"
-                type="password"
-                value={newPassword1}
-                onChange={(e) => setNewPassword1(e.target.value)}
-                required
-                fullWidth
-            />
+                    <TextField
+                        label="Nowe has³o"
+                        type="password"
+                        value={newPassword1}
+                        onChange={(e) => setNewPassword1(e.target.value)}
+                        required
+                        fullWidth
+                    />
 
-            <TextField
-                label="Powtórz nowe has³o"
-                type="password"
-                value={newPassword2}
-                onChange={(e) => setNewPassword2(e.target.value)}
-                required
-                fullWidth
-            />
+                    <TextField
+                        label="Powtórz nowe has³o"
+                        type="password"
+                        value={newPassword2}
+                        onChange={(e) => setNewPassword2(e.target.value)}
+                        required
+                        fullWidth
+                    />
 
-            <Button type="submit" variant="contained" disabled={loading}>
-                Zmieñ has³o
-            </Button>
-
-            {localError && <Alert severity="error">{localError}</Alert>}
-            {error && <Alert severity="error">{error}</Alert>}
-            {successMessage && <Alert severity="success">{successMessage}</Alert>}
+                    <Stack direction="row" spacing={2}>
+                        <Button type="submit" variant="contained" disabled={loading}>
+                            Zmieñ has³o
+                        </Button>
+                        <Button variant="outlined" onClick={() => setIsEdited(false)}>
+                            Anuluj
+                        </Button>
+                    </Stack>
+                    {localError && <Alert severity="error">{localError}</Alert>}
+                    {error && <Alert severity="error">{error}</Alert>}
+                    {successMessage && <Alert severity="success">{successMessage}</Alert>}
+                </Box>
+            )}
         </Box>
     );
 };

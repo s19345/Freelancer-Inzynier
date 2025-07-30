@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {useParams} from "react-router";
-import {PROJECT_BACKEND_URL} from "../../settings";
+import {PROJECT_BACKEND_URL, USERS_LIST_URL} from "../../settings";
 import DeleteProject from "./DeleteProject";
 import {
     Box,
@@ -10,7 +10,7 @@ import {
     Button,
     CircularProgress,
     Alert,
-    MenuItem,
+    MenuItem, InputLabel, Select, FormHelperText, FormControl,
 } from "@mui/material";
 import useGlobalStore from "../../zustand_store/globalInfoStore";
 
@@ -19,6 +19,15 @@ const EditProject = ({finishEditing, handleUpdate}) => {
     const token = useAuthStore((state) => state.token);
     const setMessage = useGlobalStore((state) => state.setMessage);
     const setType = useGlobalStore((state) => state.setType);
+    const [friends, setFriends] = useState([]);
+
+    const [errors, setErrors] = useState({});
+    const [clients, setClients] = useState([]);
+    const [clietnsFethingError, setClientsFetchingError] = useState(null);
+    const [clientsFetchingLoading, setClientsFetchingLoading] = useState(false);
+    const [friendsFetchingError, setFriendsFetchingError] = useState(null);
+    const [friendsFetchingLoading, setFriendsFetchingLoading] = useState(false);
+    const params = new URLSearchParams({page_size: 10000});
 
     const [formData, setFormData] = useState({
         name: "",
@@ -69,6 +78,52 @@ const EditProject = ({finishEditing, handleUpdate}) => {
 
         fetchProject();
     }, [projectId, token]);
+
+    useEffect(() => {
+        setClientsFetchingLoading(true);
+        const fetchClients = async () => {
+            try {
+                const res = await fetch(`${PROJECT_BACKEND_URL}clients/?${params}`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Token ${token}`,
+                    },
+                });
+
+                if (!res.ok) throw new Error("Nie udało się pobrać klientów");
+                const data = await res.json();
+                setClients(data.results);
+            } catch (err) {
+                setClientsFetchingError(err.message);
+            } finally {
+                setClientsFetchingLoading(false);
+            }
+        };
+        fetchClients();
+    }, [token]);
+
+    useEffect(() => {
+        setFriendsFetchingLoading(true);
+        const fetchFriends = async () => {
+            try {
+                const res = await fetch(`${USERS_LIST_URL}friends/?${params}`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Token ${token}`,
+                    },
+                });
+
+                if (!res.ok) throw new Error("Nie udało się pobrać znajomych");
+                const data = await res.json();
+                setFriends(data.results);
+            } catch (err) {
+                setFriendsFetchingError(err.message);
+            } finally {
+                setFriendsFetchingLoading(false);
+            }
+        };
+        fetchFriends();
+    }, [token]);
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -182,22 +237,54 @@ const EditProject = ({finishEditing, handleUpdate}) => {
                     fullWidth
                 />
 
-                <TextField
-                    label="Klient (ID)"
-                    name="client"
-                    value={formData.client}
-                    onChange={handleChange}
-                    fullWidth
-                />
-
-                <TextField
-                    label="Współpracownicy (oddziel przecinkami)"
-                    name="collaborators"
-                    value={formData.collaborators.join(", ")}
-                    onChange={handleChange}
-                    fullWidth
-                />
-
+                <FormControl fullWidth error={!!errors.client} disabled={loading}>
+                    <InputLabel id="client-label">Klient</InputLabel>
+                    <Select
+                        labelId="client-label"
+                        name="client"
+                        value={formData.client}
+                        label="Klient"
+                        onChange={handleChange}
+                    >
+                        {clients.map((client) => (
+                            <MenuItem key={client.id} value={client.id}>
+                                {client.company_name} - {client.contact_person}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                    {errors.client && <FormHelperText>{errors.client}</FormHelperText>}
+                </FormControl>
+                <FormControl fullWidth error={!!errors.collaborators} disabled={loading}>
+                    <InputLabel id="collaborators-label">Współpracownicy</InputLabel>
+                    <Select
+                        labelId="collaborators-label"
+                        name="collaborators"
+                        multiple
+                        value={formData.collaborators}
+                        onChange={(e) =>
+                            setFormData((prev) => ({
+                                ...prev,
+                                collaborators: e.target.value,
+                            }))
+                        }
+                        label="Współpracownicy"
+                        renderValue={(selected) =>
+                            friends
+                                .filter((f) => selected.includes(f.id))
+                                .map((f) => f.username)
+                                .join(", ")
+                        }
+                    >
+                        {friends.map((friend) => (
+                            <MenuItem key={friend.id} value={friend.id}>
+                                {friend.username}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                    {errors.collaborators && (
+                        <FormHelperText>{errors.collaborators}</FormHelperText>
+                    )}
+                </FormControl>
 
                 <Box display="flex" justifyContent="space-between" gap={2} alignItems="stretch">
                     {loading ? (

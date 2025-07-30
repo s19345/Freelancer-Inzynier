@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, FriendRequest, FriendNotes
+from .models import CustomUser, FriendRequest, FriendNotes, Skill
 
 
 class FriendNotesSerializer(serializers.ModelSerializer):
@@ -8,11 +8,10 @@ class FriendNotesSerializer(serializers.ModelSerializer):
         fields = ['notes', 'rate']
 
 
-class CustomUserSerializer(serializers.ModelSerializer):
+class SkillSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomUser
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'bio', 'profile_picture', 'phone_number',
-                  'location', 'timezone']
+        model = Skill
+        fields = ['id', 'name']
 
 
 class FriendListSerializer(serializers.ModelSerializer):
@@ -21,13 +20,24 @@ class FriendListSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'profile_picture', ]
 
 
-class FriendDetailSerializer(serializers.ModelSerializer):
-    friend_notes = serializers.SerializerMethodField()
+class CustomUserSerializer(serializers.ModelSerializer):
+    friends = FriendListSerializer(many=True, read_only=True)
+    skills = SkillSerializer(many=True)
 
     class Meta:
         model = CustomUser
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'bio', 'profile_picture', 'phone_number',
-                  'location', 'timezone', 'friend_notes']
+                  'location', 'timezone', 'friends', 'skills', 'specialization']
+
+
+class FriendDetailSerializer(serializers.ModelSerializer):
+    friend_notes = serializers.SerializerMethodField()
+    skills = SkillSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'bio', 'profile_picture', 'phone_number',
+                  'location', 'timezone', 'friend_notes', 'skills']
 
     def get_friend_notes(self, obj):
         request = self.context.get('request')
@@ -74,3 +84,13 @@ class FriendRequestSendSerializer(serializers.ModelSerializer):
         validated_data['sender'] = self.context['request'].user
         validated_data['receiver'] = CustomUser.objects.get(id=receiver_id)
         return super().create(validated_data)
+
+
+class SkillAddSerializer(serializers.Serializer):
+    skills = serializers.ListField(
+        child=serializers.CharField(max_length=100),
+        allow_empty=False
+    )
+
+    def validate_skills(self, value):
+        return [v.strip() for v in value if v.strip()]

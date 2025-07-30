@@ -4,7 +4,7 @@ const paths = {
     login: "/login",
     logout: "/logout",
     register: "/register",
-    profile: "/profile",
+    userProfile: "/profile",
     statistics: "/statistics",
     finances: "/finances",
     invitationList: "/invitations",

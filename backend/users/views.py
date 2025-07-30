@@ -1,16 +1,17 @@
 from django.http.response import HttpResponseRedirect
 from django.conf import settings
 from django.db import IntegrityError
-from rest_framework import status, generics
+from rest_framework import status, generics, viewsets
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
 from project.pagination import CustomPageNumberPagination
-from .models import CustomUser, FriendRequest
+from .models import CustomUser, FriendRequest, Skill
 from .serializers import CustomUserSerializer, FriendListSerializer, GetSentFriendRequestSerializer, \
     FriendRequestSendSerializer, FriendRequestAcceptSerializer, GetReceivedFriendRequestSerializer, \
-    FriendDetailSerializer
+FriendDetailSerializer, SkillAddSerializer, SkillSerializer
 
 from rest_framework.pagination import PageNumberPagination
 
@@ -162,6 +163,43 @@ class FriendRequestDeleteAPIView(APIView):
                 return Response({'success': 'Zaproszenie zostało odrzucone.'}, status=status.HTTP_200_OK)
         except FriendRequest.DoesNotExist:
             return Response({'error': 'Nie znaleziono zaproszenia.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class SkillViewSet(GenericViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = SkillSerializer
+    pagination_class = None
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return SkillAddSerializer
+        return SkillSerializer
+
+    def list(self, request):
+        skills = request.user.skills.all()
+        serializer = self.get_serializer(skills, many=True)
+        return Response(serializer.data)
+
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        skills_to_add = serializer.validated_data['skills']
+
+        added = []
+        for name in skills_to_add:
+            skill, _ = Skill.objects.get_or_create(name__iexact=name, defaults={'name': name})
+            request.user.skills.add(skill)
+            added.append(skill)
+
+        return Response(SkillSerializer(added, many=True).data, status=status.HTTP_201_CREATED)
+
+    def destroy(self, request, pk=None):
+        try:
+            skill = Skill.objects.get(pk=pk)
+            request.user.skills.remove(skill)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Skill.DoesNotExist:
+            return Response({'error': 'Skill not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 def password_reset_confirm_redirect(request, uidb64, token):
