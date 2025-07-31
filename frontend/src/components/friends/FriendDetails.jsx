@@ -163,7 +163,6 @@ export default function FriendDetails() {
                     throw new Error('Failed to fetch user details');
                 }
                 const data = await response.json();
-                console.log('Fetched user details:', data);
                 setFriend(data);
             } catch (error) {
                 console.error('Error fetching user details:', error);
