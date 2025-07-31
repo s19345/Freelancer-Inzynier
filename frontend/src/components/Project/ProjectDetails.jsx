@@ -55,7 +55,7 @@ const ProjectDetails = () => {
     if (error) return <Alert severity="error">Błąd: {error}</Alert>;
 
 
-    return (<Box sx={{p: 3}}>
+    return (<Box sx={{p: 0}}>
         {project && (<>
 
             <Box display="flex" justifyContent="flex-start" alignItems="center" mb={2}>

@@ -174,7 +174,7 @@ export default function FriendDetails() {
 
     return (
         <>
-            <Paper elevation={3} sx={{p: 4, borderRadius: 4, maxWidth: 900, mx: 'auto'}}>
+            <Paper elevation={3} sx={{p: 3, borderRadius: 4, maxWidth: 900, mx: 'auto'}}>
                 {friend && (
                     <>
                         <Typography variant="h5" align={"center"} gutterBottom>{friend.username}</Typography>

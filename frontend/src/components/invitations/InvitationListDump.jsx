@@ -17,10 +17,10 @@ const InvitationBox = ({invitations, handleAccept, pagination, handleChange, han
 
     return (
         <Box
+            id={"invitation-box"}
             sx={{
                 width: "100%",
-                maxWidth: 1053,
-                height: 686,
+                height: "60vh",
                 position: "relative",
                 bgcolor: "white",
                 borderRadius: "15px",
@@ -28,7 +28,7 @@ const InvitationBox = ({invitations, handleAccept, pagination, handleChange, han
                 p: 2,
             }}
         >
-            <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 2, width: "100%"}}>
+            <Box id="init1" sx={{borderBottom: 1, borderColor: 'divider', mb: 2, width: "100%"}}>
                 <Stack direction="row" spacing={0}>
                     {["received", "sent"].map((tab) => (
                         <Button
@@ -61,7 +61,7 @@ const InvitationBox = ({invitations, handleAccept, pagination, handleChange, han
             </Box>
 
 
-            <Stack spacing={2} sx={{mt: 2, maxHeight: "80vh"}}>
+            <Stack id={"stack1"} spacing={2} sx={{mt: 2, maxHeight: "70vh"}}>
                 {invitations.map((invitation) => {
                     const user = invitation.sender || invitation.receiver;
                     return (
@@ -111,20 +111,22 @@ const InvitationBox = ({invitations, handleAccept, pagination, handleChange, han
                                         </Typography>
                                     </Stack>
                                     <Stack direction="row" spacing={2} alignItems="center">
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            sx={{
-                                                borderRadius: "15px",
-                                                textTransform: "none",
-                                                fontFamily: "Inter, sans-serif",
-                                                fontWeight: 500,
-                                                fontSize: "1.125rem",
-                                            }}
-                                            onClick={() => handleAccept(invitation.id)}
-                                        >
-                                            Akceptuj
-                                        </Button>
+                                        {activeTab === "received" &&
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                sx={{
+                                                    borderRadius: "15px",
+                                                    textTransform: "none",
+                                                    fontFamily: "Inter, sans-serif",
+                                                    fontWeight: 500,
+                                                    fontSize: "1.125rem",
+                                                }}
+                                                onClick={() => handleAccept(invitation.id)}
+                                            >
+                                                Akceptuj
+                                            </Button>
+                                        }
                                         <Button
                                             onClick={() => handleDelete(invitation.id)}
                                             sx={{minWidth: 45, height: 40, color: "error.main"}}
@@ -138,7 +140,9 @@ const InvitationBox = ({invitations, handleAccept, pagination, handleChange, han
                     )
                 })}
             </Stack>
-            <PaginationFrame pagination={pagination} handleChange={handleChange}/>
+            {pagination.pages > 1 && (
+                <PaginationFrame pagination={pagination} handleChange={handleChange}/>
+            )}
         </Box>
     );
 };

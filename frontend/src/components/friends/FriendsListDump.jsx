@@ -69,7 +69,7 @@ const Box1 = ({collaborators, pagination, handleChange}) => {
                     bgcolor: "#fcfdff",
                     borderRadius: "20px",
                     position: "relative",
-                    p: 3,
+                    p: 0,
                 }}
             >
                 {/* Header */
@@ -176,7 +176,9 @@ const Box1 = ({collaborators, pagination, handleChange}) => {
                     ))}
                 </Grid>
             </Paper>
-            <PaginationFrame pagination={pagination} handleChange={handleChange}/>
+            {pagination.pages > 1 && (
+                <PaginationFrame pagination={pagination} handleChange={handleChange}/>
+            )}
         </Box>
     );
 };

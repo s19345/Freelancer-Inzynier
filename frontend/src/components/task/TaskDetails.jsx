@@ -107,7 +107,7 @@ const TaskDetails = () => {
     if (!task) return <Typography>Nie znaleziono zadania.</Typography>;
 
     return (
-        <Box sx={{maxWidth: 700, mx: "auto", p: 3}}>
+        <Box sx={{mx: "auto", p: 0}}>
             <Box display="flex" justifyContent="flex-start" alignItems="center" mb={2}>
                 <Typography variant="h5">
                     Szczegóły {contextText}
