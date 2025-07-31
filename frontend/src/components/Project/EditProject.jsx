@@ -36,6 +36,7 @@ const EditProject = ({finishEditing, handleUpdate}) => {
         status: "",
         budget: "",
         client: "",
+        collabolators: []
     });
 
     const [loading, setLoading] = useState(true);
@@ -65,7 +66,7 @@ const EditProject = ({finishEditing, handleUpdate}) => {
                     status: data.status || "",
                     budget: data.budget || "",
                     client: data.client || "",
-                    collabolators: data.collabolators || []
+                    collabolators: data.collabolators.map(c => c.id) || []
                 });
 
             } catch (err) {
@@ -127,17 +128,10 @@ const EditProject = ({finishEditing, handleUpdate}) => {
     const handleChange = (e) => {
         const {name, value} = e.target;
 
-        if (name === "collabolators") {
-            setFormData((prev) => ({
-                ...prev,
-                collabolators: value.split(",").map((c) => c.trim())
-            }));
-        } else {
-            setFormData((prev) => ({
-                ...prev,
-                [name]: value
-            }));
-        }
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -145,9 +139,8 @@ const EditProject = ({finishEditing, handleUpdate}) => {
         setSubmitStatus(null);
 
         try {
-            console.log("próbuję zaktualizować projekt", formData);
             const response = await fetch(`${PROJECT_BACKEND_URL}projects/${projectId}/`, {
-                method: "PUT",
+                method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Token ${token}`
@@ -164,7 +157,6 @@ const EditProject = ({finishEditing, handleUpdate}) => {
             console.log("Zaktualizowany projekt:", data);
             setMessage("Projekt został zaktualizowany pomyślnie");
             setType("success");
-            handleUpdate(formData)
 
         } catch (err) {
             setSubmitStatus(`Błąd: ${err.message}`);
@@ -321,8 +313,7 @@ const EditProject = ({finishEditing, handleUpdate}) => {
                 </Box>
             </Box>
         </Box>
-    )
-        ;
+    );
 };
 
 export default EditProject;

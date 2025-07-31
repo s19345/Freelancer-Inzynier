@@ -17,6 +17,12 @@ class ClientSerializer(serializers.ModelSerializer):
         read_only_fields = ["user"]
 
 
+class ClientSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Client
+        fields = ["id", "company_name", "contact_person"]
+
+
 class ProjectSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
@@ -24,12 +30,29 @@ class ProjectSimpleSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    collabolators = FriendListSerializer(many=True, read_only=True)
+    collabolators = FriendListSerializer(many=True)
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
+    manager = FriendListSerializer(read_only=True)
+    client = ClientSimpleSerializer(read_only=True)
+
+
+class ProjectWriteSerializer(serializers.ModelSerializer):
+    collabolators = serializers.PrimaryKeyRelatedField(
+        queryset=CustomUser.objects.all(), many=True
+    )
 
     class Meta:
         model = Project
-        fields = '__all__'
-        read_only_fields = ['manager']
+        fields = [
+            'name', 'description', 'version', 'budget',
+            'client', 'status', 'collabolators'
+        ]
+
+
+class Meta:
+    model = Project
+    fields = '__all__'
+    read_only_fields = ['manager']
 
 
 class TaskSimpleSerializer(serializers.ModelSerializer):

@@ -1,5 +1,5 @@
 from pyexpat.errors import messages
-from rest_framework import status, generics
+from rest_framework import status, generics, mixins
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.exceptions import NotFound, ValidationError
@@ -8,13 +8,70 @@ from django.utils import timezone
 from django.http import Http404
 
 from .models import Client, Project, Task, TimeLog
+from .pagination import CustomPageNumberPagination
 from .serializers import ClientSerializer, ProjectSerializer, TaskSerializer, TimeLogCreateSerializer, \
-    TimeLogStopSerializer
+    TimeLogStopSerializer, ProjectWriteSerializer
 
 
-class ProjectViewSet(ModelViewSet):
+# class ProjectViewSet(ModelViewSet):
+#     queryset = Project.objects.all()
+#     serializer_class = ProjectSerializer
+#
+#     def get_queryset(self):
+#         user = self.request.user
+#         return Project.objects.filter(
+#             Q(manager=user) | Q(collabolators=user)
+#         ).distinct()
+#
+#     def perform_create(self, serializer):
+#         serializer.save(manager=self.request.user)
+#
+#     def get_object(self):
+#         try:
+#             return super().get_object()
+#         except Http404:
+#             raise NotFound(detail=('Nie znaleziono projektu.'))
+
+
+class ProjectDetailView(mixins.RetrieveModelMixin,
+                        mixins.UpdateModelMixin,
+                        mixins.DestroyModelMixin,
+                        generics.GenericAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return Project.objects.filter(
+            Q(manager=user) | Q(collabolators=user)
+        ).distinct()
+
+    def get_serializer_class(self):
+        if self.request.method in ['PATCH', 'PUT']:
+            return ProjectWriteSerializer
+        return ProjectSerializer
+
+    def get_object(self):
+        try:
+            return super().get_object()
+        except Http404:
+            raise NotFound(detail='Nie znaleziono projektu.')
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
+class ProjectListCreateView(mixins.ListModelMixin,
+                            mixins.CreateModelMixin,
+                            generics.GenericAPIView):
+    serializer_class = ProjectSerializer
+    pagination_class = CustomPageNumberPagination
 
     def get_queryset(self):
         user = self.request.user
@@ -25,11 +82,11 @@ class ProjectViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(manager=self.request.user)
 
-    def get_object(self):
-        try:
-            return super().get_object()
-        except Http404:
-            raise NotFound(detail=('Nie znaleziono projektu.'))
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
 class ClientViewSet(ModelViewSet):
@@ -47,31 +104,7 @@ class ClientViewSet(ModelViewSet):
         except Http404:
             raise NotFound(detail=('Nie znaleziono klienta.'))
 
-# class TaskViewSet(ModelViewSet):
-#     serializer_class = TaskSerializer
-#
-#     def get_queryset(self):
-#         project_id = self.request.query_params.get("project")
-#         parent_task_id = self.request.query_params.get("parent_task")
-#         task_id = self.kwargs.get('pk')
-#
-#         if parent_task_id:
-#             queryset = Task.objects.filter(parent_task=parent_task_id)
-#         elif project_id:
-#             queryset = Task.objects.filter(project=project_id, parent_task__isnull=True)
-#         else:
-#             queryset = Task.objects.all()
-#
-#         return queryset
-#
-#     def perform_create(self, serializer):
-#         serializer.save()
-#
-#     def get_object(self):
-#         try:
-#             return super().get_object()
-#         except Http404:
-#             raise NotFound(detail=('Nie znaleziono zadania.'))
+
 class TaskDetailViewSet(ReadOnlyModelViewSet):
     """
     Obsługuje pojedynczy task: GET / PATCH / DELETE.
@@ -108,6 +141,7 @@ class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     lookup_field = 'pk'
+
 
 class TaskCreateView(generics.CreateAPIView):
     """

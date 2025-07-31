@@ -7,11 +7,12 @@ import {
     DialogTitle,
     DialogContent,
     DialogContentText,
-    DialogActions
+    DialogActions,
 } from "@mui/material";
 import useGlobalStore from "../../zustand_store/globalInfoStore";
 import {useNavigate} from "react-router";
 import paths from "../../paths";
+import DeleteButton from "../common/DeleteButton";
 
 const DeleteProject = ({projectId}) => {
     const token = useAuthStore(state => state.token);
@@ -49,9 +50,7 @@ const DeleteProject = ({projectId}) => {
 
     return (
         <>
-            <Button variant="outlined" color="error" onClick={() => setOpen(true)}>
-                Usuń projekt
-            </Button>
+            <DeleteButton handleDelete={() => setOpen(true)}/>
 
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle>Potwierdzenie usunięcia</DialogTitle>
@@ -60,7 +59,7 @@ const DeleteProject = ({projectId}) => {
                         Czy na pewno chcesz usunąć ten projekt? Tej operacji nie można cofnąć.
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions>
+                <DialogActions sx={{justifyContent: "space-around"}}>
                     <Button onClick={() => setOpen(false)}>Anuluj</Button>
                     <Button onClick={handleDelete} color="error" variant="contained">
                         Usuń

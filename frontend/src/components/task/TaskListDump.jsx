@@ -7,17 +7,17 @@ import DeleteTask from "./DeleteTask";
 const TaskListDump = ({tasks, handleNavigate, handleDeleteSuccess}) => {
     const statusColors = {
         "to_do_color": "#1f9254",
-        "to_do_bcg": "#ebf9f1",
-        "in_progress_color": "#987202",
-        "in_progress_bcg": "#fff9e6",
+        "to_do_bcg": "success.background",
+        "in_progress_color": "warning.dark",
+        "in_progress_bcg": "warning.background",
         "completed_color": "#bc0d01",
         "completed_bcg": "#fdeaea",
     }
     const priorityColors = {
         low_color: "#1f9254",
-        low_bcg: "#ebf9f1",
-        medium_color: "#987202",
-        medium_bcg: "#fff9e6",
+        low_bcg: "success.background",
+        medium_color: "warning.dark",
+        medium_bcg: "warning.background",
         high_color: "#bc0d01",
         high_bcg: "#fdeaea",
     }
@@ -27,6 +27,13 @@ const TaskListDump = ({tasks, handleNavigate, handleDeleteSuccess}) => {
         const now = new Date();
         const diffMs = now - pastDate;
         return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    }
+
+    function daysUntil(dateString) {
+        const futureDate = new Date(dateString);
+        const now = new Date();
+        const diffMs = futureDate - now;
+        return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
     }
 
 
@@ -57,7 +64,7 @@ const TaskListDump = ({tasks, handleNavigate, handleDeleteSuccess}) => {
                                      alignItems: "center",
                                      border: "1px solid #e0e0e0",
                                  }}
-                                 onClick={() => handleNavigate(task.id)}
+                                 onClick={(e) => handleNavigate(e, task.id)}
                             >
                                 <IdeaIcon
                                     sx={{
@@ -123,31 +130,29 @@ const TaskListDump = ({tasks, handleNavigate, handleDeleteSuccess}) => {
                                                 Opened {daysSince(task.created_at)} days ago
                                             </Typography>
 
-                                            <Chip id={"chip1"}
-                                                  label={task.status}
-                                                  size="small"
-                                                  sx={{
-                                                      backgroundColor: `${statusColors[`${task.status}_bcg`]}`,
-                                                      color: `${statusColors[`${task.status}_color`]}`,
-                                                      fontFamily: "Montserrat",
-                                                      fontWeight: "medium",
-                                                      fontSize: 12,
-                                                      height: 24,
-                                                      borderRadius: "22px",
-                                                  }}
+                                            <Chip
+                                                label={task.status}
+                                                size="small"
+                                                sx={{
+                                                    backgroundColor: `${statusColors[`${task.status}_bcg`]}`,
+                                                    color: `${statusColors[`${task.status}_color`]}`,
+                                                    fontWeight: "medium",
+                                                    fontSize: 12,
+                                                    height: 24,
+                                                    borderRadius: "22px",
+                                                }}
                                             />
-                                            <Chip id={"chip1"}
-                                                  label={task.priority}
-                                                  size="small"
-                                                  sx={{
-                                                      backgroundColor: `${priorityColors[`${task.priority}_bcg`]}`,
-                                                      color: `${priorityColors[`${task.priority}_color`]}`,
-                                                      fontFamily: "Montserrat",
-                                                      fontWeight: "medium",
-                                                      fontSize: 12,
-                                                      height: 24,
-                                                      borderRadius: "22px",
-                                                  }}
+                                            <Chip
+                                                label={task.priority}
+                                                size="small"
+                                                sx={{
+                                                    backgroundColor: `${priorityColors[`${task.priority}_bcg`]}`,
+                                                    color: `${priorityColors[`${task.priority}_color`]}`,
+                                                    fontWeight: "medium",
+                                                    fontSize: 12,
+                                                    height: 24,
+                                                    borderRadius: "22px",
+                                                }}
                                             />
                                         </Stack>
                                     </Box>
@@ -178,7 +183,7 @@ const TaskListDump = ({tasks, handleNavigate, handleDeleteSuccess}) => {
                                                 fontSize: 16,
                                             }}
                                         >
-                                            {task.timer}
+                                            {daysUntil(task.due_date)} d
                                         </Typography>
                                     </Box>
 

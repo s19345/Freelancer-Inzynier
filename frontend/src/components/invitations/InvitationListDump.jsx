@@ -8,7 +8,7 @@ import {
     Typography,
 } from "@mui/material";
 import React, {useState} from "react";
-import PaginationFrame from "../layout/Pagination";
+import PaginationFrame from "../common/Pagination";
 
 
 const InvitationBox = ({invitations, handleAccept, pagination, handleChange, handleDelete, setIsSelectedReceived}) => {

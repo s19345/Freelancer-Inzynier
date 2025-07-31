@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import PersonIcon from '@mui/icons-material/Person';
-import PaginationFrame from "../layout/Pagination";
+import PaginationFrame from "../common/Pagination";
 import {Link} from "react-router";
 import paths from "../../paths";
 
