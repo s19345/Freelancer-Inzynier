@@ -1,20 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {Link as RouterLink, useNavigate, useParams} from "react-router";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
-import DeleteTask from "./DeleteTask";
 
 import {
     Box,
-    Button,
     CircularProgress,
     Typography,
-    Table,
-    TableHead,
-    TableBody,
-    TableRow,
-    TableCell,
-    Paper,
 } from "@mui/material";
 
 import TaskListDump from "./TaskListDump";
@@ -51,7 +42,6 @@ const TaskList = () => {
                 }
                 const data = await res.json();
                 const results = data.results
-                console.log("TaskList: ", results);
                 setTasks(results);
             } catch (err) {
                 setError(err.message);

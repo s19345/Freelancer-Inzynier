@@ -1,7 +1,6 @@
 import React from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DeleteButton from "../common/DeleteButton";
 
 const DeleteTask = ({taskId, handleDeleteSuccess}) => {

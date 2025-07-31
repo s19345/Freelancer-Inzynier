@@ -58,46 +58,42 @@ const ProjectDetails = () => {
     if (error) return <Alert severity="error">Błąd: {error}</Alert>;
 
 
-    return (<Box sx={{p: 0}}>
-        {project && (<>
+    return (
+        <Box sx={{p: 0}}>
+            {project && (<>
 
-            <Box display="flex" justifyContent="flex-start" alignItems="center" mb={2}>
-                <Typography variant="h5">
-                    Szczegóły Projektu
-                </Typography>
-                <Button
-                    onClick={() => setIsEditing(!isEditing)}
-                    size="small"
-                    sx={{ml: 2}}
-                >
-                    Edytuj
-                </Button>
-                <Box flex={1}>
-                    <DeleteProject projectId={projectId}/>
+                <Box display="flex" justifyContent="flex-start" alignItems="center" mb={2}>
+                    {/*<Typography variant="h5">*/}
+                    {/*    Szczegóły Projektu*/}
+                    {/*</Typography>*/}
+                    {/*<Button*/}
+                    {/*    onClick={() => setIsEditing(!isEditing)}*/}
+                    {/*    size="small"*/}
+                    {/*    sx={{ml: 2}}*/}
+                    {/*>*/}
+                    {/*    Edytuj*/}
+                    {/*</Button>*/}
+                    {/*<Box flex={1}>*/}
+                    {/*    <DeleteProject projectId={projectId}/>*/}
+                    {/*</Box>*/}
                 </Box>
-            </Box>
-            {!isEditing ? (<>
-                <Typography variant="h4" gutterBottom>{project.name || "Bez nazwy"}</Typography>
-                <Typography><strong>Status:</strong> {project.status}</Typography>
-                <Typography><strong>Wersja:</strong> {project.version}</Typography>
-                <Typography><strong>Budżet:</strong> {project.budget} zł</Typography>
-                <Typography><strong>Opis:</strong> {project.description}</Typography>
-            </>) : (<EditProject finishEditing={finishEditing} handleUpdate={handleUpdate}/>)}
-            {project.client && (<Typography><strong>Klient ID:</strong> {project.client}</Typography>)}
-            <TaskList/>
-            <Box>
-                {/*<Button*/}
-                {/*    variant="contained"*/}
-                {/*    component={RouterLink}*/}
-                {/*    to={paths.createTask(projectId)}*/}
-                {/*>*/}
-                {/*    Dodaj zadanie do projektu*/}
-                {/*</Button>*/}
-                <AddButton to={paths.createTask(projectId)} label={"Dodaj nowe zadanie"}/>
-            </Box>
-        </>)}
-        {/*<ProjecDetailsDump/>*/}
-    </Box>);
+                <ProjecDetailsDump project={project}/>
+                {/*{!isEditing ? (<>*/}
+                {/*    <Typography variant="h4" gutterBottom>{project.name || "Bez nazwy"}</Typography>*/}
+                {/*    <Typography><strong>Status:</strong> {project.status}</Typography>*/}
+                {/*    <Typography><strong>Wersja:</strong> {project.version}</Typography>*/}
+                {/*    <Typography><strong>Budżet:</strong> {project.budget} zł</Typography>*/}
+                {/*    <Typography><strong>Opis:</strong> {project.description}</Typography>*/}
+                {/*</>) : (<EditProject finishEditing={finishEditing} handleUpdate={handleUpdate}/>)}*/}
+                {/*{project.client && (<Typography><strong>Klient ID:</strong> {project.client}</Typography>)}*/}
+                <TaskList/>
+                <Box>
+
+                    <AddButton to={paths.createTask(projectId)} label={"Dodaj nowe zadanie"}/>
+                </Box>
+            </>)}
+            {/*<ProjecDetailsDump/>*/}
+        </Box>);
 };
 
 export default ProjectDetails;

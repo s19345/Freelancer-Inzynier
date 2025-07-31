@@ -1,7 +1,6 @@
 import {Avatar, Box, Card, Chip, Stack, Typography} from "@mui/material";
 import IdeaIcon from "@mui/icons-material/Lightbulb";
 import TimerIcon from "@mui/icons-material/AccessTime";
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import React from "react";
 import DeleteTask from "./DeleteTask";
 
