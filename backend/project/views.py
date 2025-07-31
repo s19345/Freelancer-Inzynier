@@ -1,4 +1,5 @@
 from pyexpat.errors import messages
+
 from rest_framework import status, generics, mixins
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
@@ -12,25 +13,6 @@ from .pagination import CustomPageNumberPagination
 from .serializers import ClientSerializer, ProjectSerializer, TaskSerializer, TimeLogCreateSerializer, \
     TimeLogStopSerializer, ProjectWriteSerializer
 
-
-# class ProjectViewSet(ModelViewSet):
-#     queryset = Project.objects.all()
-#     serializer_class = ProjectSerializer
-#
-#     def get_queryset(self):
-#         user = self.request.user
-#         return Project.objects.filter(
-#             Q(manager=user) | Q(collabolators=user)
-#         ).distinct()
-#
-#     def perform_create(self, serializer):
-#         serializer.save(manager=self.request.user)
-#
-#     def get_object(self):
-#         try:
-#             return super().get_object()
-#         except Http404:
-#             raise NotFound(detail=('Nie znaleziono projektu.'))
 
 
 class ProjectDetailView(mixins.RetrieveModelMixin,
@@ -86,9 +68,6 @@ class ProjectListCreateView(mixins.ListModelMixin,
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        print("*-" * 50)
-        print(request.data)
-        print("*-" * 50)
         return self.create(request, *args, **kwargs)
 
 

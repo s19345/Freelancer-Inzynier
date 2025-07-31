@@ -8,11 +8,8 @@ import {
     Box, Typography, Button, Alert,
 } from "@mui/material";
 import TaskList from "../task/TaskList";
-import EditProject from "./EditProject";
-import DeleteProject from "./DeleteProject";
 import paths from "../../paths";
 import ProjecDetailsDump from "./ProjectDetailsDump";
-import PaginationFrame from "../common/Pagination";
 
 const ProjectDetails = () => {
     const {projectId} = useParams();
