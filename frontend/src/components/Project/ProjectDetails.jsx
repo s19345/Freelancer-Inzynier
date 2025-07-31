@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
-import {useParams, Link} from "react-router";
+import {useParams, Link, Link as RouterLink} from "react-router";
 import {PROJECT_BACKEND_URL} from "../../settings";
 
 import {
     Box, Typography, Button, Alert,
 } from "@mui/material";
-import TaskList from "../task/UserTaskList";
+import TaskList from "../task/TaskList";
 import EditProject from "./EditProject";
 import DeleteProject from "./DeleteProject";
+import paths from "../../paths";
+import ProjecDetailsDump from "./ProjectDetailsDump";
 
 const ProjectDetails = () => {
     const {projectId} = useParams();
@@ -32,7 +34,7 @@ const ProjectDetails = () => {
                 }
 
                 const data = await response.json();
-                console.log(" pobieram projekt w pr detProjekt:", data);
+                console.log(data)
                 setProject(data);
             } catch (err) {
                 console.error("Błąd:", err);
@@ -82,7 +84,17 @@ const ProjectDetails = () => {
             </>) : (<EditProject finishEditing={finishEditing} handleUpdate={handleUpdate}/>)}
             {project.client && (<Typography><strong>Klient ID:</strong> {project.client}</Typography>)}
             <TaskList/>
+            <Box>
+                <Button
+                    variant="contained"
+                    component={RouterLink}
+                    to={paths.createTask(projectId)}
+                >
+                    Dodaj zadanie do projektu
+                </Button>
+            </Box>
         </>)}
+        {/*<ProjecDetailsDump/>*/}
     </Box>);
 };
 

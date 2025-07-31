@@ -1,13 +1,13 @@
 import React from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
-import {Button} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-const DeleteTask = ({taskId, onDeleteSuccess}) => {
+const DeleteTask = ({taskId, handleDeleteSuccess}) => {
     const token = useAuthStore((state) => state.token);
 
-    const handleDelete = async () => {
+    const handleDelete = async (e) => {
+
         try {
             const response = await fetch(`${PROJECT_BACKEND_URL}tasks/${taskId}/`, {
                 method: "DELETE",
@@ -17,7 +17,7 @@ const DeleteTask = ({taskId, onDeleteSuccess}) => {
             });
 
             if (response.ok) {
-                if (onDeleteSuccess) onDeleteSuccess();
+                if (handleDeleteSuccess) handleDeleteSuccess(taskId);
             } else {
                 const errorData = await response.json();
                 console.error("Błąd podczas usuwania zadania:", errorData);
@@ -28,16 +28,17 @@ const DeleteTask = ({taskId, onDeleteSuccess}) => {
     };
 
     return (
-        <Button
-            onClick={handleDelete}
-            variant="outlined"
+
+        <DeleteOutlineIcon
+            fontSize="large"
             color="error"
-            size="small"
-            startIcon={<DeleteIcon/>}
-        >
-            Usuń
-        </Button>
+            onClick={(e) => {
+                e.stopPropagation();
+                handleDelete(taskId);
+            }}
+        />
     );
+
 };
 
 export default DeleteTask;

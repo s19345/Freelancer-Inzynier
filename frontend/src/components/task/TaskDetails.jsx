@@ -16,7 +16,7 @@ import {
 import DeleteTask from "./DeleteTask";
 import paths from "../../paths";
 import EditTask from "./EditTask";
-import AutoDismissAlert from "../common/AutoDismissAlert";
+import TaskList from "./TaskList";
 
 const ReturnButton = ({to, text, finishEditing}) => {
 
@@ -51,13 +51,15 @@ const TaskDetails = () => {
             });
 
             if (!res.ok) {
-                throw new Error(`Nie udało się pobrać danych ${contextText}`);
+                console.log(" bla Nie udało się pobrać danych", contextText, res, res.status, res.statusText);
+                throw new Error(` Nie udało się pobrać danych ${contextText}`);
             }
 
             const data = await res.json();
-            console.log("pobieram zadanie w Task:", data);
+            console.log("pobieram zadania w TaskDetails:", data);
             setTask(data);
         } catch (err) {
+            console.log("Error fetching task:", err);
             setError(err.message);
         } finally {
             setLoading(false);
@@ -103,8 +105,8 @@ const TaskDetails = () => {
         high: "Wysoki",
     };
 
-    if (error) return <Alert severity="error">{error}</Alert>;
-    if (!task) return <Typography>Nie znaleziono zadania.</Typography>;
+    // if (error) return <Alert severity="error">{error}</Alert>;
+    // if (!task) return <Typography>Nie znaleziono zadania.</Typography>;
 
     return (
         <Box sx={{mx: "auto", p: 0}}>
@@ -120,7 +122,8 @@ const TaskDetails = () => {
                     Edytuj
                 </Button>
             </Box>
-            {!isEditing ? (<>
+            {error && <Alert severity="error"> {error}</Alert>}
+            {!isEditing && task ? (<>
                     <Typography><strong>Tytuł:</strong> {task.title}</Typography>
                     <Typography><strong>Opis:</strong> {task.description || "Brak opisu"}</Typography>
                     <Typography><strong>Status:</strong> {statusLabels[task.status]}</Typography>
@@ -133,83 +136,93 @@ const TaskDetails = () => {
                 </>) :
                 (<EditTask finishEditing={finishEditing} handleTaskUpdate={handleTaskUpdate}/>)
             }
-            {
-                task.parent_task && (
-                    <Typography><strong>Zadanie nadrzędne:</strong> {task.parent_task.title}</Typography>
-                )
-            }
+            {/*{*/}
+            {/*    task.parent_task && (*/}
+            {/*        <Typography><strong>Zadanie nadrzędne:</strong> {task.parent_task.title}</Typography>*/}
+            {/*    )*/}
+            {/*}*/}
 
 
-            {
-                task.subtasks?.length > 0 &&
-                <Box mt={4}>
-                    <Typography variant="h6" gutterBottom>
-                        Podzadania ({task.subtasks?.length})
-                    </Typography>
-                    <List disablePadding>
-                        {task.subtasks.map((subtask) => (
-                            <React.Fragment key={subtask?.id}>
-                                <ListItem
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                        px: 0
-                                    }}
-                                >
-                                    <ListItemText
-                                        primary={subtask.title}
-                                        secondary={`Termin: ${subtask.due_date}`}
-                                    />
-                                    <Button
-                                        component={RouterLink}
-                                        to={paths.taskDetails(projectId, subtask.id)}
-                                        size="small"
-                                        sx={{mr: 1}}
-                                    >
-                                        Szczegóły
-                                    </Button>
-                                    <DeleteTask
-                                        taskId={subtask.id}
-                                        onDeleteSuccess={() => handleDeleteSuccess(subtask.id)}
-                                    />
-                                    <Chip
-                                        label={statusLabels[subtask.status]}
-                                        color={
-                                            subtask.status === "completed"
-                                                ? "success"
-                                                : subtask.status === "in_progress"
-                                                    ? "warning"
-                                                    : "default"
-                                        }
-                                        variant="outlined"
-                                    />
-                                </ListItem>
-                                <Divider/>
-                            </React.Fragment>
-                        ))}
-                    </List>
-                </Box>
-            }
-            {
-                task.parent_task ? (
-                        <ReturnButton
-                            to={paths.taskDetails(projectId, task.parent_task.id)}
-                            text="Powrót do zadania nadrzędnego"
-                            finishEditing={finishEditing}
-                        />) :
-                    (<Box mt={3} display="flex" gap={2} flexWrap="wrap">
-                        <ReturnButton to={paths.project(projectId)} text="Powrót projektu"/>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => navigate(paths.createSubtask(projectId, taskId))}
-                        >
-                            Dodaj podzadanie
-                        </Button>
+            {/*{*/}
+            {/*    task.subtasks?.length > 0 &&*/}
+            {/*    <Box mt={4}>*/}
+            {/*        <Typography variant="h6" gutterBottom>*/}
+            {/*            Podzadania ({task.subtasks?.length})*/}
+            {/*        </Typography>*/}
+            {/*<List disablePadding>*/}
+            {/*    {task.subtasks.map((subtask) => (*/}
+            {/*        <React.Fragment key={subtask?.id}>*/}
+            {/*            <ListItem*/}
+            {/*                sx={{*/}
+            {/*                    display: "flex",*/}
+            {/*                    justifyContent: "space-between",*/}
+            {/*                    alignItems: "center",*/}
+            {/*                    px: 0*/}
+            {/*                }}*/}
+            {/*            >*/}
+            {/*                <ListItemText*/}
+            {/*                    primary={subtask.title}*/}
+            {/*                    secondary={`Termin: ${subtask.due_date}`}*/}
+            {/*                />*/}
+            {/*                <Button*/}
+            {/*                    component={RouterLink}*/}
+            {/*                    to={paths.taskDetails(projectId, subtask.id)}*/}
+            {/*                    size="small"*/}
+            {/*                    sx={{mr: 1}}*/}
+            {/*                >*/}
+            {/*                    Szczegóły*/}
+            {/*                </Button>*/}
+            {/*                <DeleteTask*/}
+            {/*                    taskId={subtask.id}*/}
+            {/*                    onDeleteSuccess={() => handleDeleteSuccess(subtask.id)}*/}
+            {/*                />*/}
+            {/*                <Chip*/}
+            {/*                    label={statusLabels[subtask.status]}*/}
+            {/*                    color={*/}
+            {/*                        subtask.status === "completed"*/}
+            {/*                            ? "success"*/}
+            {/*                            : subtask.status === "in_progress"*/}
+            {/*                                ? "warning"*/}
+            {/*                                : "default"*/}
+            {/*                    }*/}
+            {/*                    variant="outlined"*/}
+            {/*                />*/}
+            {/*            </ListItem>*/}
+            {/*            <Divider/>*/}
+            {/*        </React.Fragment>*/}
+            {/*    ))}*/}
+            {/*</List>*/}
+            {/*    </Box>*/}
+            {/*}*/}
+            {/*{*/}
+            {/*    task.parent_task ? (*/}
+            {/*            <ReturnButton*/}
+            {/*                to={paths.taskDetails(projectId, task.parent_task.id)}*/}
+            {/*                text="Powrót do zadania nadrzędnego"*/}
+            {/*                finishEditing={finishEditing}*/}
+            {/*            />) :*/}
+            {/*        (<Box mt={3} display="flex" gap={2} flexWrap="wrap">*/}
+            {/*            <ReturnButton to={paths.project(projectId)} text="Powrót projektu"/>*/}
+            {/*            <Button*/}
+            {/*                variant="contained"*/}
+            {/*                color="primary"*/}
+            {/*                onClick={() => navigate(paths.createSubtask(projectId, taskId))}*/}
+            {/*            >*/}
+            {/*                Dodaj podzadanie*/}
+            {/*            </Button>*/}
 
-                    </Box>)
-            }
+            {/*        </Box>)*/}
+            {/*}*/}
+            <TaskList/>
+            <Box>
+                <Button
+                    variant="contained"
+                    component={RouterLink}
+                    to={paths.createSubtask(projectId, taskId)}
+                >
+                    Dodaj zadanie do projektu
+                </Button>
+            </Box>
         </Box>
     );
 };

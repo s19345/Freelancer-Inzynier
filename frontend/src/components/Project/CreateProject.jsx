@@ -106,7 +106,7 @@ const ProjectForm = () => {
     const createProject = async (data) => {
         setLoading(true);
         try {
-            const response = await fetch(`${PROJECT_BACKEND_URL}projects/`, {
+            const response = await fetch(`${PROJECT_BACKEND_URL}project/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -122,6 +122,7 @@ const ProjectForm = () => {
             }
 
             const responseData = await response.json();
+            console.log("Utworzono projekt:", responseData);
             setMessage("Projekt został utworzony pomyślnie");
             setType("success");
             navigate(paths.projectList);

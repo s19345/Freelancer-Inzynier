@@ -97,7 +97,7 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
 
 
             try {
-                const response = await fetch(`${PROJECT_BACKEND_URL}tasks/`, {
+                const response = await fetch(`${PROJECT_BACKEND_URL}task/?project=${projectId}`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

@@ -1,7 +1,8 @@
+from pyexpat.errors import messages
 from rest_framework import status, generics
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.exceptions import NotFound
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.exceptions import NotFound, ValidationError
 from django.db.models import Q
 from django.utils import timezone
 from django.http import Http404
@@ -46,33 +47,92 @@ class ClientViewSet(ModelViewSet):
         except Http404:
             raise NotFound(detail=('Nie znaleziono klienta.'))
 
+# class TaskViewSet(ModelViewSet):
+#     serializer_class = TaskSerializer
+#
+#     def get_queryset(self):
+#         project_id = self.request.query_params.get("project")
+#         parent_task_id = self.request.query_params.get("parent_task")
+#         task_id = self.kwargs.get('pk')
+#
+#         if parent_task_id:
+#             queryset = Task.objects.filter(parent_task=parent_task_id)
+#         elif project_id:
+#             queryset = Task.objects.filter(project=project_id, parent_task__isnull=True)
+#         else:
+#             queryset = Task.objects.all()
+#
+#         return queryset
+#
+#     def perform_create(self, serializer):
+#         serializer.save()
+#
+#     def get_object(self):
+#         try:
+#             return super().get_object()
+#         except Http404:
+#             raise NotFound(detail=('Nie znaleziono zadania.'))
+class TaskDetailViewSet(ReadOnlyModelViewSet):
+    """
+    Obsługuje pojedynczy task: GET / PATCH / DELETE.
+    Nie obsługuje listowania.
+    """
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
 
-class TaskViewSet(ModelViewSet):
+
+class TaskListAPIView(generics.ListAPIView):
+    """
+    Zwraca listę tasków w zależności od filtrów w query params:
+    - project=<id> → taski z tym projektem i parent_task=null
+    - parent_task=<id> → taski mające parent_task = <id>
+    """
     serializer_class = TaskSerializer
 
     def get_queryset(self):
-        queryset = Task.objects.filter(user=self.request.user)
         project_id = self.request.query_params.get("project")
         parent_task_id = self.request.query_params.get("parent_task")
 
+        queryset = Task.objects.all()
+
+        if parent_task_id:
+            return queryset.filter(parent_task_id=parent_task_id)
+
         if project_id:
-            queryset = queryset.filter(project_id=project_id)
+            return queryset.filter(project_id=project_id, parent_task__isnull=True)
 
-        if parent_task_id == "null":
-            queryset = queryset.filter(parent_task__isnull=True)
-        elif parent_task_id:
-            queryset = queryset.filter(parent_task_id=parent_task_id)
+        return queryset.none()
 
-        return queryset
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    lookup_field = 'pk'
 
-    def get_object(self):
-        try:
-            return super().get_object()
-        except Http404:
-            raise NotFound(detail=('Nie znaleziono zadania.'))
+class TaskCreateView(generics.CreateAPIView):
+    """
+    Tworzy nowy task:
+    - POST /tasks/?project=<id>&parent_task=<id?>
+    """
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+    def create(self, request, *args, **kwargs):
+        project_id = request.query_params.get("project")
+        parent_task_id = request.query_params.get("parent_task")
+
+        if not project_id:
+            raise ValidationError({"detail": "Musisz podać parametr project=<id>"})
+
+        data = request.data.copy()
+        data["project_id"] = project_id
+        # if parent_task_id:
+        #     data["parent_task_id"] = parent_task_id
+
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=201)
 
 
 class BaseTaskTimeLogView(generics.GenericAPIView):

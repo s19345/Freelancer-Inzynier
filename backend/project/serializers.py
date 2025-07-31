@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from users.serializers import FriendListSerializer
 from .models import Client, Project, Task, TimeLog
 from users.models import CustomUser
 
@@ -36,30 +37,23 @@ class TaskSimpleSerializer(serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    user = UserSimpleSerializer(read_only=True)
+    user = FriendListSerializer(read_only=True)
     project = ProjectSimpleSerializer(read_only=True)
+    parent_task = TaskSimpleSerializer(read_only=True)
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
 
-    user_id = serializers.PrimaryKeyRelatedField(
-        queryset=CustomUser.objects.all(), source='user', write_only=True, required=False
-    )
     project_id = serializers.PrimaryKeyRelatedField(
         queryset=Project.objects.all(), source='project', write_only=True
     )
 
     parent_task_id = serializers.PrimaryKeyRelatedField(
-        queryset=Task.objects.all(), source='parent_task', write_only=True, required=False
+        queryset=Task.objects.all(), source='parent_task', write_only=True, required=False, allow_null=True
     )
-    parent_task = TaskSimpleSerializer(read_only=True)
-
-    subtasks = serializers.SerializerMethodField()
 
     class Meta:
         model = Task
         fields = '__all__'
-
-    def get_subtasks(self, obj):
-        subtasks = Task.objects.filter(parent_task=obj)
-        return TaskSimpleSerializer(subtasks, many=True, context=self.context).data
+        read_only_fields = ('id', 'created_at')
 
 
 class BaseTimeLogSerializer(serializers.Serializer):
