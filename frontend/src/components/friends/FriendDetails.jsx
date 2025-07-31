@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
     Box,
-
     Grid,
     Typography,
     Paper, Stack, Popover, DialogTitle, Dialog, DialogContent, TextField, DialogActions, Button
@@ -42,7 +41,7 @@ const ExpandableText = ({label, icon, text}) => {
                         align='center'
                         sx={{overflow: "hidden", textAlign: "center"}}
                     >
-                        {displayText || `Dodaj ${label}`}
+                        {displayText || `brak ${label}`}
                     </Typography>
                 </TextBox>
             </Stack>
@@ -160,12 +159,12 @@ export default function FriendDetails() {
                     }
                 });
                 if (!response.ok) {
-                    throw new Error('Failed to fetch user details');
+                    throw new Error('Nie uda³o siê pobraæ szczegó³ów znajomego');
                 }
                 const data = await response.json();
                 setFriend(data);
             } catch (error) {
-                console.error('Error fetching user details:', error);
+                console.error('B³±d podczas pobierania szczegó³ów znajomego:', error);
             }
 
         }
@@ -177,80 +176,92 @@ export default function FriendDetails() {
         <>
             <Paper elevation={3} sx={{p: 4, borderRadius: 4, maxWidth: 900, mx: 'auto'}}>
                 {friend && (
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} sm={4}>
-                            <Typography variant="subtitle2">Imiê i Nazwisko</Typography>
-                            <TextBox>{friend.first_name} {friend.last_name}</TextBox>
-                        </Grid>
+                    <>
+                        <Typography variant="h5" align={"center"} gutterBottom>{friend.username}</Typography>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} sm={4}>
+                                <Typography variant="subtitle2">Imiê i Nazwisko</Typography>
+                                <TextBox>
+                                    {friend.first_name || friend.last_name
+                                        ? `${friend.first_name || ''} ${friend.last_name || ''}`.trim()
+                                        : 'brak danych'}
+                                </TextBox>
+                            </Grid>
 
-                        <Grid item xs={12} sm={4}>
-                            <Typography variant="subtitle2">Email</Typography>
-                            <TextBox>{friend.email}</TextBox>
-                        </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <Typography variant="subtitle2">Email</Typography>
+                                <TextBox>{friend.email}</TextBox>
+                            </Grid>
 
-                        <Grid item xs={12} sm={4}>
-                            <Typography variant="subtitle2">Telefon</Typography>
-                            <TextBox>{friend.phone_number}</TextBox>
-                        </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <Typography variant="subtitle2">Telefon</Typography>
+                                <TextBox>
+                                    {friend.phone_number ? friend.phone_number : 'brak danych'}
+                                </TextBox>
+                            </Grid>
 
-                        <Grid item xs={12} sm={4}>
-                            <Typography variant="subtitle2">Lokalizacja / strefa czasowa</Typography>
-                            <TextBox>{friend.location} / {friend.timezone}</TextBox>
-                        </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <Typography variant="subtitle2">Lokalizacja / strefa czasowa</Typography>
+                                <TextBox>
+                                    {friend.location || friend.timezone
+                                        ? `${friend.location || ''}${friend.location && friend.timezone ? ' / ' : ''}${friend.timezone || ''}`
+                                        : 'brak danych'}
+                                </TextBox>
+                            </Grid>
 
-                        <Grid>
-                            <ExpandableText
-                                label="umiejêtno¶ci"
+                            <Grid>
+                                <ExpandableText
+                                    label="umiejêtno¶ci"
 
 
-                                text={
-                                    friend.skills?.length
-                                        ? friend.skills.map((s) => s.name).join(", ")
-                                        : null
-                                }
-                            />
-                        </Grid>
-                        <Grid>
-                            <ExpandableText
-                                label="bio"
-                                text={friend.bio}
-                            />
-                        </Grid>
+                                    text={
+                                        friend.skills?.length
+                                            ? friend.skills.map((s) => s.name).join(", ")
+                                            : null
+                                    }
+                                />
+                            </Grid>
+                            <Grid>
+                                <ExpandableText
+                                    label="bio"
+                                    text={friend.bio}
+                                />
+                            </Grid>
 
-                        <Grid item xs={12} sm={4}>
-                            <Typography variant="subtitle2">Twoja ocena</Typography>
-                            <TextBox
-                                editable={true}
-                                friendId={friend.id}
-                                field="rate"
-                                initialValue={friend.friend_notes ? friend.friend_notes.rate : ""}
-                                setFriend={setFriend}
-                            >
-                                {friend.friend_notes ? `${friend.friend_notes.rate}` : "Kliknij aby dodaæ swoj± ocenê"}
-                            </TextBox>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Typography variant="subtitle2">Notes</Typography>
-                            <TextBox
-                                editable={true}
-                                friendId={friend.id}
-                                field="notes"
-                                initialValue={friend.friend_notes ? friend.friend_notes.notes : ""}
-                                setFriend={setFriend}
-                            >
-                                {friend.friend_notes ? friend.friend_notes.notes : "Dodaj notatkê."}
-                            </TextBox>
-                        </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <Typography variant="subtitle2">Twoja ocena</Typography>
+                                <TextBox
+                                    editable={true}
+                                    friendId={friend.id}
+                                    field="rate"
+                                    initialValue={friend.friend_notes ? friend.friend_notes.rate : ""}
+                                    setFriend={setFriend}
+                                >
+                                    {friend.friend_notes ? `${friend.friend_notes.rate}` : "Kliknij aby dodaæ swoj± ocenê"}
+                                </TextBox>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography variant="subtitle2">Notes</Typography>
+                                <TextBox
+                                    editable={true}
+                                    friendId={friend.id}
+                                    field="notes"
+                                    initialValue={friend.friend_notes ? friend.friend_notes.notes : ""}
+                                    setFriend={setFriend}
+                                >
+                                    {friend.friend_notes ? friend.friend_notes.notes : "Dodaj notatkê."}
+                                </TextBox>
+                            </Grid>
 
-                        <Grid item xs={12} sm={6}>
-                            <Typography variant="subtitle2">Projekty nad którymi
-                                wspó³pracowali¶cie</Typography>
-                            <TextBox>
-                                {friend.project ? friend.project : "Jeszcze nie wspó³pracowali¶cie nad ¿adnym projektem."}
-                            </TextBox>
-                        </Grid>
 
-                    </Grid>
+                            {/*    <Typography variant="subtitle2">Projekty nad którymi wspó³pracowali¶cie</Typography>*/}
+                            {/*    <TextBox>*/}
+                            {/*        {friend.project ? friend.project : "Jeszcze nie wspó³pracowali¶cie nad ¿adnym projektem."}*/}
+                            {/*    </TextBox>*/}
+                            {/*</Grid>*/}
+
+                        </Grid>
+                    </>
                 )}
 
             </Paper>
