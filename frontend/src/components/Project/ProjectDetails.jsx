@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
-import {useParams, Link, Link as RouterLink} from "react-router";
+import {useParams, Link as RouterLink} from "react-router";
 import {PROJECT_BACKEND_URL} from "../../settings";
+import AddButton from "../common/AddButton";
 
 import {
     Box, Typography, Button, Alert,
@@ -85,13 +86,14 @@ const ProjectDetails = () => {
             {project.client && (<Typography><strong>Klient ID:</strong> {project.client}</Typography>)}
             <TaskList/>
             <Box>
-                <Button
-                    variant="contained"
-                    component={RouterLink}
-                    to={paths.createTask(projectId)}
-                >
-                    Dodaj zadanie do projektu
-                </Button>
+                {/*<Button*/}
+                {/*    variant="contained"*/}
+                {/*    component={RouterLink}*/}
+                {/*    to={paths.createTask(projectId)}*/}
+                {/*>*/}
+                {/*    Dodaj zadanie do projektu*/}
+                {/*</Button>*/}
+                <AddButton to={paths.createTask(projectId)} label={"Dodaj nowe zadanie"}/>
             </Box>
         </>)}
         {/*<ProjecDetailsDump/>*/}
