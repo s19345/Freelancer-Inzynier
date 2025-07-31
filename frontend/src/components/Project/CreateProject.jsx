@@ -33,7 +33,7 @@ const ProjectForm = () => {
         status: "",
         budget: "",
         client: "",
-        collaborators: [], // teraz to tablica
+        collabolators: [],
     });
 
     const [errors, setErrors] = useState({});
@@ -70,8 +70,10 @@ const ProjectForm = () => {
 
                 if (!res.ok) throw new Error("Nie udało się pobrać klientów");
                 const data = await res.json();
+                console.log("Fetched clients:", data);
                 setClients(data.results);
             } catch (err) {
+                console.log("Error fetching clients:", err);
                 setClientsFetchingError(err.message);
             } finally {
                 setClientsFetchingLoading(false);
@@ -106,7 +108,8 @@ const ProjectForm = () => {
     const createProject = async (data) => {
         setLoading(true);
         try {
-            const response = await fetch(`${PROJECT_BACKEND_URL}project/`, {
+            console.log("Creating project with data:", data);
+            const response = await fetch(`${PROJECT_BACKEND_URL}projects/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -135,7 +138,23 @@ const ProjectForm = () => {
 
     const handleChange = (e) => {
         const {name, value} = e.target;
+
         setFormData((prev) => ({...prev, [name]: value}));
+
+        // waliduj zmieniane pole i zaktualizuj errors
+        const fieldErrors = validate(name, value);
+
+        setErrors((prevErrors) => {
+            // usuń błąd dla tego pola, jeśli walidacja przeszła
+            const updatedErrors = {...prevErrors, ...fieldErrors};
+
+            // jeśli nie ma błędu dla pola, usuń go z obiektu errors
+            if (!fieldErrors[name]) {
+                delete updatedErrors[name];
+            }
+
+            return updatedErrors;
+        });
     };
 
     const handleSubmit = (e) => {
@@ -177,6 +196,7 @@ const ProjectForm = () => {
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
+                            required
                             multiline
                             rows={4}
                             disabled={loading}
@@ -185,6 +205,7 @@ const ProjectForm = () => {
                         <TextField
                             label="Wersja"
                             name="version"
+                            required
                             value={formData.version}
                             onChange={handleChange}
                             disabled={loading}
@@ -212,6 +233,7 @@ const ProjectForm = () => {
                             label="Budżet (PLN)"
                             name="budget"
                             type="number"
+                            required
                             value={formData.budget}
                             onChange={handleChange}
                             error={!!errors.budget}
@@ -219,8 +241,8 @@ const ProjectForm = () => {
                             disabled={loading}
                         />
 
-                        <FormControl fullWidth error={!!errors.client} disabled={loading}>
-                            <InputLabel id="client-label">Klient</InputLabel>
+                        <FormControl fullWidth error={!!errors.collabolators} disabled={loading}>
+                            <InputLabel id="collabolators-label">Współpracownicy</InputLabel>
                             <Select
                                 labelId="client-label"
                                 name="client"
@@ -240,14 +262,14 @@ const ProjectForm = () => {
                         <FormControl fullWidth error={!!errors.collaborators} disabled={loading}>
                             <InputLabel id="collaborators-label">Współpracownicy</InputLabel>
                             <Select
-                                labelId="collaborators-label"
-                                name="collaborators"
+                                labelId="collabolators-label"
+                                name="collabolators"
                                 multiple
-                                value={formData.collaborators}
+                                value={formData.collabolators}
                                 onChange={(e) =>
                                     setFormData((prev) => ({
                                         ...prev,
-                                        collaborators: e.target.value,
+                                        collabolators: e.target.value,
                                     }))
                                 }
                                 label="Współpracownicy"
@@ -264,8 +286,8 @@ const ProjectForm = () => {
                                     </MenuItem>
                                 ))}
                             </Select>
-                            {errors.collaborators && (
-                                <FormHelperText>{errors.collaborators}</FormHelperText>
+                            {errors.collabolators && (
+                                <FormHelperText>{errors.collabolators}</FormHelperText>
                             )}
                         </FormControl>
 

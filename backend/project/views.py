@@ -70,7 +70,7 @@ class ProjectDetailView(mixins.RetrieveModelMixin,
 class ProjectListCreateView(mixins.ListModelMixin,
                             mixins.CreateModelMixin,
                             generics.GenericAPIView):
-    serializer_class = ProjectSerializer
+    serializer_class = ProjectWriteSerializer
     pagination_class = CustomPageNumberPagination
 
     def get_queryset(self):
@@ -86,6 +86,9 @@ class ProjectListCreateView(mixins.ListModelMixin,
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        print("*-" * 50)
+        print(request.data)
+        print("*-" * 50)
         return self.create(request, *args, **kwargs)
 
 

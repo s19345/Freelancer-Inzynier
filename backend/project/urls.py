@@ -5,9 +5,7 @@ from .views import ClientViewSet, StartTaskTimeLogView, StopTaskTimeLogView, \
 from rest_framework.routers import DefaultRouter
 
 project_router = DefaultRouter()
-# project_router.register(r'projects', ProjectViewSet, basename='project')
 project_router.register(r'clients', ClientViewSet, basename='client')
-# project_router.register(r'tasks', TaskDetailViewSet, basename='task')
 
 urlpatterns = [
     path('', include(project_router.urls), name='project_view_set'),
