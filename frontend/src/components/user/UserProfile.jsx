@@ -33,7 +33,7 @@ const UserProfile = () => {
 
     return (
 
-        <Box sx={{display: "flex", flexDirection: "row"}}>
+        <Box sx={{display: "flex", flexDirection: "row", gap: 2}}>
             <UserProfileCard user={user}/>
             <Stack spacing={2}>
                 <ProjectsCard/>

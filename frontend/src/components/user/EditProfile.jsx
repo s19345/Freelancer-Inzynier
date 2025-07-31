@@ -16,23 +16,23 @@ import {useNavigate} from "react-router";
 import paths from "../../paths";
 import ChangePassword from "./ChangePassword";
 import SkillEditor from "./EditSkills";
+import {fetchTimezones} from "../helpers";
 
-const TIMEZONES = [
-    'Europe/Warsaw',
-    'America/New_York',
-    'Asia/Tokyo',
-    'Africa/Abidjan',
-    'UTC'
-//     todo pobieraæ z backendu
-];
 
 const EditProfile = () => {
+    const [timezones, setTimezones] = useState([]);
+
+    useEffect(() => {
+        fetchTimezones().then(setTimezones)
+    }, []);
+
     const user = useAuthStore((state) => state.user);
     const updateUserData = useAuthStore((state) => state.updateUserData);
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     const setMessage = useGlobalStore((state) => state.setMessage);
     const setType = useGlobalStore((state) => state.setType);
     const navigate = useNavigate();
+    const [isEdited, setIsEdited] = useState(false);
 
     const [form, setForm] = useState({
         username: '',
@@ -95,13 +95,13 @@ const EditProfile = () => {
     }
 
     return (
-        <Box sx={{display: "flex", flexDirection: "row"}}>
+        <Box sx={{display: "flex", flexDirection: "row", gap: 3, flexWrap: "wrap",}}>
             <Box
                 component="form"
                 onSubmit={handleSubmit}
                 sx={{
-                    maxWidth: 600,
-                    mx: 'auto',
+                    width: "50%",
+                    minWidth: 300,
                     mt: 4,
                     p: 3,
                     border: '1px solid',
@@ -134,11 +134,13 @@ const EditProfile = () => {
                 <FormControl fullWidth>
                     <InputLabel>Strefa czasowa</InputLabel>
                     <Select name="timezone" value={form.timezone} label="Strefa czasowa" onChange={handleChange}>
-                        {TIMEZONES.map((tz) => (
-                            <MenuItem key={tz} value={tz}>
-                                {tz}
-                            </MenuItem>
-                        ))}
+                        {
+                            timezones.map((tz) => (
+                                <MenuItem key={tz} value={tz}>
+                                    {tz}
+                                </MenuItem>
+                            ))
+                        }
                     </Select>
                 </FormControl>
 
@@ -156,14 +158,25 @@ const EditProfile = () => {
                     Dodaj zdjêcie profilowe
                     <input type="file" name="profile_picture" hidden onChange={handleChange} accept="image/*"/>
                 </Button>
+                <Box sx={{display: "flex", flexDirection: "row"}}>
+                    <Button variant="contained" type="submit" sx={{mt: 2, width: "50%"}}>
+                        Zapisz zmiany
+                    </Button>
+                    <Button
+                        sx={{mt: 2, ml: 2, width: "50%"}}
+                        variant="outlined"
+                        onClick={() => setIsEdited(!isEdited)}
 
-                <Button variant="contained" type="submit" sx={{mt: 2}}>
-                    Zapisz zmiany
-                </Button>
+                    >
+                        Zmieñ has³o
+                    </Button>
+                </Box>
             </Box>
-            <Box>
-                <ChangePassword/>
+            <Box sx={{flex: 1}}>
                 <SkillEditor/>
+                {isEdited &&
+                    <ChangePassword setIsEdited={setIsEdited}/>
+                }
             </Box>
         </Box>
     );

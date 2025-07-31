@@ -15,7 +15,6 @@ const showMessage = (message, type) => {
 export const fetchUserSkills = async () => {
 
     try {
-        console.log("token z helpers: ", token)
         const response = await fetch(`${USERS_LIST_URL}skills/`, {
             headers: {
                 Authorization: `Token ${token}`,
@@ -29,10 +28,31 @@ export const fetchUserSkills = async () => {
         }
 
         const data = await response.json();
-        console.log("skile pobrane w helpers:", data);
         return data || [{id: 0, name: "Brak umiejêtno¶ci"}];
     } catch (error) {
         showMessage("Nie uda³o siê pobraæ umiejêtno¶ci.", "error");
+        return [];
+    }
+};
+
+export const fetchTimezones = async () => {
+    try {
+        const response = await fetch(`${USERS_LIST_URL}timezones/`, {
+            headers: {
+                Authorization: `Token ${token}`,
+                Accept: "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            showMessage("B³±d podczas pobierania stref czasowych.", "error");
+            throw new Error("B³±d podczas pobierania stref czasowych.");
+        }
+
+        const data = await response.json();
+        return data || [];
+    } catch (error) {
+        showMessage("Nie uda³o siê pobraæ stref czasowych.", "error");
         return [];
     }
 };

@@ -27,7 +27,6 @@ const SkillEditor = ({initialSkills = []}) => {
             .filter((s) => s && !skills.includes(s));
 
         if (newSkills.length === 0) return;
-        console.log('Dodawanie umiejêtno¶ci:', newSkills);
         setLoading(true);
         try {
             const res = await fetch(API_URL, {
@@ -44,7 +43,8 @@ const SkillEditor = ({initialSkills = []}) => {
             }
             ;
             const data = await res.json();
-            setSkills((prev) => [...prev, ...newSkills]);
+            const filtered = data.filter(skill => !skills.some(s => s.id === skill.id));
+            setSkills(prev => [...prev, ...filtered]);
             setInput('');
         } catch (err) {
             console.error(err);
@@ -54,27 +54,30 @@ const SkillEditor = ({initialSkills = []}) => {
     };
 
     const handleDelete = async (skill) => {
-        setLoading(true);
-        try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Token ${token}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify({add: [], remove: [skill]}),
-            });
+            setLoading(true);
+            try {
+                const res = await fetch(`${API_URL}${skill.id}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Token ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
 
-            if (!res.ok) throw new Error('B³±d usuwania umiejêtno¶ci');
+                if (
+                    !res.ok
+                )
+                    throw new Error('B³±d usuwania umiejêtno¶ci');
 
-            setSkills((prev) => prev.filter((s) => s !== skill));
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoading(false);
+                setSkills((prev) => prev.filter((s) => s !== skill));
+            } catch
+                (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
         }
-    };
+    ;
 
     useEffect(() => {
         const loadSkills = async () => {
@@ -92,13 +95,14 @@ const SkillEditor = ({initialSkills = []}) => {
                 borderColor: 'grey.300',
                 borderRadius: 2,
                 mt: 4,
+                minWidth: 300,
             }}
         >
             <Typography variant="h6" gutterBottom>
                 Twoje umiejêtno¶ci
             </Typography>
 
-            <Stack direction="row" spacing={1} flexWrap="wrap" mb={2}>
+            <Stack direction="row" spacing={1} flexWrap="wrap" mb={2} gap={1}>
                 {skills && skills.map((skill) => (
                     <Chip
                         key={skill.id}

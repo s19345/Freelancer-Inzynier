@@ -65,10 +65,9 @@ const UserProfileCard = ({user}) => {
 
             <Box id={"user-profile-card"}
                  width={"auto"}
-                // height={627}
                  bgcolor="#fcfdff"
                  borderRadius={5}
-                 boxShadow={1}
+                 boxShadow={"0px 3px 35px rgba(0, 0, 0, 0.08)"}
                  position="relative"
                  display="flex"
                  flexDirection="column"
@@ -76,35 +75,15 @@ const UserProfileCard = ({user}) => {
                  p={3}
             >
 
-                {/* Profile Picture */}
-                <Box
-                    position="relative"
-                    width={179}
-                    height={184}
-                    display="flex"
-                    justifyContent="center"
-                    mb={2}
-                >
-                    <Avatar
-                        src={user.profile_picture || "/default-avatar.png"}
-                        alt={fullName || username}
-                        sx={{
-                            width: 166,
-                            height: 181,
-                            position: "absolute",
-                            top: 3,
-                            left: 7,
-                        }}
-                    />
-                    <Box
-                        position="absolute"
-                        width={179}
-                        height={184}
-                        borderRadius="89.5px/92px"
-                        border={3}
-                        borderColor="#ed2590"
-                    />
-                </Box>
+                <Avatar
+                    src={user.profile_picture || "/default-avatar.png"}
+                    alt={fullName || username}
+                    sx={{
+                        width: {xs: 100, sm: 130, md: 180},
+                        height: {xs: 100, sm: 130, md: 180},
+                        border: "4px solid #ed2590",
+                    }}
+                />
 
                 {/* Username & Location */}
                 <Typography

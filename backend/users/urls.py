@@ -1,7 +1,7 @@
 from django.urls import path
 from django.urls.conf import include
 from .views import UserSearchListAPIView, FriendRequestSenderAPIView, FriendRequestReceiverAPIView, \
-FriendRequestDeleteAPIView, FriendListAPIView, FriendDetailsAPIView, SkillViewSet
+FriendRequestDeleteAPIView, FriendListAPIView, FriendDetailsAPIView, SkillViewSet, TimezoneListView
 from rest_framework.routers import DefaultRouter
 from users.views import password_reset_confirm_redirect
 
@@ -19,5 +19,6 @@ urlpatterns = [
     path('friend-request-delete/<int:id>/', FriendRequestDeleteAPIView.as_view(), name='friend-request-delete'),
     path('friends/', FriendListAPIView.as_view(), name='friend-list'),
     path('friends/<int:id>/', FriendDetailsAPIView.as_view(), name='friend-details'),
+    path('timezones/', TimezoneListView.as_view(), name='timezone-list'),
     path('', include(router.urls)),
 ]

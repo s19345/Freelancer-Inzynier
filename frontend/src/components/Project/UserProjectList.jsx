@@ -13,7 +13,6 @@ import {
     Stack, Button,
 } from "@mui/material";
 import paths from "../../paths";
-import AutoDismissAlert from "../common/AutoDismissAlert";
 
 const UserProjectsList = () => {
     const token = useAuthStore(state => state.token);

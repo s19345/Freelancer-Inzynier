@@ -57,7 +57,8 @@ const ProjectsCard = () => {
             maxWidth={800}
             bgcolor="#fcfdff"
             borderRadius={4}
-            boxShadow={2}
+            boxShadow={"0px 3px 35px rgba(0, 0, 0, 0.08)"}
+            sx={{}}
             p={3}
         >
             <Typography variant="h6" fontWeight="bold" mb={2}>
@@ -66,7 +67,7 @@ const ProjectsCard = () => {
 
             <Grid container spacing={2}>
                 {projects.map((project) => (
-                    <Grid item xs={12} sm={6} md={4} key={project.id}>
+                    <Grid xs={12} sm={6} md={4} key={project.id}>
                         <Card
                             sx={{
                                 aspectRatio: "1 / 1",

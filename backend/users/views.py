@@ -7,11 +7,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+import pytz
 from project.pagination import CustomPageNumberPagination
 from .models import CustomUser, FriendRequest, Skill
 from .serializers import CustomUserSerializer, FriendListSerializer, GetSentFriendRequestSerializer, \
     FriendRequestSendSerializer, FriendRequestAcceptSerializer, GetReceivedFriendRequestSerializer, \
-FriendDetailSerializer, SkillAddSerializer, SkillSerializer
+    FriendDetailSerializer, SkillAddSerializer, SkillSerializer
 
 from rest_framework.pagination import PageNumberPagination
 
@@ -200,6 +201,14 @@ class SkillViewSet(GenericViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Skill.DoesNotExist:
             return Response({'error': 'Skill not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class TimezoneListView(APIView):
+    permission_classes = [IsAuthenticated]  # każdy może pobrać
+
+    def get(self, request):
+        timezones = pytz.common_timezones
+        return Response(timezones)
 
 
 def password_reset_confirm_redirect(request, uidb64, token):
