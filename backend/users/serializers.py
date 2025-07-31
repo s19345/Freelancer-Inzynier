@@ -1,4 +1,8 @@
 from rest_framework import serializers
+from django.db import models
+from datetime import timedelta
+
+from project.models import Project, Task, TimeLog
 from .models import CustomUser, FriendRequest, FriendNotes, Skill
 
 
@@ -27,32 +31,66 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class FriendDetailSerializer(serializers.ModelSerializer):
     friend_notes = serializers.SerializerMethodField()
     skills = SkillSerializer(many=True, read_only=True)
+    collaboration_history = serializers.SerializerMethodField()
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'bio', 'profile_picture', 'phone_number',
-                  'location', 'timezone', 'friend_notes', 'skills']
+        fields = [
+            'id', 'username', 'first_name', 'last_name', 'email', 'bio', 'profile_picture',
+            'phone_number', 'location', 'timezone', 'friend_notes', 'skills', 'collaboration_history'
+        ]
 
     def get_friend_notes(self, obj):
-        print("*-" * 50)
-        print("Retrieving friend notes for:", obj.username)
-        print("*-" * 50)
         request = self.context.get('request')
         if not request or not request.user.is_authenticated:
-            print("No authenticated user found in request context.")
             return None
 
         try:
             meta = FriendNotes.objects.get(owner=request.user, friend=obj)
-            print("*-" * 50)
-            print("meta:", meta)
-            print("*-" * 50)
             return FriendNotesSerializer(meta).data
         except FriendNotes.DoesNotExist:
-            print("*-" * 50)
-            print("exceprtion")
-            print("*-" * 50)
             return None
+
+    def get_collaboration_history(self, obj):
+        """
+        Returns stats about common projects and time logs.
+        """
+        request = self.context['request']
+
+        friend_projects = Project.objects.filter(
+            models.Q(manager=obj) | models.Q(collabolators=obj)
+        )
+        user_projects = Project.objects.filter(
+            models.Q(manager=request.user) | models.Q(collabolators=request.user)
+        )
+        common_projects = friend_projects & user_projects
+
+        if not common_projects.exists():
+            return {
+                "common_projects_count": 0,
+                "first_project_date": None,
+                "last_project_date": None,
+                "total_hours": 0
+            }
+
+        first_project_date = common_projects.order_by("created_at").first().created_at
+        last_project_date = common_projects.order_by("-created_at").first().created_at
+
+        tasks = Task.objects.filter(project__in=common_projects, user=obj)
+
+        total_duration = timedelta()
+        for timelog in TimeLog.objects.filter(task__in=tasks):
+            if timelog.end_time:
+                total_duration += timelog.end_time - timelog.start_time
+
+        total_hours = total_duration.total_seconds() / 3600
+
+        return {
+            "common_projects_count": common_projects.count(),
+            "first_project_date": first_project_date.date(),
+            "last_project_date": last_project_date.date(),
+            "total_hours": round(total_hours, 2)
+        }
 
 
 class GetSentFriendRequestSerializer(serializers.ModelSerializer):

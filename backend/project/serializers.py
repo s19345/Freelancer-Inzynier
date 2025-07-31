@@ -19,7 +19,7 @@ class ClientSerializer(serializers.ModelSerializer):
 class ProjectSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ["id", "name"]
+        fields = ["id", "name", "created_at"]
 
 
 class ProjectSerializer(serializers.ModelSerializer):
