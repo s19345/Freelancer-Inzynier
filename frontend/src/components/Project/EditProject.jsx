@@ -36,7 +36,6 @@ const EditProject = ({finishEditing, handleUpdate}) => {
         status: "",
         budget: "",
         client: "",
-        collaborators: []
     });
 
     const [loading, setLoading] = useState(true);
@@ -66,7 +65,7 @@ const EditProject = ({finishEditing, handleUpdate}) => {
                     status: data.status || "",
                     budget: data.budget || "",
                     client: data.client || "",
-                    collaborators: data.collaborators || []
+                    collabolators: data.collabolators || []
                 });
 
             } catch (err) {
@@ -128,10 +127,10 @@ const EditProject = ({finishEditing, handleUpdate}) => {
     const handleChange = (e) => {
         const {name, value} = e.target;
 
-        if (name === "collaborators") {
+        if (name === "collabolators") {
             setFormData((prev) => ({
                 ...prev,
-                collaborators: value.split(",").map((c) => c.trim())
+                collabolators: value.split(",").map((c) => c.trim())
             }));
         } else {
             setFormData((prev) => ({
@@ -146,6 +145,7 @@ const EditProject = ({finishEditing, handleUpdate}) => {
         setSubmitStatus(null);
 
         try {
+            console.log("próbuję zaktualizować projekt", formData);
             const response = await fetch(`${PROJECT_BACKEND_URL}projects/${projectId}/`, {
                 method: "PUT",
                 headers: {
@@ -160,7 +160,8 @@ const EditProject = ({finishEditing, handleUpdate}) => {
                 throw new Error(errorData.detail || "Błąd aktualizacji projektu");
             }
 
-            await response.json();
+            const data = await response.json();
+            console.log("Zaktualizowany projekt:", data);
             setMessage("Projekt został zaktualizowany pomyślnie");
             setType("success");
             handleUpdate(formData)
@@ -254,17 +255,17 @@ const EditProject = ({finishEditing, handleUpdate}) => {
                     </Select>
                     {errors.client && <FormHelperText>{errors.client}</FormHelperText>}
                 </FormControl>
-                <FormControl fullWidth error={!!errors.collaborators} disabled={loading}>
-                    <InputLabel id="collaborators-label">Współpracownicy</InputLabel>
+                <FormControl fullWidth error={!!errors.collabolators} disabled={loading}>
+                    <InputLabel id="collabolators-label">Współpracownicy</InputLabel>
                     <Select
-                        labelId="collaborators-label"
-                        name="collaborators"
+                        labelId="collabolators-label"
+                        name="collabolators"
                         multiple
-                        value={formData.collaborators}
+                        value={formData.collabolators}
                         onChange={(e) =>
                             setFormData((prev) => ({
                                 ...prev,
-                                collaborators: e.target.value,
+                                collabolators: e.target.value,
                             }))
                         }
                         label="Współpracownicy"
@@ -281,8 +282,8 @@ const EditProject = ({finishEditing, handleUpdate}) => {
                             </MenuItem>
                         ))}
                     </Select>
-                    {errors.collaborators && (
-                        <FormHelperText>{errors.collaborators}</FormHelperText>
+                    {errors.collabolators && (
+                        <FormHelperText>{errors.collabolators}</FormHelperText>
                     )}
                 </FormControl>
 
