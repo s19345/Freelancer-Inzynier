@@ -2,17 +2,17 @@ from django.http.response import HttpResponseRedirect
 from django.conf import settings
 from django.db import IntegrityError
 from rest_framework import status, generics, viewsets
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, get_object_or_404  # todo get objor 404 chyba z django
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 import pytz
 from project.pagination import CustomPageNumberPagination
-from .models import CustomUser, FriendRequest, Skill
+from .models import CustomUser, FriendRequest, Skill, FriendNotes
 from .serializers import CustomUserSerializer, FriendListSerializer, GetSentFriendRequestSerializer, \
     FriendRequestSendSerializer, FriendRequestAcceptSerializer, GetReceivedFriendRequestSerializer, \
-    FriendDetailSerializer, SkillAddSerializer, SkillSerializer
+    FriendDetailSerializer, SkillAddSerializer, SkillSerializer, FriendNotesSerializer
 
 from rest_framework.pagination import PageNumberPagination
 
@@ -209,6 +209,42 @@ class TimezoneListView(APIView):
     def get(self, request):
         timezones = pytz.common_timezones
         return Response(timezones)
+
+
+class FriendNotesUpdateCreateView(generics.GenericAPIView):
+    serializer_class = FriendNotesSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, friend_id):
+        """
+        Utwórz lub zaktualizuj notatkę (friend_id w URL)
+        """
+        data = request.data.copy()
+        data["friend"] = friend_id  # żeby nie musiał być podany w body
+
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+
+        friend = serializer.validated_data['friend']
+
+        note, created = FriendNotes.objects.get_or_create(
+            owner=request.user,
+            friend=friend,
+            defaults={
+                'notes': serializer.validated_data.get('notes', ''),
+                'rate': serializer.validated_data.get('rate', ''),
+            }
+        )
+
+        if not created:
+            note.notes = serializer.validated_data.get('notes', note.notes)
+            note.rate = serializer.validated_data.get('rate', note.rate)
+            note.save()
+
+        return Response(
+            FriendNotesSerializer(note).data,
+            status=status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        )
 
 
 def password_reset_confirm_redirect(request, uidb64, token):

@@ -2,12 +2,6 @@ from rest_framework import serializers
 from .models import CustomUser, FriendRequest, FriendNotes, Skill
 
 
-class FriendNotesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FriendNotes
-        fields = ['notes', 'rate']
-
-
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
@@ -40,14 +34,24 @@ class FriendDetailSerializer(serializers.ModelSerializer):
                   'location', 'timezone', 'friend_notes', 'skills']
 
     def get_friend_notes(self, obj):
+        print("*-" * 50)
+        print("Retrieving friend notes for:", obj.username)
+        print("*-" * 50)
         request = self.context.get('request')
         if not request or not request.user.is_authenticated:
+            print("No authenticated user found in request context.")
             return None
 
         try:
             meta = FriendNotes.objects.get(owner=request.user, friend=obj)
+            print("*-" * 50)
+            print("meta:", meta)
+            print("*-" * 50)
             return FriendNotesSerializer(meta).data
         except FriendNotes.DoesNotExist:
+            print("*-" * 50)
+            print("exceprtion")
+            print("*-" * 50)
             return None
 
 
@@ -94,3 +98,10 @@ class SkillAddSerializer(serializers.Serializer):
 
     def validate_skills(self, value):
         return [v.strip() for v in value if v.strip()]
+
+
+class FriendNotesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FriendNotes
+        fields = ['id', 'friend', 'notes', 'rate']
+        read_only_fields = ['id']

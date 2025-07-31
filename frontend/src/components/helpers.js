@@ -56,3 +56,35 @@ export const fetchTimezones = async () => {
         return [];
     }
 };
+
+export const updateOrCreateNotes = async (friendId, notes, rate) => {
+    try {
+        const payload = {};
+        if (notes && notes.trim() !== "") payload.notes = notes;
+        if (rate && rate.trim() !== "") payload.rate = rate;
+
+        const response = await fetch(
+            `${USERS_LIST_URL}friend-notes/${friendId}/`,
+            {
+                method: "POST",
+                headers: {
+                    Authorization: `Token ${token}`,
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            }
+        );
+
+        if (!response.ok) {
+            showMessage("B³±d podczas zapisywania notatki.", "error");
+            throw new Error("B³±d podczas zapisywania notatki.");
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        showMessage("Nie uda³o siê zapisaæ notatki.", "error");
+        return null;
+    }
+};
