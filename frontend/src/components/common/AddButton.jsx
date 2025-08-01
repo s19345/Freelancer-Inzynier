@@ -1,6 +1,6 @@
 import {Link as RouterLink} from "react-router";
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
-import {Button} from "@mui/material";
+import {Button, Typography} from "@mui/material";
 import theme from "../../theme";
 
 const AddButton = ({label, to}) => {
@@ -17,10 +17,16 @@ const AddButton = ({label, to}) => {
                 borderRadius: '30px',
                 cursor: 'pointer',
                 fontSize: '16px',
+                textTransform: 'none',
+                width: 'auto',
+                whiteSpace: 'nowrap',
+                minWidth: 'unset',
             }}
         >
             <AddCircleOutlineRoundedIcon sx={{mr: 1}}/>
-            {label}
+            <Typography noWrap>
+                {label}
+            </Typography>
         </Button>
     );
 }

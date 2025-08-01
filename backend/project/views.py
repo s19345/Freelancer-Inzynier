@@ -14,7 +14,6 @@ from .serializers import ClientSerializer, ProjectSerializer, TaskSerializer, Ti
     TimeLogStopSerializer, ProjectWriteSerializer
 
 
-
 class ProjectDetailView(mixins.RetrieveModelMixin,
                         mixins.UpdateModelMixin,
                         mixins.DestroyModelMixin,
@@ -60,6 +59,11 @@ class ProjectListCreateView(mixins.ListModelMixin,
         return Project.objects.filter(
             Q(manager=user) | Q(collabolators=user)
         ).distinct()
+
+    def get_serializer(self, *args, **kwargs):
+        if self.request.method == 'GET':
+            return ProjectSerializer(*args, **kwargs)
+        return super().get_serializer(*args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save(manager=self.request.user)
