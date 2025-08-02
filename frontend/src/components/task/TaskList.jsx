@@ -13,7 +13,7 @@ import TaskListDump from "./TaskListDump";
 import paths from "../../paths";
 import PaginationFrame from "../common/Pagination";
 
-const TaskList = () => {
+const TaskList = ({addTaskButton, returnButton}) => {
         const {projectId} = useParams();
         let {taskId} = useParams();
         const token = useAuthStore(state => state.token);
@@ -24,7 +24,7 @@ const TaskList = () => {
         const [pagination, setPagination] = useState({next: null, prev: null, pages: 0, currentPage: 1});
 
         const fetchTasks = async (page) => {
-            let url = null
+            let url
             if (!taskId) {
                 url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}`;
             } else {
@@ -85,7 +85,19 @@ const TaskList = () => {
         return (
             <Box sx={{p: 3}}>
                 <TaskListDump tasks={tasks} handleDeleteSuccess={handleDeleteSuccess} handleNavigate={handleNavigate}/>
-
+                <Box sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mt: 2
+                }}>
+                    {returnButton && returnButton}
+                    {pagination.pages > 1 && (
+                        <PaginationFrame pagination={pagination} handleChange={handlePageChange}></PaginationFrame>
+                    )}
+                    {addTaskButton && addTaskButton}
+                </Box>
             </Box>
 
         );

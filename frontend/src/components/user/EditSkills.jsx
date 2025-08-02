@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import useAuthStore from "../../zustand_store/authStore";
 import {USERS_LIST_URL} from "../../settings";
-import {fetchUserSkills} from "../helpers";
+import {fetchUserSkills} from "../fetchers";
 
 
 const SkillEditor = ({initialSkills = []}) => {

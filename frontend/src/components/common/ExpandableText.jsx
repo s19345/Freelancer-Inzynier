@@ -24,7 +24,7 @@ const ExpandableText = ({label, icon, text}) => {
                 open={open}
                 anchorEl={anchorEl}
                 onClose={handleClose}
-                anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+                anchorOrigin={{vertical: 'top', horizontal: 'left'}}
                 transformOrigin={{vertical: 'top', horizontal: 'left'}}
                 PaperProps={{sx: {maxWidth: 300, p: 2}}}
             >

@@ -3,39 +3,26 @@ import IdeaIcon from "@mui/icons-material/Lightbulb";
 import TimerIcon from "@mui/icons-material/AccessTime";
 import React from "react";
 import DeleteTask from "./DeleteTask";
+import {daysSince, daysUntil} from "../helpers";
+
+export const statusColors = {
+    "to_do_color": "#1f9254",
+    "to_do_bcg": "success.background",
+    "in_progress_color": "warning.dark",
+    "in_progress_bcg": "warning.background",
+    "completed_color": "#bc0d01",
+    "completed_bcg": "#fdeaea",
+}
+export const priorityColors = {
+    low_color: "#1f9254",
+    low_bcg: "success.background",
+    medium_color: "warning.dark",
+    medium_bcg: "warning.background",
+    high_color: "#bc0d01",
+    high_bcg: "#fdeaea",
+}
 
 const TaskListDump = ({tasks, handleNavigate, handleDeleteSuccess}) => {
-    const statusColors = {
-        "to_do_color": "#1f9254",
-        "to_do_bcg": "success.background",
-        "in_progress_color": "warning.dark",
-        "in_progress_bcg": "warning.background",
-        "completed_color": "#bc0d01",
-        "completed_bcg": "#fdeaea",
-    }
-    const priorityColors = {
-        low_color: "#1f9254",
-        low_bcg: "success.background",
-        medium_color: "warning.dark",
-        medium_bcg: "warning.background",
-        high_color: "#bc0d01",
-        high_bcg: "#fdeaea",
-    }
-
-    function daysSince(dateString) {
-        const pastDate = new Date(dateString);
-        const now = new Date();
-        const diffMs = now - pastDate;
-        return Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    }
-
-    function daysUntil(dateString) {
-        const futureDate = new Date(dateString);
-        const now = new Date();
-        const diffMs = futureDate - now;
-        return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-    }
-
 
     return (
         <Box
@@ -54,19 +41,21 @@ const TaskListDump = ({tasks, handleNavigate, handleDeleteSuccess}) => {
                 <Box sx={{p: 2}}>
                     <Stack spacing={2}>
                         {tasks.map((task, index) => (
-                            <Box key={index}
-                                 sx={{
-                                     boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.35)",
-                                     borderRadius: "20px",
-                                     p: 2,
-                                     display: "flex",
-                                     flexDirection: "row",
-                                     alignItems: "center",
-                                     border: "1px solid #e0e0e0",
-                                 }}
-                                 onClick={(e) => handleNavigate(e, task.id)}
+                            <Card key={index}
+                                  id="task-box"
+                                  sx={{
+                                      boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.35)",
+                                      borderRadius: "20px",
+                                      p: 2,
+                                      display: "flex",
+                                      flexDirection: "row",
+                                      alignItems: "center",
+                                      border: "1px solid #e0e0e0",
+                                      kursor: "pointer",
+                                  }}
+                                  onClick={(e) => handleNavigate(e, task.id)}
                             >
-                                <IdeaIcon
+                                < IdeaIcon
                                     sx={{
                                         color: "#666",
                                         fontSize: 25,
@@ -192,7 +181,7 @@ const TaskListDump = ({tasks, handleNavigate, handleDeleteSuccess}) => {
                                     />
                                     <DeleteTask handleDeleteSuccess={handleDeleteSuccess} taskId={task.id}/>
                                 </Stack>
-                            </Box>
+                            </Card>
                         ))}
                     </Stack>
                 </Box>

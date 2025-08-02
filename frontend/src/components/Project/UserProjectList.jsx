@@ -6,10 +6,8 @@ import {
     CircularProgress,
     Alert,
 } from "@mui/material";
-import paths from "../../paths";
 import ProjectListDump from "./ProjectListDump";
 import PaginationFrame from "../common/Pagination";
-import AddButton from "../common/AddButton";
 
 const UserProjectsList = () => {
     const token = useAuthStore(state => state.token);
@@ -67,7 +65,6 @@ const UserProjectsList = () => {
             <ProjectListDump projects={projects}/>
             <Box sx={{display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", mb: 2}}>
                 <PaginationFrame pagination={pagination} handleChange={handlePageChange}/>
-                <AddButton label={"Dodaj nowy projekt"} to={paths.createProject}/>
             </Box>
 
         </Box>

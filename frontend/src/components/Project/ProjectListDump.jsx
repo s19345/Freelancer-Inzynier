@@ -39,7 +39,7 @@ function ProjectBox({project}) {
                 display: "flex",
                 flexDirection: "row",
                 cursor: "pointer",
-                p: 2,
+                p: 1,
                 alignItems: "center",
                 boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
             }}
@@ -48,13 +48,15 @@ function ProjectBox({project}) {
                 borderRight="1px dashed #ccc"
                 width="30%"
             >
-                <Box sx={{ml: 2, mt: 2, mb: 2}}>
-                    <Typography variant="h6">
+                <Box sx={{ml: 2, mr: 2, mb: 1, display: "flex", flexDirection: "column", alignItems: "space-between"}}>
+                    <Typography
+                        variant="h6"
+                    >
                         {project.name}
                     </Typography>
                     <Box
                         id="client-box"
-                        sx={{alignItems: "center", display: "flex", flexDirection: "column"}}
+                        sx={{alignItems: "center", display: "flex", flexDirection: "column",}}
                     >
                         {project.client && (<>
                                 <Typography variant="subtitle1">

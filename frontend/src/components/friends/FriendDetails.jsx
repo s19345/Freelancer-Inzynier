@@ -8,8 +8,8 @@ import {
 import {USERS_LIST_URL} from '../../settings';
 import {useParams} from "react-router";
 import useAuthStore from "../../zustand_store/authStore";
-import {updateOrCreateNotes} from "../helpers";
 import CollaborationHistory from "./CollaborationHistory";
+import {updateOrCreateNotes} from "../fetchers";
 
 const ExpandableText = ({label, icon, text}) => {
     const [anchorEl, setAnchorEl] = useState(null);

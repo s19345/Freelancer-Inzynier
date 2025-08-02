@@ -16,7 +16,7 @@ import {useNavigate} from "react-router";
 import paths from "../../paths";
 import ChangePassword from "./ChangePassword";
 import SkillEditor from "./EditSkills";
-import {fetchTimezones} from "../helpers";
+import {fetchTimezones} from "../fetchers";
 
 
 const EditProfile = () => {
