@@ -1,19 +1,12 @@
 import React, {useEffect, useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
-import {Link} from "react-router";
 import {
-    Typography,
-    List,
-    ListItem,
-    Paper,
     Box,
     CircularProgress,
     Alert,
-    Stack, Button,
 } from "@mui/material";
 import paths from "../../paths";
-import ProjectDetailsDump from "./ProjectDetailsDump";
 import ProjectListDump from "./ProjectListDump";
 import PaginationFrame from "../common/Pagination";
 import AddButton from "../common/AddButton";
@@ -77,50 +70,7 @@ const UserProjectsList = () => {
                 <PaginationFrame pagination={pagination} handleChange={handlePageChange}/>
                 <AddButton label={"Dodaj nowy projekt"} to={paths.createProject}/>
             </Box>
-            {/*<Typography variant="h5" gutterBottom>*/}
-            {/*    Twoje projekty*/}
-            {/*</Typography>*/}
 
-            {/*<List>*/}
-            {/*    {projects.map((project) => (*/}
-            {/*        <ListItem key={project.id} disableGutters sx={{mb: 2}}>*/}
-            {/*            <Paper elevation={2} sx={{p: 2, width: '100%'}}>*/}
-            {/*                <Stack spacing={1}>*/}
-            {/*                    <Typography*/}
-            {/*                        variant="h6"*/}
-            {/*                        component={Link}*/}
-            {/*                        to={paths.project(project.id)}*/}
-            {/*                        sx={{*/}
-            {/*                            textDecoration: 'none',*/}
-            {/*                            color: 'primary.main',*/}
-            {/*                            '&:hover': {textDecoration: 'underline'},*/}
-            {/*                        }}*/}
-            {/*                    >*/}
-            {/*                        {project.name || "Bez nazwy"}*/}
-            {/*                    </Typography>*/}
-
-            {/*                    <Typography variant="body2">Status: {project.status}</Typography>*/}
-            {/*                    {project.description && (*/}
-            {/*                        <Typography variant="body2">{project.description}</Typography>*/}
-            {/*                    )}*/}
-            {/*                    {project.budget && (*/}
-            {/*                        <Typography variant="body2">Budżet: {project.budget} zł</Typography>*/}
-            {/*                    )}*/}
-            {/*                </Stack>*/}
-            {/*            </Paper>*/}
-            {/*        </ListItem>*/}
-            {/*    ))}*/}
-            {/*</List>*/}
-            {/*<Box mt={2}>*/}
-            {/*    <Button*/}
-            {/*        component={Link}*/}
-            {/*        to={paths.createProject}*/}
-            {/*        variant="contained"*/}
-            {/*        color="primary"*/}
-            {/*    >*/}
-            {/*        Utwórz nowy projekt*/}
-            {/*    </Button>*/}
-            {/*</Box>*/}
         </Box>
     );
 };

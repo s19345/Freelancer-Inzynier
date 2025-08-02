@@ -1,14 +1,8 @@
-import TimerIcon from "@mui/icons-material/AccessTime";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import IdeaIcon from "@mui/icons-material/Lightbulb";
 import {
     Avatar, AvatarGroup,
     Box,
     Card,
     Chip,
-    IconButton,
-    Stack,
     Typography,
     Tooltip
 } from "@mui/material";
