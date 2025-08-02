@@ -65,8 +65,8 @@ const EditProject = ({finishEditing, handleUpdate}) => {
                     version: data.version || "",
                     status: data.status || "",
                     budget: data.budget || "",
-                    client: data.client || "",
-                    collabolators: data.collabolators.map(c => c.id) || []
+                    client: data.client?.id || "",
+                    collabolators: data.collabolators?.map(c => c.id) || []
                 });
 
             } catch (err) {
@@ -154,9 +154,9 @@ const EditProject = ({finishEditing, handleUpdate}) => {
             }
 
             const data = await response.json();
-            console.log("Zaktualizowany projekt:", data);
             setMessage("Projekt został zaktualizowany pomyślnie");
             setType("success");
+            handleUpdate();
 
         } catch (err) {
             setSubmitStatus(`Błąd: ${err.message}`);

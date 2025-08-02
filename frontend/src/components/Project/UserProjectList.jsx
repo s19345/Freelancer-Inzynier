@@ -31,7 +31,6 @@ const UserProjectsList = () => {
                 throw new Error("Nie udało się pobrać projektów");
             }
             const data = await res.json();
-            console.log("Fetched projects:", data);
             setPagination({
                 next: data.next,
                 prev: data.previous,

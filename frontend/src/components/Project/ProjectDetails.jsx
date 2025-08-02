@@ -12,13 +12,12 @@ import paths from "../../paths";
 import ProjecDetailsDump from "./ProjectDetailsDump";
 
 const ProjectDetails = () => {
-    const {projectId} = useParams();
-    const token = useAuthStore((state) => state.token);
-    const [project, setProject] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+        const {projectId} = useParams();
+        const token = useAuthStore((state) => state.token);
+        const [project, setProject] = useState(null);
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(null);
 
-    useEffect(() => {
         const fetchProject = async () => {
             try {
                 const response = await fetch(`${PROJECT_BACKEND_URL}projects/${projectId}/`, {
@@ -32,7 +31,6 @@ const ProjectDetails = () => {
                 }
 
                 const data = await response.json();
-                console.log(data)
                 setProject(data);
             } catch (err) {
                 console.error("Błąd:", err);
@@ -42,27 +40,33 @@ const ProjectDetails = () => {
             }
         };
 
-        fetchProject();
-    }, [projectId, token]);
-    const handleUpdate = (updatedTask) => {
-        setProject(updatedTask);
-    };
+        useEffect(() => {
+                fetchProject();
+            }, [projectId, token]
+        )
+        ;
+        const handleProjectUpdate = () => {
+            fetchProject()
+        }
 
 
-    if (error) return <Alert severity="error">Błąd: {error}</Alert>;
+        if (error) return <Alert severity="error">Błąd: {error}</Alert>;
 
 
-    return (
-        <Box sx={{p: 0}}>
-            {project && (<>
+        return (
+            <Box sx={{p: 0}}>
+                {project && (<>
 
-                <TaskList/>
-                <Box>
+                    <ProjecDetailsDump project={project} handleUpdate={handleProjectUpdate}/>
 
-                    <AddButton to={paths.createTask(projectId)} label={"Dodaj nowe zadanie"}/>
-                </Box>
-            </>)}
-        </Box>);
-};
+                    <TaskList/>
+                    <Box>
+
+                        <AddButton to={paths.createTask(projectId)} label={"Dodaj nowe zadanie"}/>
+                    </Box>
+                </>)}
+            </Box>);
+    }
+;
 
 export default ProjectDetails;

@@ -48,7 +48,6 @@ const TaskList = () => {
                     pages: data.total_pages,
                     currentPage: data.current_page
                 });
-                console.log("Fetched tasks:", data);
                 setTasks(results);
             } catch (err) {
                 setError(err.message);
