@@ -1,15 +1,18 @@
-import {Link as RouterLink} from "react-router";
+import {useNavigate} from "react-router";
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import {Button, Typography} from "@mui/material";
 import theme from "../../theme";
 
-const AddButton = ({label, to, type}) => {
+const SubmitButton = ({label, to, type}) => {
+    const navigate = useNavigate();
+
     return (
         <Button
             variant="contained"
-            component={RouterLink}
-            to={to}
             type={type}
+            onClick={() => {
+                navigate(to)
+            }}
             style={{
                 backgroundColor: theme.palette.primary.dark,
                 color: 'black',
@@ -32,4 +35,4 @@ const AddButton = ({label, to, type}) => {
     );
 }
 
-export default AddButton;
+export default SubmitButton;

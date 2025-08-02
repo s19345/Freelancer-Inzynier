@@ -3,6 +3,7 @@ import {
     Box,
     Card,
     Chip,
+
     Typography,
     Tooltip
 } from "@mui/material";
@@ -38,22 +39,16 @@ export const statusColors = {
     "Completed_bcg": "#fdeaea",
 }
 
-const ProjecDetailsDump = ({project, handleUpdate}) => {
-        const [isEditing, setIsEditing] = useState(false);
+const ProjecDetailsDump = ({project, handleUpdate, handleEdit}) => {
 
         if (project) {
             project = {
                 ...project,
                 status: project.status.charAt(0).toUpperCase() + project.status.slice(1)
             };
-        };
+        }
+        ;
 
-        const handleEdit = () => {
-            setIsEditing(!isEditing);
-        }
-        const finishEditing = () => {
-            setIsEditing(false);
-        }
 
         function daysSince(startDate) {
             const now = new Date();
@@ -90,124 +85,118 @@ const ProjecDetailsDump = ({project, handleUpdate}) => {
                         alignItems: "center",
                         mr: 5
                     }}>
-                        {!isEditing && (
-                            <>
-                                <Box id="project-info"
-                                     sx={{display: "flex", flexDirection: "column", alignItems: "flex-start",}}>
+                        <Box id="project-info"
+                             sx={{display: "flex", flexDirection: "column", alignItems: "flex-start",}}>
+                            <Box sx={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                                <Typography
+                                    variant={"h6"}
+                                    sx={{mr: 2}}
+                                >
+                                    {project.name}
+                                </Typography>
+                                <CustomAvatar user={project.manager}/>
+                                {project.client && (
                                     <Box sx={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-                                        <Typography
-                                            variant={"h6"}
-                                            sx={{mr: 2}}
+                                        <Typography sx={{ml: 2, mr: 2}}>dla</Typography>
+                                        <Tooltip
+                                            title={
+                                                <>
+                                                    <Typography
+                                                        variant="body2">{project.client.contact_person}</Typography>
+                                                    <Typography
+                                                        variant="body2">{project.client.company_name}</Typography>
+                                                </>
+                                            }
                                         >
-                                            {project.name}
-                                        </Typography>
-                                        <CustomAvatar user={project.manager}/>
-                                        {project.client && (
-                                            <Box sx={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-                                                <Typography sx={{ml: 2, mr: 2}}>dla</Typography>
-                                                <Tooltip
-                                                    title={
-                                                        <>
-                                                            <Typography
-                                                                variant="body2">{project.client.contact_person}</Typography>
-                                                            <Typography
-                                                                variant="body2">{project.client.company_name}</Typography>
-                                                        </>
-                                                    }
-                                                >
-                                                    <Avatar sx={{width: 32, height: 32}}>
-                                                        JK
-                                                    </Avatar>
-                                                </Tooltip>
-                                            </Box>
-                                        )}
-                                        {/*    todo dodaæ klienta: np dla: {client} */}
+
+                                            <Avatar sx={{width: 32, height: 32}}>
+                                                JK
+                                            </Avatar>
+                                        </Tooltip>
                                     </Box>
-                                    <Box sx={{display: "flex", flexDirection: "row", mt: 2}}>
-                                        <Chip
-                                            label={project.status}
-                                            size="medium"
-                                            sx={{
-                                                backgroundColor: `${statusColors[`${project.status}_bcg`]}`,
-                                                color: `${statusColors[`${project.status}_color`]}`,
-                                                fontWeight: "medium",
-                                                fontSize: 14,
-                                                height: 24,
-                                                borderRadius: "22px",
-                                            }}
-                                        />
-                                        <Chip
-                                            label={project.version}
-                                            size="medium"
-                                            sx={{
-                                                ml: 1,
-                                                fontWeight: "medium",
-                                                fontSize: 14,
-                                                height: 24,
-                                                borderRadius: "22px",
-                                            }}
-                                        />
-                                        <Chip
-                                            label={project.budget + " z³"}
-                                            size="medium"
-                                            sx={{
-                                                ml: 1,
-                                                fontWeight: "medium",
-                                                fontSize: 14,
-                                                height: 24,
-                                                borderRadius: "22px",
-                                            }}
-                                        />
-                                    </Box>
-                                    <AvatarGroup
-                                        max={6}
-                                        sx={{mt: 2}}
-                                        slotProps={{
-                                            additionalAvatar: {
-                                                sx: {
-                                                    width: 32,
-                                                    height: 32,
-                                                    fontSize: 14,
-                                                },
-                                            },
-                                            avatar: {
-                                                sx: {
-                                                    width: 32,
-                                                    height: 32,
-                                                    fontSize: 14,
-                                                },
-                                            },
-                                        }}
-                                    >
-                                        {project.collabolators
-                                            .filter((user) => user.id !== project.manager.id)
-                                            .map((user) => (
-                                                <CustomAvatar user={user}/>
-                                            ))}
-                                    </AvatarGroup>
-                                    <ExpandableText text={project.description}/>
-                                </Box>
+
+                                )}
+                            </Box>
+                            <Box sx={{display: "flex", flexDirection: "row", mt: 2}}>
+                                <Chip
+                                    label={project.status}
+                                    size="medium"
+                                    sx={{
+                                        backgroundColor: `${statusColors[`${project.status}_bcg`]}`,
+                                        color: `${statusColors[`${project.status}_color`]}`,
+                                        fontWeight: "medium",
+                                        fontSize: 14,
+                                        height: 24,
+                                        borderRadius: "22px",
+                                    }}
+                                />
+                                <Chip
+                                    label={project.version}
+                                    size="medium"
+                                    sx={{
+                                        ml: 1,
+                                        fontWeight: "medium",
+                                        fontSize: 14,
+                                        height: 24,
+                                        borderRadius: "22px",
+                                    }}
+                                />
+                                <Chip
+                                    label={project.budget + " z³"}
+                                    size="medium"
+                                    sx={{
+                                        ml: 1,
+                                        fontWeight: "medium",
+                                        fontSize: 14,
+                                        height: 24,
+                                        borderRadius: "22px",
+                                    }}
+                                />
+                            </Box>
+                            <AvatarGroup
+                                max={6}
+                                sx={{mt: 2}}
+                                slotProps={{
+                                    additionalAvatar: {
+                                        sx: {
+                                            width: 32,
+                                            height: 32,
+                                            fontSize: 14,
+                                        },
+                                    },
+                                    avatar: {
+                                        sx: {
+                                            width: 32,
+                                            height: 32,
+                                            fontSize: 14,
+                                        },
+                                    },
+                                }}
+                            >
+                                {project.collabolators
+                                    .filter((user) => user.id !== project.manager.id)
+                                    .map((user) => (
+                                        <CustomAvatar user={user}/>
+                                    ))}
+                            </AvatarGroup>
+                            <ExpandableText text={project.description}/>
+                        </Box>
 
 
-                                <Box>
-                                    <TimeInfo time={daysSince(project.created_at)} label={"Spêdzony czas"}/>
-                                </Box>
-                            </>
-                        )}
-                        {isEditing && (
-                            <Card sx={{p: 2, width: "80%"}}>
-                                <EditProject finishEditing={finishEditing} handleUpdate={handleUpdate}/>
-                            </Card>
-                        )}
+                        <Box>
+                            <TimeInfo time={daysSince(project.created_at)} label={"Spêdzony czas"}/>
+                        </Box>
+
+
                         <Box>
                             <EditButton handleEdit={handleEdit}/>
                             <DeleteProject projectId={project.id}/>
                         </Box>
                     </Box>
-                )}
+                )
+                }
             </Box>
         );
-    }
-;
+    };
 
 export default ProjecDetailsDump;

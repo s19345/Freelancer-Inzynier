@@ -11,6 +11,7 @@ import TaskList from "../task/TaskList";
 import paths from "../../paths";
 import ProjecDetailsDump from "./ProjectDetailsDump";
 import ReturnButton from "../common/ReturnButton";
+import EditProject from "./EditProject";
 
 const AddTaskButton = ({projectId}) => {
     return (
@@ -19,59 +20,81 @@ const AddTaskButton = ({projectId}) => {
 }
 
 const ProjectDetails = () => {
-        const {projectId} = useParams();
-        const token = useAuthStore((state) => state.token);
-        const [project, setProject] = useState(null);
-        const [loading, setLoading] = useState(true);
-        const [error, setError] = useState(null);
+    const {projectId} = useParams();
+    const token = useAuthStore((state) => state.token);
+    const [project, setProject] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
 
-        const fetchProject = async () => {
-            try {
-                const response = await fetch(`${PROJECT_BACKEND_URL}projects/${projectId}/`, {
-                    headers: {
-                        Authorization: `Token ${token}`, "Content-Type": "application/json"
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error("Nie udało się pobrać danych projektu");
+    const fetchProject = async () => {
+        try {
+            const response = await fetch(`${PROJECT_BACKEND_URL}projects/${projectId}/`, {
+                headers: {
+                    Authorization: `Token ${token}`, "Content-Type": "application/json"
                 }
-                const data = await response.json();
-                setProject(data);
-            } catch (err) {
-                console.error("Błąd:", err);
-                setError(err.message);
-            } finally {
-                setLoading(false);
+            });
+
+            if (!response.ok) {
+                throw new Error("Nie udało się pobrać danych projektu");
             }
+            const data = await response.json();
+            setProject(data);
+        } catch (err) {
+            console.error("Błąd:", err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEdit = () => {
+        setIsEditing(!isEditing);
+    }
+
+    useEffect(() => {
+            fetchProject();
+        }, [projectId, token]
+    );
+    const handleProjectUpdate = (project) => {
+        if (!project) fetchProject()
+        else {
+            setProject(project)
+            setIsEditing(false);
         };
 
-        useEffect(() => {
-                fetchProject();
-            }, [projectId, token]
-        )
-        ;
-        const handleProjectUpdate = () => {
-            fetchProject()
-        }
-
-
-        if (error) return <Alert severity="error">Błąd: {error}</Alert>;
-
-
-        return (
-            <Box sx={{p: 0}}>
-                {project && (<>
-
-                    <ProjecDetailsDump project={project} handleUpdate={handleProjectUpdate}/>
-
-                    <TaskList
-                        addTaskButton={<AddTaskButton projectId={projectId}/>}
-                        returnButton={<ReturnButton label={"Wróć do projektów"} to={paths.projectList}/>}
-                    />
-                </>)}
-            </Box>);
     }
-;
+
+
+    if (error) return <Alert severity="error">Błąd: {error}</Alert>;
+
+
+    return (
+        <Box sx={{p: 0}}>
+            {project && (<>
+
+                {!isEditing && (
+                    <ProjecDetailsDump
+                        project={project}
+                        handleUpdate={handleProjectUpdate}
+                        handleEdit={handleEdit}
+                    />
+                )}
+                {isEditing && (
+                    <EditProject
+                        handleUpdate={handleProjectUpdate}
+                        project={project}
+                        setIsEditing={setIsEditing}
+                    />
+                )}
+
+
+                <TaskList
+                    addTaskButton={<AddTaskButton projectId={projectId}/>}
+                    returnButton={<ReturnButton label={"Wróć do projektów"} to={paths.projectList}/>}
+                />
+            </>)}
+        </Box>);
+};
 
 export default ProjectDetails;

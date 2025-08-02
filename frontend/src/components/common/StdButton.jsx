@@ -1,15 +1,14 @@
 import {Link as RouterLink} from "react-router";
-import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import {Button, Typography} from "@mui/material";
 import theme from "../../theme";
 
-const AddButton = ({label, to, type}) => {
+const StdButton = ({label, to, onClick}) => {
     return (
         <Button
             variant="contained"
             component={RouterLink}
             to={to}
-            type={type}
+            onClick={onClick}
             style={{
                 backgroundColor: theme.palette.primary.dark,
                 color: 'black',
@@ -24,7 +23,6 @@ const AddButton = ({label, to, type}) => {
                 minWidth: 'unset',
             }}
         >
-            <AddCircleOutlineRoundedIcon sx={{mr: 1}}/>
             <Typography noWrap>
                 {label}
             </Typography>
@@ -32,4 +30,4 @@ const AddButton = ({label, to, type}) => {
     );
 }
 
-export default AddButton;
+export default StdButton;

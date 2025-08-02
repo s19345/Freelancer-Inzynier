@@ -8,6 +8,8 @@ import {
 } from "@mui/material";
 import ProjectListDump from "./ProjectListDump";
 import PaginationFrame from "../common/Pagination";
+import AddButton from "../common/AddButton";
+import paths from "../../paths";
 
 const UserProjectsList = () => {
     const token = useAuthStore(state => state.token);
@@ -65,6 +67,7 @@ const UserProjectsList = () => {
             <ProjectListDump projects={projects}/>
             <Box sx={{display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", mb: 2}}>
                 <PaginationFrame pagination={pagination} handleChange={handlePageChange}/>
+                <AddButton label={"Stwórz nowy projekt"} to={paths.createProject}/>
             </Box>
 
         </Box>

@@ -42,7 +42,16 @@ const theme = createTheme(
             //     default: "#202020",
             //     paper: "#202020",
             // },
-        }
+        },
+        components: {
+            MuiOutlinedInput: {
+                styleOverrides: {
+                    root: {
+                        borderRadius: "12px",
+                    },
+                },
+            },
+        },
     }
 )
 export default theme
