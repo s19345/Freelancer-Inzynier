@@ -1,7 +1,8 @@
 from pyexpat.errors import messages
 from django.db.models.query import Prefetch
 from rest_framework import status, generics, mixins
-from rest_framework.response import Response
+from users.models import CustomUser
+from users.serializers import FriendListSerializer
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
@@ -221,10 +222,8 @@ class RecentProjectsWithTasksView(generics.ListAPIView):
             .annotate(most_urgent_due_date=Min('tasks__due_date', filter=Q(tasks__user=user)))
             .order_by('most_urgent_due_date')
             .prefetch_related(
-                Prefetch(
-                    'tasks',
-                    queryset=tasks,
-                    to_attr='user_tasks_prefetched'
-                )
+                Prefetch('tasks', queryset=tasks, to_attr='user_tasks_prefetched'),
+                Prefetch('tasks__user', queryset=CustomUser.objects.exclude(id=user.id))
+                # todo to są wszyscy użytkownicy spośród pobranych tasków, (czyli mają przypisane zadanie) ale wolałabym żeby się nie powtarzali i byli posortowani w kolejności od tego który ma najwięcej przypisanych tasków
             )
         )

@@ -167,7 +167,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         const tasks = projects.flatMap(project => project.user_tasks_prefetched)
-        setAllTasks(tasks.sort((a, b) => new Date(a.due_date) - new Date(b.due_date)))
+        setAllTasks(tasks.sort((a, b) => new Date(a.due_date) - new Date(b.due_date)).slice(0, 5));
     }, [projects]);
 
 

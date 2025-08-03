@@ -141,10 +141,22 @@ class UserTaskSerializer(serializers.ModelSerializer):
 
 class ProjectWithUserTasksSerializer(serializers.ModelSerializer):
     user_tasks_prefetched = TaskSerializer(many=True)
+    users = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
-        fields = ['id', 'name', 'user_tasks_prefetched']
+        fields = ['id', 'name', 'user_tasks_prefetched', "users"]
+
+        def get_users(self, obj):
+            users = {task.user for task in obj.user_tasks_prefetched}
+            return [
+                {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email,
+                }
+                for user in users
+            ]
 
 
 class ProjectWithTasksSerializer(serializers.ModelSerializer):
