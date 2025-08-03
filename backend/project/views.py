@@ -110,18 +110,28 @@ class TaskListAPIView(generics.ListAPIView):
     serializer_class = TaskSerializer
 
     def get_queryset(self):
+        user = self.request.user
         project_id = self.request.query_params.get("project")
         parent_task_id = self.request.query_params.get("parent_task")
 
         queryset = Task.objects.all()
 
         if parent_task_id:
-            return queryset.filter(parent_task_id=parent_task_id)
+            queryset = queryset.filter(parent_task_id=parent_task_id)
 
-        if project_id:
-            return queryset.filter(project_id=project_id, parent_task__isnull=True)
+        elif project_id:
+            queryset = queryset.filter(project_id=project_id, parent_task__isnull=True)
 
-        return queryset.none()
+        else:
+            return queryset.none()
+
+        return queryset.annotate(
+            user_order=Case(
+                When(user=user, then=0),
+                default=1,
+                output_field=IntegerField()
+            )
+        ).order_by('user_order', 'due_date')
 
 
 class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
