@@ -212,21 +212,18 @@ class RecentProjectsWithTasksView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
 
-        # pobieramy taski usera i sortujemy po due_date rosnąco
         tasks = Task.objects.filter(user=user).order_by('due_date')
 
-        # wyciągamy ID projektów użytkownika
         project_ids = tasks.values_list('project_id', flat=True).distinct()
 
-        # pobieramy projekty i sortujemy po najwcześniejszym due_date taska
         return (
             Project.objects.filter(id__in=project_ids)
-            .annotate(most_urgent_due_date=Min('tasks__due_date'))
+            .annotate(most_urgent_due_date=Min('tasks__due_date', filter=Q(tasks__user=user)))
             .order_by('most_urgent_due_date')
             .prefetch_related(
                 Prefetch(
                     'tasks',
-                    queryset=tasks,  # te same taski z sortowaniem
+                    queryset=tasks,
                     to_attr='user_tasks_prefetched'
                 )
             )

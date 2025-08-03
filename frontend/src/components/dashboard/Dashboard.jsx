@@ -26,6 +26,7 @@ const ProjectCard = ({project}) => {
                 flexDirection: "column",
                 alignItems: "center",
                 boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                cursor: "pointer",
             }}
         >
             <Tooltip title={project.name} arrow>
@@ -36,7 +37,7 @@ const ProjectCard = ({project}) => {
                         fontWeight: 600,
                         display: "-webkit-box",
                         WebkitBoxOrient: "vertical",
-                        WebkitLineClamp: 2, // maksymalnie 2 linie
+                        WebkitLineClamp: 2,
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         width: "100%",
@@ -74,6 +75,80 @@ const ProjectCard = ({project}) => {
 
 const TaskCard = ({task}) => {
 
+    const priorityColors = {
+        low: "rgba(115,221,140,0.2)",
+        medium: "#fff9e6",
+        high: "#fdeaea",
+    }
+
+    const navigate = useNavigate()
+    const handleClick = () => {
+        navigate(paths.taskDetails(task.project.id, task.id));
+    };
+
+    return (
+        <Card
+            onClick={() => {
+                handleClick(task.id)
+            }}
+            sx={{
+                textAlign: "center",
+                // background: `${priorityColors[task.priority]}`,
+                background: priorityColors[task.priority],
+                // background: 'warning.background',
+                p: 1,
+                m: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                cursor: "pointer",
+            }}
+        >
+            <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", flex: 1}}>
+                <Tooltip title={task.title} arrow>
+                    <Typography
+                        variant="subtitle1"
+                        sx={{
+                            fontWeight: 600,
+                            display: "-webkit-box",
+                            WebkitBoxOrient: "vertical",
+                            WebkitLineClamp: 1,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            width: "100%",
+                            minWidth: 100,
+                        }}
+                    >
+                        {task.title}
+                    </Typography>
+
+                </Tooltip>
+                <Tooltip title={task.description} arrow>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            display: "-webkit-box",
+                            WebkitBoxOrient: "vertical",
+                            WebkitLineClamp: 1,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            width: "100%",
+                            minWidth: 100,
+
+                        }}
+                    >
+                        {task.description}
+                    </Typography>
+                </Tooltip>
+            </Box>
+
+            <Typography variant="body2" sx={{fontWeight: 500, mb: 1}}>
+                {task.assignee?.username}
+            </Typography>
+        </Card>
+    )
+
 }
 
 const Dashboard = () => {
@@ -92,9 +167,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         const tasks = projects.flatMap(project => project.user_tasks_prefetched)
-        console.log("Tasks from all projects:", tasks);
-        setAllTasks(allTasks.sort((a, b) => new Date(a.due_date) - new Date(b.due_date)))
-        console.log(projects);
+        setAllTasks(tasks.sort((a, b) => new Date(a.due_date) - new Date(b.due_date)))
     }, [projects]);
 
 
@@ -123,10 +196,13 @@ const Dashboard = () => {
         </Box>
         <Box id="second-row" sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
             <Box id="second-left-column"
-                 sx={{flex: 4, m: 2, border: '2px solid #eaeaea', borderRadius: '9px', height: "30vh"}}>
-                <Typography variant="h2">
-                    Daily tasks
+                 sx={{flex: 3, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
+                <Typography variant="h6">
+                    Najpilniejsze zadania
                 </Typography>
+                {allTasks && allTasks.map(task => (
+                    <TaskCard key={task.id} task={task}/>
+                ))}
             </Box>
             <Box id="second-right-column"
                  sx={{flex: 7, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
