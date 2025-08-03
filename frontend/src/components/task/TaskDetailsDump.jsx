@@ -1,4 +1,4 @@
-import {Avatar, Box, Card, Chip, Stack, Typography} from "@mui/material";
+import {Avatar, Box, Button, Card, Chip, Stack, Typography} from "@mui/material";
 import IdeaIcon from "@mui/icons-material/Lightbulb";
 import TimerIcon from "@mui/icons-material/AccessTime";
 import DeleteTask from "./DeleteTask";
@@ -8,7 +8,7 @@ import {priorityColors, statusColors} from "./TaskListDump";
 import ExpandableText from "../common/ExpandableText";
 import EditButton from "../common/EditButton";
 
-const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick}) => {
+const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick, handleTaskStartOrPause, handleEndTask}) => {
 
 
     return (
@@ -106,9 +106,21 @@ const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick}) => {
                             }}
                         />
                     </Stack>
-                    {/*    tu opis*/}
                     <ExpandableText text={task.description} label={"opis"}/>
                 </Box>
+                <Button
+                    onClick={() => handleTaskStartOrPause(task.id)}
+                >
+                    {task.status == "to_do" && <Typography variant={"subtitle2"}>Rozpocznij zadanie</Typography>}
+                    {task.status == "in_progress" && <Typography variant={"subtitle2"}>Wstrzymaj zadanie</Typography>}
+                </Button>
+                {task.status == "in_progress" && (
+                    <Button
+                        onClick={() => handleEndTask(task.id)}
+                    >
+                        <Typography variant={"subtitle1"}>Zakoñcz zadanie</Typography>
+                    </Button>
+                )}
                 <Box
                     sx={{
                         backgroundColor: "rgba(75, 166, 101, 0.11)",

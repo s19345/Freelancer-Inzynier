@@ -36,7 +36,6 @@ const TaskForm = ({
         if (!formData.title.trim()) newErrors.title = "Tytu³ jest wymagany";
         if (!formData.due_date) newErrors.due_date = "Termin wykonania jest wymagany";
         if (!formData.project_version.trim()) newErrors.project_version = "Wersja projektu jest wymagana";
-        if (!formData.status) newErrors.status = "Status jest wymagany";
         if (!formData.priority) newErrors.priority = "Priorytet jest wymagany";
         if (!formData.description.trim()) newErrors.description = "Opis jest wymagany";
         return newErrors;
@@ -208,24 +207,24 @@ const TaskForm = ({
                                 <MenuItem value="high">Wysoki</MenuItem>
                             </TextField>
                         </Box>
-                        <Box sx={{display: "flex", flexDirection: "column", flex: 1}}>
-                            <Typography variant="h6" sx={{ml: 1}}>Status</Typography>
-                            <TextField
-                                onInvalid={(e) => e.target.setCustomValidity(invalidText)}
-                                onInput={(e) => e.target.setCustomValidity("")}
-                                required
-                                select
-                                label="Status"
-                                name="status"
-                                value={formData.status}
-                                onChange={handleChange}
-                                fullWidth
-                            >
-                                <MenuItem value="to_do">Do zrobienia</MenuItem>
-                                <MenuItem value="in_progress">W trakcie</MenuItem>
-                                <MenuItem value="completed">Zakoñczone</MenuItem>
-                            </TextField>
-                        </Box>
+                        {/*<Box sx={{display: "flex", flexDirection: "column", flex: 1}}>*/}
+                        {/*    <Typography variant="h6" sx={{ml: 1}}>Status</Typography>*/}
+                        {/*    <TextField*/}
+                        {/*        onInvalid={(e) => e.target.setCustomValidity(invalidText)}*/}
+                        {/*        onInput={(e) => e.target.setCustomValidity("")}*/}
+                        {/*        required*/}
+                        {/*        select*/}
+                        {/*        label="Status"*/}
+                        {/*        name="status"*/}
+                        {/*        value={formData.status}*/}
+                        {/*        onChange={handleChange}*/}
+                        {/*        fullWidth*/}
+                        {/*    >*/}
+                        {/*        <MenuItem value="to_do">Do zrobienia</MenuItem>*/}
+                        {/*        <MenuItem value="in_progress">W trakcie</MenuItem>*/}
+                        {/*        <MenuItem value="completed">Zakoñczone</MenuItem>*/}
+                        {/*    </TextField>*/}
+                        {/*</Box>*/}
                     </Box>
                 </Card>
                 <Box sx={{display: "flex", flexDirection: "row", gap: 5, mt: 2, mr: 10, justifyContent: "flex-end"}}>

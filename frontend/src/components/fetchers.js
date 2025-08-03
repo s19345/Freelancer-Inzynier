@@ -1,6 +1,6 @@
 import useGlobalStore from "../zustand_store/globalInfoStore";
 import useAuthStore from "../zustand_store/authStore";
-import {USERS_LIST_URL} from "../settings";
+import {PROJECT_BACKEND_URL, USERS_LIST_URL} from "../settings";
 
 const token = useAuthStore.getState().token;
 
@@ -33,6 +33,8 @@ export const fetchUserSkills = async () => {
         showMessage("Nie uda³o siê pobraæ umiejêtno¶ci.", "error");
         return [];
     }
+
+
 };
 
 export const fetchTimezones = async () => {
@@ -55,6 +57,7 @@ export const fetchTimezones = async () => {
         showMessage("Nie uda³o siê pobraæ stref czasowych.", "error");
         return [];
     }
+
 };
 
 export const updateOrCreateNotes = async (friendId, notes, rate) => {
@@ -86,12 +89,15 @@ export const updateOrCreateNotes = async (friendId, notes, rate) => {
     } catch (error) {
         showMessage("Nie uda³o siê zapisaæ notatki.", "error");
         return null;
+
     }
+
+
 };
 
 export const fetchLastActiveProjects = async () => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/project/last-active-projects/`, {
+        const response = await fetch(`${PROJECT_BACKEND_URL}last-active-projects/`, {
             headers: {
                 Authorization: `Token ${token}`,
                 Accept: "application/json",
@@ -108,5 +114,108 @@ export const fetchLastActiveProjects = async () => {
     } catch (error) {
         showMessage("Nie uda³o siê pobraæ ostatnio aktywnych projektów.", "error");
         return [];
+    }
+};
+
+export const startTaskTimelog = async (taskId) => {
+    try {
+        const response = await fetch(`${PROJECT_BACKEND_URL}start-task-timelog/`, {
+            method: "POST",
+            headers: {
+                Authorization: `Token ${token}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({task_id: taskId}),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            let errorMessage = "B³±d podczas uruchamiania timeloga zadania.";
+
+            if (errorData?.non_field_errors && errorData.non_field_errors.length > 0) {
+                errorMessage = errorData.non_field_errors[0];
+            }
+            showMessage(errorMessage, "error");
+        }
+
+        const data = await response.json();
+        console.log("rozpoczête zadanie : ", data)
+        if (data?.success) {
+            showMessage(data.success, "success");
+        }
+        return data;
+    } catch
+        (error) {
+        return null;
+    }
+};
+
+export const stopTaskTimelog = async (taskId) => {
+    try {
+        const response = await fetch(`${PROJECT_BACKEND_URL}stop-task-timelog/`, {
+            method: "POST",
+            headers: {
+                Authorization: `Token ${token}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({task_id: taskId}),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            let errorMessage = "B³±d podczas zatrzymywania timeloga zadania.";
+            if (data?.non_field_errors && data.non_field_errors.length > 0) {
+                errorMessage = data.non_field_errors[0];
+            }
+            showMessage(errorMessage, "error");
+            return null;
+        }
+
+        if (data?.success) {
+            showMessage(data.success, "success");
+        }
+
+        return data;
+    } catch (error) {
+        showMessage("Wyst±pi³ b³±d po³±czenia z serwerem.", "error");
+        return null;
+    }
+};
+
+export const endTaskTimelog = async (taskId) => {
+    try {
+        const response = await fetch(`${PROJECT_BACKEND_URL}end-task-timelog/`, {
+            method: "POST",
+            headers: {
+                Authorization: `Token ${token}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({task_id: taskId}),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            let errorMessage = "B³±d podczas koñczenia zadania.";
+            if (data?.non_field_errors && data.non_field_errors.length > 0) {
+                errorMessage = data.non_field_errors[0];
+            }
+            showMessage(errorMessage, "error");
+            return null;
+        }
+
+        console.log("zakoñczone zadanie : ", data);
+        if (data?.success) {
+            showMessage(data.success, "success");
+        }
+
+        return data;
+    } catch (error) {
+        showMessage("Wyst±pi³ b³±d po³±czenia z serwerem.", "error");
+        return null;
     }
 };

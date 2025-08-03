@@ -12,6 +12,7 @@ import TaskDetailsDump from "./TaskDetailsDump";
 import AddButton from "../common/AddButton";
 import paths from "../../paths";
 import ReturnButton from "../common/ReturnButton";
+import {endTaskTimelog, startTaskTimelog, stopTaskTimelog} from "../fetchers";
 
 
 const TaskDetails = () => {
@@ -40,10 +41,8 @@ const TaskDetails = () => {
             }
 
             const data = await res.json();
-            console.log("Fetched task data:", data);
             setTask(data);
         } catch (err) {
-            console.log("Error fetching task:", err);
             setError(err.message);
         } finally {
             setLoading(false);
@@ -67,6 +66,42 @@ const TaskDetails = () => {
         setTask(updatedTask);
     };
 
+    const handleTaskStartOrPause = async (taskId) => {
+        let result;
+        if (task.status === "to_do") {
+            result = await startTaskTimelog(taskId);
+            if (result && result.start_time) {
+                setTask(prev => ({
+                    ...prev,
+                    status: "in_progress",
+                    start_time: result.start_time,
+                }));
+            }
+
+        } else if (task.status === "in_progress") {
+            console.log("zaraz zatrzymam to zadanie")
+            result = await stopTaskTimelog(taskId);
+            if (result && result.end_time) {
+                setTask(prev => ({
+                    ...prev,
+                    status: "to_do",
+                    stop_time: result.stop_time,
+                }));
+            }
+        }
+    }
+
+    const handleEndTask = async (taskId) => {
+        const result = await endTaskTimelog(taskId)
+        if (result) {
+            setTask(prev => ({
+                ...prev,
+                status: "completed",
+                end_time: result.end_time,
+            }));
+        }
+    }
+
     const handleEditClick = () => {
         setIsEditing(!isEditing);
     }
@@ -85,8 +120,13 @@ const TaskDetails = () => {
                 <Card>
                     {isEditing ?
                         (<EditTask task={task} handleTaskUpdate={handleTaskUpdate} setIsEditing={setIsEditing}/>) :
-                        (<TaskDetailsDump task={task} handleDeleteSuccess={handleDeleteSuccess}
-                                          handleEditClick={handleEditClick}/>)
+                        (<TaskDetailsDump
+                            task={task}
+                            handleDeleteSuccess={handleDeleteSuccess}
+                            handleEditClick={handleEditClick}
+                            handleTaskStartOrPause={handleTaskStartOrPause}
+                            handleEndTask={handleEndTask}
+                        />)
                     }
                     {!task.parent_task && <TaskList
                         addTaskButton={<AddButton label={"Dodaj podzadanie"}

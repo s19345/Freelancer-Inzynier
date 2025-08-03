@@ -53,7 +53,7 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
 
 
         try {
-            console.log("Tworzenie podzadania:", payload);
+            console.log("Tworzenie zadania:", payload);
             const response = await fetch(`${PROJECT_BACKEND_URL}task/?project=${projectId}`, {
                 method: "POST",
                 headers: {

@@ -14,7 +14,7 @@ const EditTask = ({handleTaskUpdate, setIsEditing, task}) => {
     const [formData, setFormData] = useState({
         title: task?.title || '',
         description: task?.description || '',
-        status: task?.status || 'to_do',
+        // status: task?.status || 'to_do',
         due_date: task?.due_date || '',
         project_version: task?.project_version || '',
         priority: task?.priority || 'medium',
@@ -30,6 +30,7 @@ const EditTask = ({handleTaskUpdate, setIsEditing, task}) => {
         setError(null);
 
         try {
+            console.log("Updating task with data:", formData);
             const res = await fetch(`${PROJECT_BACKEND_URL}tasks/${taskId}/`, {
                 method: 'PATCH',
                 headers: {
