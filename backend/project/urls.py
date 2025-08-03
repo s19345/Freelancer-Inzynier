@@ -1,7 +1,7 @@
 from django.urls import path, include
 from .views import ClientViewSet, StartTaskTimeLogView, StopTaskTimeLogView, \
     EndTaskTimeLogView, TaskListAPIView, TaskDetailView, TaskCreateView, ProjectDetailView, \
-    ProjectListCreateView
+    ProjectListCreateView, RecentProjectsWithTasksView
 from rest_framework.routers import DefaultRouter
 
 project_router = DefaultRouter()
@@ -17,5 +17,6 @@ urlpatterns = [
     path("tasks/<int:pk>/", TaskDetailView().as_view(), name="task_detail"),
     path("projects/", ProjectListCreateView.as_view(), name="project_list_create"),
     path("projects/<int:pk>/", ProjectDetailView.as_view(), name="project_detail"),
+    path("last-active-projects/", RecentProjectsWithTasksView.as_view(), name="last_active_projects"),
 
 ]

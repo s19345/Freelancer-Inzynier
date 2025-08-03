@@ -1,6 +1,6 @@
 import './App.css';
 import {BrowserRouter, Routes, Route} from "react-router";
-import Dashboard from "./components/layout/Dashboard";
+import Dashboard from "./components/dashboard/Dashboard";
 import Login from "./components/user/Login";
 import Logout from "./components/user/Logout";
 import Register from "./components/user/Register";

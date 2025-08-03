@@ -1,17 +1,26 @@
 from pyexpat.errors import messages
-
+from django.db.models.query import Prefetch
 from rest_framework import status, generics, mixins
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
 from django.utils import timezone
 from django.http import Http404
+from django.db.models import Case, When, IntegerField
+
+from django.db.models import Case, When, IntegerField, Min, Prefetch
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+from .models import Project, Task
+from .serializers import ProjectWithTasksSerializer
 
 from .models import Client, Project, Task, TimeLog
 from .pagination import CustomPageNumberPagination
 from .serializers import ClientSerializer, ProjectSerializer, TaskSerializer, TimeLogCreateSerializer, \
-    TimeLogStopSerializer, ProjectWriteSerializer
+    TimeLogStopSerializer, ProjectWriteSerializer, ProjectWithUserTasksSerializer
 
 
 class ProjectDetailView(mixins.RetrieveModelMixin,
@@ -89,7 +98,6 @@ class ClientViewSet(ModelViewSet):
             return super().get_object()
         except Http404:
             raise NotFound(detail=('Nie znaleziono klienta.'))
-
 
 
 class TaskListAPIView(generics.ListAPIView):
@@ -195,3 +203,31 @@ class EndTaskTimeLogView(BaseTaskTimeLogView):
     serializer_class = TimeLogStopSerializer
     new_status = 'completed'
     success_message = 'Zadanie zostało zakończone a status został ustawiony na {status}.'
+
+
+class RecentProjectsWithTasksView(generics.ListAPIView):
+    serializer_class = ProjectWithUserTasksSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        # pobieramy taski usera i sortujemy po due_date rosnąco
+        tasks = Task.objects.filter(user=user).order_by('due_date')
+
+        # wyciągamy ID projektów użytkownika
+        project_ids = tasks.values_list('project_id', flat=True).distinct()
+
+        # pobieramy projekty i sortujemy po najwcześniejszym due_date taska
+        return (
+            Project.objects.filter(id__in=project_ids)
+            .annotate(most_urgent_due_date=Min('tasks__due_date'))
+            .order_by('most_urgent_due_date')
+            .prefetch_related(
+                Prefetch(
+                    'tasks',
+                    queryset=tasks,  # te same taski z sortowaniem
+                    to_attr='user_tasks_prefetched'
+                )
+            )
+        )

@@ -88,3 +88,25 @@ export const updateOrCreateNotes = async (friendId, notes, rate) => {
         return null;
     }
 };
+
+export const fetchLastActiveProjects = async () => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/project/last-active-projects/`, {
+            headers: {
+                Authorization: `Token ${token}`,
+                Accept: "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            showMessage("B³±d podczas pobierania ostatnio aktywnych projektów.", "error");
+            throw new Error("B³±d podczas pobierania ostatnio aktywnych projektów.");
+        }
+
+        const data = await response.json();
+        return data || [];
+    } catch (error) {
+        showMessage("Nie uda³o siê pobraæ ostatnio aktywnych projektów.", "error");
+        return [];
+    }
+};

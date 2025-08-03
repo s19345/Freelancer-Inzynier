@@ -131,3 +131,25 @@ class TimeLogStopSerializer(BaseTimeLogSerializer):
         attrs['task'] = task
         attrs['timelog'] = timelog
         return attrs
+
+
+class UserTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = "__all__"
+
+
+class ProjectWithUserTasksSerializer(serializers.ModelSerializer):
+    user_tasks_prefetched = TaskSerializer(many=True)
+
+    class Meta:
+        model = Project
+        fields = ['id', 'name', 'user_tasks_prefetched']
+
+
+class ProjectWithTasksSerializer(serializers.ModelSerializer):
+    user_tasks = TaskSerializer(many=True)
+
+    class Meta:
+        model = Project
+        fields = ['id', 'name', 'user_tasks']

@@ -58,7 +58,6 @@ const FriendList = () => {
     };
 
     const handleInvite = async (friend) => {
-        console.log("zapros", friend);
         try {
             const res = await fetch(`${USERS_LIST_URL}friend-request-send/`, {
                 method: "POST",
@@ -69,26 +68,19 @@ const FriendList = () => {
                 body: JSON.stringify({receiver: friend}),
             });
 
-            // Odczytujemy odpowied¼ tylko raz
             const data = await res.json();
 
             if (!res.ok) {
-                // Obs³uga b³êdów z API
-                // np. data = { "error": "Zaproszenie zosta³o ju¿ wcze¶niej wys³ane." }
-                setType("error");
+                setType(data.key || "error");
                 setMessage(data.error || "Nie uda³o siê wys³aæ zaproszenia");
                 return;
             }
 
-            // Obs³uga sukcesu
-            // np. data = { key: "success", value: "Zaproszenie wys³ane" }
             setType(data.key || "success");
             setMessage(data.value || "Zaproszenie wys³ane");
 
-            console.log("Zaproszenie wys³ane:", data);
 
         } catch (error) {
-            console.log(error);
             setError("Nie uda³o siê wys³aæ zaproszenia (b³±d sieci)");
         }
     };
