@@ -91,14 +91,6 @@ class ClientViewSet(ModelViewSet):
             raise NotFound(detail=('Nie znaleziono klienta.'))
 
 
-class TaskDetailViewSet(ReadOnlyModelViewSet):
-    """
-    Obsługuje pojedynczy task: GET / PATCH / DELETE.
-    Nie obsługuje listowania.
-    """
-    serializer_class = TaskSerializer
-    queryset = Task.objects.all()
-
 
 class TaskListAPIView(generics.ListAPIView):
     """

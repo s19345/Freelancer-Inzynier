@@ -1,18 +1,15 @@
 import {
     Avatar, AvatarGroup,
     Box,
-    Card,
     Chip,
-
     Typography,
     Tooltip
 } from "@mui/material";
-import React, {useState} from "react";
+import React from "react";
 import DeleteProject from "./DeleteProject";
 import TimeInfo from "../common/TimeInfo";
 import ExpandableText from "../common/ExpandableText";
 import EditButton from "../common/EditButton";
-import EditProject from "./EditProject";
 
 const CustomAvatar = ({user}) => {
     return <Avatar
@@ -39,7 +36,7 @@ export const statusColors = {
     "Completed_bcg": "#fdeaea",
 }
 
-const ProjecDetailsDump = ({project, handleUpdate, handleEdit}) => {
+const ProjecDetailsDump = ({project, handleEdit}) => {
 
     if (project) {
         project = {
@@ -75,7 +72,6 @@ const ProjecDetailsDump = ({project, handleUpdate, handleEdit}) => {
         return parts.join(" : ");
     }
 
-    console.log("Project Details Dump:", project);
 
     return (
         <Box>

@@ -3,7 +3,7 @@ import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRou
 import {Button, Typography} from "@mui/material";
 import theme from "../../theme";
 
-const SubmitButton = ({label, to, type}) => {
+const SubmitButton = ({label, type}) => {
 
     return (
         <Button

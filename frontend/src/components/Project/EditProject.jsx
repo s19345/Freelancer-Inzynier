@@ -72,7 +72,7 @@ const EditProject = ({setIsEditing, handleUpdate, project}) => {
             loading={loading}
             returnPath={paths.project(projectId)}
             setIsEditing={setIsEditing}
-            submitMessage={"Aktualizuj"}
+            submitMessage={"Zapisz zmiany"}
         />
     );
 };

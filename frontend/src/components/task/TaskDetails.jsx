@@ -40,6 +40,7 @@ const TaskDetails = () => {
             }
 
             const data = await res.json();
+            console.log("Fetched task data:", data);
             setTask(data);
         } catch (err) {
             console.log("Error fetching task:", err);
@@ -65,9 +66,6 @@ const TaskDetails = () => {
     const handleTaskUpdate = (updatedTask) => {
         setTask(updatedTask);
     };
-    const finishEditing = () => {
-        setIsEditing(false);
-    }
 
     const handleEditClick = () => {
         setIsEditing(!isEditing);
@@ -85,7 +83,8 @@ const TaskDetails = () => {
             {error && <Alert severity="error"> {error}</Alert>}
             {task &&
                 <Card>
-                    {isEditing ? (<EditTask finishEditing={finishEditing} handleTaskUpdate={handleTaskUpdate}/>) :
+                    {isEditing ?
+                        (<EditTask task={task} handleTaskUpdate={handleTaskUpdate} setIsEditing={setIsEditing}/>) :
                         (<TaskDetailsDump task={task} handleDeleteSuccess={handleDeleteSuccess}
                                           handleEditClick={handleEditClick}/>)
                     }

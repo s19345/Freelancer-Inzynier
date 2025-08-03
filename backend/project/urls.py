@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import ClientViewSet, StartTaskTimeLogView, StopTaskTimeLogView, \
-    EndTaskTimeLogView, TaskDetailViewSet, TaskListAPIView, TaskDetailView, TaskCreateView, ProjectDetailView, \
+    EndTaskTimeLogView, TaskListAPIView, TaskDetailView, TaskCreateView, ProjectDetailView, \
     ProjectListCreateView
 from rest_framework.routers import DefaultRouter
 
