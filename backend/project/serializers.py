@@ -148,14 +148,14 @@ class ProjectWithUserTasksSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'user_tasks_prefetched', "users"]
 
         def get_users(self, obj):
-            users = {task.user for task in obj.user_tasks_prefetched}
+            collaborators = getattr(obj, 'prefetched_collaborators', [])
             return [
                 {
                     'id': user.id,
                     'username': user.username,
-                    'email': user.email,
+                    'profile_picture': user.profile_picture,
                 }
-                for user in users
+                for user in collaborators
             ]
 
 

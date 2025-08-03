@@ -1,23 +1,12 @@
-from pyexpat.errors import messages
-from django.db.models.query import Prefetch
 from rest_framework import status, generics, mixins
 from users.models import CustomUser
-from users.serializers import FriendListSerializer
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
-from django.db.models import Q
+from django.db.models import Q, Count, Case, When, IntegerField, Min, Prefetch
 from django.utils import timezone
 from django.http import Http404
-from django.db.models import Case, When, IntegerField
-
-from django.db.models import Case, When, IntegerField, Min, Prefetch
-from rest_framework.views import APIView
 from rest_framework.response import Response
-
-from .models import Project, Task
-from .serializers import ProjectWithTasksSerializer
-
 from .models import Client, Project, Task, TimeLog
 from .pagination import CustomPageNumberPagination
 from .serializers import ClientSerializer, ProjectSerializer, TaskSerializer, TimeLogCreateSerializer, \
@@ -223,9 +212,24 @@ class RecentProjectsWithTasksView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
 
-        tasks = Task.objects.filter(user=user).order_by('due_date')
+        status_order = Case(
+            When(status='in_progress', then=0),
+            default=1,
+            output_field=IntegerField(),
+        )
+
+        tasks = (
+            Task.objects.filter(user=user)
+            .exclude(status='completed')
+            .annotate(status_order=status_order)
+            .order_by('status_order', 'due_date')
+        )
 
         project_ids = tasks.values_list('project_id', flat=True).distinct()
+
+        collaborators_qs = CustomUser.objects.exclude(id=user.id).annotate(
+            task_count=Count('tasks', filter=Q(tasks__project_id__in=project_ids))
+        ).order_by('-task_count')
 
         return (
             Project.objects.filter(id__in=project_ids)
@@ -233,7 +237,9 @@ class RecentProjectsWithTasksView(generics.ListAPIView):
             .order_by('most_urgent_due_date')
             .prefetch_related(
                 Prefetch('tasks', queryset=tasks, to_attr='user_tasks_prefetched'),
-                Prefetch('tasks__user', queryset=CustomUser.objects.exclude(id=user.id))
-                # todo to są wszyscy użytkownicy spośród pobranych tasków, (czyli mają przypisane zadanie) ale wolałabym żeby się nie powtarzali i byli posortowani w kolejności od tego który ma najwięcej przypisanych tasków
+                Prefetch(
+                    'collabolators',
+                    queryset=collaborators_qs,
+                    to_attr='prefetched_collaborators')
             )
         )
