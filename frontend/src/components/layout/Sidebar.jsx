@@ -33,12 +33,11 @@ const Sidebar = () => {
         {text: "Klienci", icon: <ClientsIcon/>, adress: paths.clients},
         {text: "Znajomi", icon: <CollaboratorsIcon/>, adress: paths.friends},
         {text: "Kalendarz", icon: <CalendarIcon/>, adress: paths.calendar},
-    ];
 
-    const bottomMenuItems = [
         {text: "Statystyki", icon: <StatisticsIcon/>, adress: paths.statistics},
         {text: "Finanse", icon: <FinancesIcon/>, adress: paths.finances},
         {text: "Zaproszenia", icon: <InvitationsIcon/>, adress: paths.invitationList},
+        {text: "Wyloguj", icon: <LogOutIcon/>, adress: paths.logout},
     ];
 
     const handleItemClick = (text) => {
@@ -48,13 +47,14 @@ const Sidebar = () => {
     return (
         <Box
             sx={{
-                width: 400,
+                width: 280,
                 height: "100vh",
                 bgcolor: "primary.main",
                 borderRadius: "0px 20px 20px 0px",
                 position: "relative",
                 overflow: "hidden",
                 display: "flex",
+                minWidth: 280,
             }}
         >
             <Box
@@ -128,82 +128,7 @@ const Sidebar = () => {
                     ))}
                 </List>
 
-                <Divider
-                    sx={{bgcolor: "rgba(255, 255, 255, 0.2)", width: 249, my: 2}}
-                />
 
-                <List sx={{width: "100%", mt: 3}}>
-                    {bottomMenuItems.map((item) => (
-                        <ListItem
-                            key={item.text}
-                            onClick={() => handleItemClick(item.text)}
-                            component={Link}
-                            to={item.adress}
-                            sx={{
-                                width: 206,
-                                height: 53,
-                                mb: 3,
-                                borderRadius: "0px 20px 20px 0px",
-                                bgcolor:
-                                    selectedItem === item.text ? "primary.dark" : "primary.main",
-                                "&:hover": {
-                                    bgcolor: "primary.dark",
-                                    cursor: "pointer",
-                                },
-                            }}
-                        >
-                            <ListItemIcon sx={{color: "white", minWidth: 40}}>
-                                {item.icon}
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <Typography
-                                        variant="body1"
-                                        sx={{
-                                            color: "white",
-                                            fontWeight: 500,
-                                        }}
-                                    >
-                                        {item.text}
-                                    </Typography>
-                                }
-                            />
-                        </ListItem>
-                    ))}
-                    <ListItem
-                        onClick={() => handleItemClick("Log Out")}
-                        sx={{
-                            width: 206,
-                            height: 53,
-                            mt: 3,
-                            borderRadius: "0px 20px 20px 0px",
-                            "&:hover": {
-                                bgcolor: "primary.dark",
-                                cursor: "pointer",
-                            },
-                        }}
-                    >
-                        <ListItemIcon sx={{color: "white", minWidth: 40}}>
-                            <LogOutIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            component={Link}
-                            to={paths.logout}
-                            primary={
-                                <Typography
-                                    variant="body1"
-                                    sx={{
-                                        color: "white",
-                                        fontWeight: 500,
-                                    }}
-                                >
-                                    Log Out
-                                </Typography>
-                            }
-                        />
-                    </ListItem>
-
-                </List>
             </Box>
 
 
