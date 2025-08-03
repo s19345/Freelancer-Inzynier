@@ -56,14 +56,9 @@ const ProjectDetails = () => {
             fetchProject();
         }, [projectId, token]
     );
-    const handleProjectUpdate = (project) => {
-        if (!project) fetchProject()
-        else {
-            setProject(project)
-            setIsEditing(false);
-        };
-
-    }
+    const handleProjectUpdate = () => {
+        fetchProject();
+    };
 
 
     if (error) return <Alert severity="error">Błąd: {error}</Alert>;

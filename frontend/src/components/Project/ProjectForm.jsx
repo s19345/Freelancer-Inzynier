@@ -95,20 +95,10 @@ const ProjectForm = ({
 
         setFormData((prev) => ({...prev, [name]: value}));
 
-        const fieldErrors = validate(name, value);
-
-        setErrors((prevErrors) => {
-            const updatedErrors = {...prevErrors, ...fieldErrors};
-
-            if (!fieldErrors[name]) {
-                delete updatedErrors[name];
-            }
-
-            return updatedErrors;
-        });
     };
 
     const handleLocalSubmit = (e) => {
+        e.preventDefault()
         const validationErrors = validate();
 
         if (Object.keys(validationErrors).length > 0) {

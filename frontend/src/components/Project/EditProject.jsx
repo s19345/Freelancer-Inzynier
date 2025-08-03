@@ -48,6 +48,7 @@ const EditProject = ({setIsEditing, handleUpdate, project}) => {
             }
 
             const data = await response.json();
+            console.log("Updated project data:", data);
             setMessage("Projekt został zaktualizowany pomyślnie");
             setType("success");
             handleUpdate(data);
