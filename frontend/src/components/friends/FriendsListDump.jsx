@@ -1,6 +1,6 @@
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
-    Box,
+    Box, Button,
     FormControl,
     Grid,
     MenuItem,
@@ -10,65 +10,74 @@ import {
     Typography,
 } from "@mui/material";
 import React from "react";
-import PersonIcon from '@mui/icons-material/Person';
 import PaginationFrame from "../common/Pagination";
-import {Link} from "react-router";
+import {useNavigate} from "react-router";
 import paths from "../../paths";
 
 
-const imageUrls = {
-    image: <PersonIcon/>,
-    imagem: <PersonIcon/>,
-    imagem2: <PersonIcon/>,
-    imagem3: <PersonIcon/>,
-    imagem4: <PersonIcon/>,
-    imagem5: <PersonIcon/>,
-    imagem6: <PersonIcon/>,
-    imagem7: <PersonIcon/>,
-    bubble: "/bubble.svg",
+const CollaboratorBox = ({collaborator, newFriendsSearching, handleInvite}) => {
+    const navigate = useNavigate();
+    const handleClick = () => {
+        if (!newFriendsSearching) {
+            console.log(`Przejd¼ do profilu ${collaborator.username}`);
+            navigate(paths.friendDetails(collaborator.id));
+        }
+    }
+
+    return (<Stack alignItems="center" spacing={1}>
+            <Box
+                onClick={() => handleClick()}
+            >
+                <Box
+                    component="img"
+                    src={collaborator.profile_picture}
+                    alt={`${collaborator.username} avatar`}
+                    sx={{
+                        width: 100,
+                        height: 100,
+                        objectFit: "cover",
+                        borderRadius: "50%",
+                    }}
+                />
+            </Box>
+            <Typography
+                variant="body2"
+                color="#4b4b4b"
+                align="center"
+                sx={{fontFamily: "Roboto, sans-serif", fontSize: "14px"}}
+            >
+                {collaborator.username}
+            </Typography>
+            {newFriendsSearching && (
+                <Button
+                    onClick={() => handleInvite(collaborator.id)}
+                >
+                    Zapro¶
+                </Button>
+            )}
+        </Stack>
+    )
 };
 
-const CollaboratorBox = ({collaborator}) => (
-    <Stack alignItems="center" spacing={1}>
-        <Box
-            component={Link}
-            to={paths.friendDetails(collaborator.id)}
-        >
-            <Box
-                component="img"
-                src={collaborator.profile_picture}
-                alt={`${collaborator.username} avatar`}
-                sx={{
-                    width: 100,
-                    height: 100,
-                    objectFit: "cover",
-                    borderRadius: "50%",
-                }}
-            />
-        </Box>
-        <Typography
-            variant="body2"
-            color="#4b4b4b"
-            align="center"
-            sx={{fontFamily: "Roboto, sans-serif", fontSize: "14px"}}
-        >
-            {collaborator.username}
-        </Typography>
-    </Stack>
-);
-
-const Box1 = ({collaborators, pagination, handleChange}) => {
+const Box1 = ({
+                  collaborators,
+                  pagination,
+                  handleChange,
+                  newFriendsSearching,
+                  pageSize,
+                  toggleNewFriendsSearching,
+                  changePageSize,
+                  handleInvite
+              }) => {
 
     return (
-        <Box sx={{width: 664, height: 703}}>
+        <Box>
             <Paper
                 elevation={0}
                 sx={{
-                    width: 664,
-                    height: 703,
+                    // width: 664,  <- sta³a szeroko¶æ
                     bgcolor: "#fcfdff",
                     borderRadius: "20px",
-                    position: "relative",
                     p: 0,
                 }}
             >
@@ -92,7 +101,47 @@ const Box1 = ({collaborators, pagination, handleChange}) => {
                         Znajomi
                     </Typography>
 
+                    <Button onClick={() => toggleNewFriendsSearching()}>
+                        <Typography>
+                            {newFriendsSearching ? "Twoi znajomi" : "Szukaj znajomych"}
+                        </Typography>
+                    </Button>
+
                     <Stack direction="row" alignItems="center" spacing={2}>
+                        <Typography
+                            sx={{
+                                fontFamily: "DM Sans, sans-serif",
+                                fontWeight: 500,
+                                color: "#2c2e32",
+                                fontSize: "18.8px",
+                            }}
+                        >
+                            Rozmiar strony
+                        </Typography>
+
+                        <FormControl sx={{minWidth: 90}}>
+                            <Select
+                                value={pageSize}
+                                onChange={(e) => changePageSize(Number(e.target.value))}
+                                sx={{
+                                    height: 33,
+                                    fontSize: "15px",
+                                    fontFamily: "DM Sans, sans-serif",
+                                    border: "1px solid #ecedee",
+                                    borderRadius: "6px",
+                                    "& .MuiSelect-select": {
+                                        padding: "4px 14px",
+                                    },
+                                }}
+                                IconComponent={KeyboardArrowDownIcon}
+                            >
+                                <MenuItem value={10}>10</MenuItem>
+                                <MenuItem value={25}>25</MenuItem>
+                                <MenuItem value={40}>40</MenuItem>
+                                <MenuItem value={60}>60</MenuItem>
+                            </Select>
+                        </FormControl>
+
                         <Typography
                             sx={{
                                 fontFamily: "DM Sans, sans-serif",
@@ -128,50 +177,12 @@ const Box1 = ({collaborators, pagination, handleChange}) => {
                     </Stack>
                 </Stack>
 
-                {/* Message Bubble */}
-                <Box
-                    sx={{
-                        width: 616,
-                        height: 51,
-                        backgroundImage: `url(${imageUrls.bubble})`,
-                        backgroundSize: "100% 100%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        mb: 4,
-                    }}
-                >
-                    <Typography
-                        variant="body1"
-                        align="center"
-                        sx={{
-                            fontFamily: "Roboto, sans-serif",
-                            color: "#4b4b4b",
-                            fontSize: "16px",
-                            letterSpacing: "0.2px",
-                        }}
-                    >
-                        Lorem Ispum is the best sentence in the world of dummy text
 
-                    </Typography>
-                </Box>
-
-                {/* Collaborators Section Header */}
-                <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    mb={2}
-                >
-
-                </Stack>
-
-                {/* Collaborators Grid */
-                }
-                <Grid container spacing={2}>
+                <Grid container spacing={2} justifyContent={"center"} sx={{mt: 10}}>
                     {collaborators.map((collaborator) => (
                         <Grid item xs={3} key={collaborator.id}>
-                            <CollaboratorBox collaborator={collaborator}/>
+                            <CollaboratorBox collaborator={collaborator} newFriendsSearching={newFriendsSearching}
+                                             handleInvite={handleInvite}/>
                         </Grid>
                     ))}
                 </Grid>

@@ -22,7 +22,7 @@ class UserSearchListAPIView(ListAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = FriendListSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = PageNumberPagination
+    pagination_class = CustomPageNumberPagination
 
     def get_queryset(self):
         return CustomUser.objects.exclude(id=self.request.user.id)
@@ -31,6 +31,7 @@ class UserSearchListAPIView(ListAPIView):
 class FriendListAPIView(ListAPIView):
     """ApiView to list all friends of the authenticated user."""
     serializer_class = FriendListSerializer
+    pagination_class = CustomPageNumberPagination
 
     def get_queryset(self):
         return self.request.user.friends.all()
