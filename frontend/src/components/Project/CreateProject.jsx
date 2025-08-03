@@ -102,8 +102,6 @@ const CreateProject = () => {
                 return;
             }
 
-            const responseData = await response.json();
-            console.log("Utworzono projekt:", responseData);
             setMessage("Projekt został utworzony pomyślnie");
             setType("success");
             navigate(paths.projectList);
