@@ -61,8 +61,15 @@ const ProjectCard = ({project}) => {
             </Typography>
 
             <Box sx={{height: 30,}}>
-                <AvatarGroup max={4} spacing={15}>
-                    {project.collabolators?.map((collaborator) => (<Avatar
+                <AvatarGroup max={4} spacing={"medium"}
+                             sx={{
+                                 '& .MuiAvatar-root': {
+                                     width: 25,
+                                     height: 25,
+                                     fontSize: 14,
+                                 },
+                             }}>
+                    {project.users?.map((collaborator) => (<Avatar
                         key={collaborator.id}
                         src={collaborator.profile_picture}
                         alt={collaborator.username}
@@ -151,6 +158,45 @@ const TaskCard = ({task}) => {
 
 }
 
+const TeamCard = ({project}) => {
+    const navigate = useNavigate()
+
+    const handleUserClick = (userId) => {
+        navigate(paths.friendDetails(userId));
+    }
+
+    return (
+        <Card sx={{m: 1, p: 1, display: "flex", flexDirection: "column", alignItems: "center"}}>
+            <Typography variant={"body2"}>{project.name}</Typography>
+            <AvatarGroup max={9} spacing={"medium"}
+                         sx={{
+                             '& .MuiAvatar-root': {
+                                 width: 25,
+                                 height: 25,
+                                 fontSize: 14,
+                             },
+                         }}>
+                {project.users?.map((user) => (
+                    <Tooltip
+                        key={user.id}
+                        title={
+                            <Typography variant="caption" display="block">{user.username}</Typography>
+                        }
+                        arrow
+                    >
+                        <Avatar
+                            onClick={() => handleUserClick(user.id)}
+                            src={user.profile_picture}
+                            alt={user.username}
+                            sx={{width: 25, height: 25, cursor: "pointer"}}
+                        />
+                    </Tooltip>
+                ))}
+            </AvatarGroup>
+        </Card>
+    )
+}
+
 const Dashboard = () => {
     const user = useAuthStore((state) => state.user);
     const [projects, setProjects] = useState([]);
@@ -182,16 +228,21 @@ const Dashboard = () => {
         </Box>
 
         <Box id="first-row"
-             sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', height: "30vh"}}>
+             sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between',}}>
             <Box id="left-column" sx={{flex: 7, m: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
                 <Typography variant="h2">
                     Piêkny wykres
                 </Typography>
             </Box>
-            <Box id="first-right-column" sx={{flex: 2, m: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
-                <Typography varioant="h2">
-                    teams
+            <Box id="first-right-column" sx={{flex: 2, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
+                <Typography variant="h6">
+                    Zespo³y
                 </Typography>
+                {projects.map((project) => (
+                    project.users.length > 0 && (
+                        <TeamCard key={project.id} project={project}/>
+                    )
+                ))}
             </Box>
         </Box>
         <Box id="second-row" sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
