@@ -26,36 +26,13 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
         parent_task: "",
     });
 
-    const [errors, setErrors] = useState({});
     const [statusMsg, setStatusMsg] = useState(null);
     const [statusType, setStatusType] = useState("success");
-    const [users, setUsers] = useState([]);
     const token = useAuthStore(state => state.token);
     const returnUrl = parentTaskId ? paths.taskDetails(projectId, parentTaskId) : paths.project(projectId)
     const contextText = parentTaskId ? "podzadanie" : "zadanie";
     const successMessage = parentTaskId ? "Podzadanie zostało utworzone" : "Zadanie zostało utworzone";
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const res = await fetch(`${USERS_LIST_URL}`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Token ${token}`,
-                    },
-                });
-
-                if (!res.ok) throw new Error("Nie udało się pobrać użytkowników");
-
-                const data = await res.json();
-                setUsers(data.results);
-            } catch (err) {
-                console.error("Błąd ładowania użytkowników:", err);
-            }
-        };
-
-        fetchUsers();
-    }, [token]);
 
     const handleSubmit = async () => {
 
@@ -87,7 +64,6 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
             });
 
             const data = await response.json();
-            console.log("Response data:", data);
 
             if (response.ok) {
                 setMessage(successMessage, "zrobione");

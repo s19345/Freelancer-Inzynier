@@ -1,20 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useParams} from 'react-router';
 import useAuthStore from '../../zustand_store/authStore';
 import {PROJECT_BACKEND_URL} from '../../settings';
-import {
-    Box,
-    TextField,
-    Button,
-    MenuItem,
-    CircularProgress,
-    Alert
-} from '@mui/material';
 import useGlobalStore from "../../zustand_store/globalInfoStore";
 import TaskForm from "./TaskForm";
 
 const EditTask = ({handleTaskUpdate, setIsEditing, task}) => {
-    const {taskId, projectId} = useParams();
+    const {taskId} = useParams();
     const token = useAuthStore(state => state.token);
     const setMessage = useGlobalStore((state) => state.setMessage);
     const setType = useGlobalStore((state) => state.setType);
@@ -38,7 +30,6 @@ const EditTask = ({handleTaskUpdate, setIsEditing, task}) => {
         setError(null);
 
         try {
-            console.log("Submitting form data:", formData);
             const res = await fetch(`${PROJECT_BACKEND_URL}tasks/${taskId}/`, {
                 method: 'PATCH',
                 headers: {
@@ -53,7 +44,6 @@ const EditTask = ({handleTaskUpdate, setIsEditing, task}) => {
                 throw new Error(errorData.detail || 'Błąd podczas aktualizacji zadania');
             }
             const data = await res.json();
-            console.log("Response from server:", data);
             setMessage('Zadanie zostało zaktualizowane pomyślnie');
             setType('success');
             handleTaskUpdate(await res.json());
