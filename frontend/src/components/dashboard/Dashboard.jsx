@@ -3,6 +3,15 @@ import useAuthStore from "../../zustand_store/authStore";
 import {fetchLastActiveProjects} from "../fetchers";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router";
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip as TooltipRecharts,
+    ResponsiveContainer,
+} from "recharts";
 import paths from "../../paths";
 
 const ProjectCard = ({project}) => {
@@ -197,15 +206,112 @@ const TeamCard = ({project}) => {
     )
 }
 
+const TimeBarChart = ({data}) => {
+    const dataMap = data.reduce((acc, item) => {
+        acc[item.date] = item.total_time; // sekundy
+        return acc;
+    }, {});
+
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    };
+
+    const formatTime = (seconds) => {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        return `${hours}h ${minutes}m`;
+    };
+
+    const last30Days = Array.from({length: 30}, (_, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - (29 - i));
+        const formattedDate = formatDate(date);
+        return {
+            date: formattedDate,
+            total_time: dataMap[formattedDate] || 0,
+            day: String(date.getDate()).padStart(2, "0"),
+            month: date.toLocaleDateString("pl-PL", {month: "short"}),
+            monthKey: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`,
+        };
+    });
+
+    // Grupuj daty po miesi±cach, aby wiedzieæ gdzie wstawiæ nazwê miesi±ca
+    const monthTicks = [];
+    for (let i = 0; i < last30Days.length; i++) {
+        if (i === 0 || last30Days[i].monthKey !== last30Days[i - 1].monthKey) {
+            monthTicks.push({
+                value: last30Days[i].date,
+                month: last30Days[i].month,
+            });
+        }
+    }
+
+    return (
+        <ResponsiveContainer width="100%" height={300}>
+            <BarChart
+                data={last30Days}
+                margin={{top: 20, right: 30, left: 20, bottom: 30}}
+            >
+                {/* Górna o¶ z dniami */}
+                <XAxis
+                    dataKey="date"
+                    tickFormatter={(dateStr, index) => {
+                        const date = new Date(dateStr);
+                        return date.getDate() % 2 === 0 ? String(date.getDate()).padStart(2, "0") : "";
+                    }}
+                    tickLine={false}
+                    axisLine={true}
+                    interval={0}
+                    height={20}
+                />
+
+                {/* Dolna o¶ z miesi±cami */}
+                <XAxis
+                    dataKey="date"
+                    xAxisId="month"
+                    axisLine={false}
+                    tickLine={false}
+                    ticks={monthTicks.map((t) => t.value)}
+                    tickFormatter={(value) => {
+                        const tick = monthTicks.find((t) => t.value === value);
+                        return tick ? tick.month : "";
+                    }}
+                    height={20}
+                    orientation="bottom"
+                />
+
+                <YAxis
+                    domain={[0, (dataMax) => Math.ceil(dataMax / 3600) * 3600]} // np. do 4h => 14400s
+                    tickFormatter={(value) => `${Math.floor(value / 3600)}h`}
+                    tickCount={10}
+                />
+
+
+                <TooltipRecharts
+                    formatter={(value) => [formatTime(value), "Czas"]}
+                    labelFormatter={(label) => `Data: ${label}`}
+                />
+                <Bar dataKey="total_time" fill="#1976d2"/>
+            </BarChart>
+        </ResponsiveContainer>
+    );
+};
+
 const Dashboard = () => {
     const user = useAuthStore((state) => state.user);
     const [projects, setProjects] = useState([]);
     const [allTasks, setAllTasks] = useState([]);
+    const [dailyTimes, setDailyTimes] = useState([]);
 
     useEffect(() => {
         const loadProjects = async () => {
             const data = await fetchLastActiveProjects();
-            setProjects(data.results);
+            console.log("Fetched projects:", data);
+            setProjects(data.projects);
+            setDailyTimes(data.total_daily_times);
         };
 
         loadProjects();
@@ -229,10 +335,11 @@ const Dashboard = () => {
 
         <Box id="first-row"
              sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between',}}>
-            <Box id="left-column" sx={{flex: 7, m: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
-                <Typography variant="h2">
-                    Piêkny wykres
+            <Box id="left-column" sx={{flex: 7, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
+                <Typography variant="h6">
+                    Czas pracy w ci±gu ostatnich 30 dni
                 </Typography>
+                <TimeBarChart data={dailyTimes}/>
             </Box>
             <Box id="first-right-column" sx={{flex: 2, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
                 <Typography variant="h6">

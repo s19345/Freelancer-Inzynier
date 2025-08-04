@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from datetime import timedelta
 from users.serializers import FriendListSerializer
 from .models import Client, Project, Task, TimeLog
 from users.models import CustomUser
@@ -145,7 +146,7 @@ class ProjectWithUserTasksSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['id', 'name', 'user_tasks_prefetched', "users"]
+        fields = ['id', 'name', 'user_tasks_prefetched', "users",]
 
         def get_users(self, obj):
             collaborators = getattr(obj, 'prefetched_collaborators', [])

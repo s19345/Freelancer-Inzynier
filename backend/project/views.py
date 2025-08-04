@@ -1,10 +1,16 @@
+import datetime
+import itertools
+from datetime import timedelta
 from rest_framework import status, generics, mixins
 from users.models import CustomUser
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
-from django.db.models import Q, Count, Case, When, IntegerField, Min, Prefetch
+from django.db.models import Q, Count, Case, When, IntegerField, Min, Prefetch, Sum, F, ExpressionWrapper, \
+    DurationField, Value
+from django.db.models.functions import Coalesce, Now, TruncDate
 from django.utils import timezone
+from django.utils.timezone import now
 from django.http import Http404
 from rest_framework.response import Response
 from .models import Client, Project, Task, TimeLog
@@ -209,6 +215,10 @@ class RecentProjectsWithTasksView(generics.ListAPIView):
     serializer_class = ProjectWithUserTasksSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        return context
+
     def get_queryset(self):
         user = self.request.user
 
@@ -221,11 +231,34 @@ class RecentProjectsWithTasksView(generics.ListAPIView):
         tasks = (
             Task.objects.filter(user=user)
             .exclude(status='completed')
-            .annotate(status_order=status_order)
+            .annotate(
+                status_order=status_order,
+            )
             .order_by('status_order', 'due_date')
         )
 
         project_ids = tasks.values_list('project_id', flat=True).distinct()
+        timelogs = (
+            TimeLog.objects
+            .filter(task__project_id__in=project_ids, task__user=user)
+            .select_related('task__project')
+            .annotate(
+                date=TruncDate('start_time'),
+                effective_end_time=Coalesce('end_time', Value(now()))
+            )
+            .order_by('start_time')
+        )
+
+        timelog_map = {}
+        for date, date_logs in itertools.groupby(timelogs, key=lambda t: t.date):
+            intervals = [(log.start_time, log.effective_end_time) for log in date_logs]
+            merged_intervals = self.merge_intervals(intervals)
+            total_time = sum((end - start for start, end in merged_intervals), timedelta())
+            timelog_map[date] = total_time
+
+        self.timelog_map = timelog_map
+
+        print(" ")
 
         collaborators_qs = CustomUser.objects.exclude(id=user.id).annotate(
             task_count=Count('tasks', filter=Q(tasks__project_id__in=project_ids))
@@ -243,3 +276,39 @@ class RecentProjectsWithTasksView(generics.ListAPIView):
                     to_attr='prefetched_collaborators')
             )
         )
+
+    def merge_intervals(self, intervals):
+        # intervals: lista krotek (start_time, end_time)
+        if not intervals:
+            return []
+
+        # Posortuj po starcie
+        sorted_intervals = sorted(intervals, key=lambda x: x[0])
+        merged = [sorted_intervals[0]]
+
+        for current_start, current_end in sorted_intervals[1:]:
+            last_start, last_end = merged[-1]
+            if current_start <= last_end:  # nakłada się
+                # scalaj przedziały
+                merged[-1] = (last_start, max(last_end, current_end))
+            else:
+                merged.append((current_start, current_end))
+        print("merged", merged)
+        return merged
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        total_daily_times = [
+            {
+                "date": date.isoformat(),
+                "total_time": total_time.total_seconds() if total_time else 0,
+            }
+            for date, total_time in sorted(self.timelog_map.items())
+        ]
+
+        return Response({
+            "projects": serializer.data,
+            "total_daily_times": total_daily_times,
+        })
