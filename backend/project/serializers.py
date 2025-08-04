@@ -101,7 +101,7 @@ class BaseTimeLogSerializer(serializers.Serializer):
         except Task.DoesNotExist:
             raise serializers.ValidationError('Nie znaleziono zadania.')
 
-        if task.project.manager != request.user:
+        if task.project.manager != request.user and task.user != request.user:
             raise serializers.ValidationError('Nie masz uprawnień do tego zadania.')
 
         return task

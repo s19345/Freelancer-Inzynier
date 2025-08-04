@@ -145,15 +145,12 @@ class TaskCreateView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         project_id = request.query_params.get("project")
-        parent_task_id = request.query_params.get("parent_task")
 
         if not project_id:
             raise ValidationError({"detail": "Musisz podać parametr project=<id>"})
 
         data = request.data.copy()
         data["project_id"] = project_id
-        # if parent_task_id:
-        #     data["parent_task_id"] = parent_task_id
 
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)

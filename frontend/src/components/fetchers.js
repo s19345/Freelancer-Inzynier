@@ -139,7 +139,6 @@ export const startTaskTimelog = async (taskId) => {
         }
 
         const data = await response.json();
-        console.log("rozpoczête zadanie : ", data)
         if (data?.success) {
             showMessage(data.success, "success");
         }
@@ -207,7 +206,6 @@ export const endTaskTimelog = async (taskId) => {
             return null;
         }
 
-        console.log("zakoñczone zadanie : ", data);
         if (data?.success) {
             showMessage(data.success, "success");
         }
@@ -238,7 +236,6 @@ export const fetchTasks = async (token, page, projectId, taskId) => {
             throw new Error("Nie uda³o siê pobraæ zadañ");
         }
         const data = await res.json();
-        console.log("pobrane zadania: ", data)
         return data
 
 

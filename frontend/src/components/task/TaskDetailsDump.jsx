@@ -1,4 +1,4 @@
-import {Avatar, Box, Button, Chip, Stack, Typography} from "@mui/material";
+import {Avatar, Box, Button, Chip, Stack, Tooltip, Typography} from "@mui/material";
 import IdeaIcon from "@mui/icons-material/Lightbulb";
 import TimerIcon from "@mui/icons-material/AccessTime";
 import DeleteTask from "./DeleteTask";
@@ -10,7 +10,6 @@ import EditButton from "../common/EditButton";
 
 const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick, handleTaskStartOrPause, handleEndTask}) => {
     const contextText = task.parent_task ? 'podzadanie' : 'zadanie';
-
 
     return (
         <Box key={task.id}
@@ -153,11 +152,20 @@ const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick, handleTask
                         {daysUntil(task.due_date)} d
                     </Typography>
                 </Box>
+
                 {task.user && (
-                    <Avatar
-                        alt={task.user.username}
-                        src={task.user.profile_picture}
-                    />
+                    <Tooltip
+                        key={task.user.id}
+                        title={
+                            <Typography variant="caption" display="block">{task.user.username}</Typography>
+                        }
+                        arrow
+                    >
+                        <Avatar
+                            alt={task.user.username}
+                            src={task.user.profile_picture}
+                        />
+                    </Tooltip>
                 )}
                 <EditButton handleEdit={handleEditClick}/>
                 <DeleteTask handleDeleteSuccess={handleDeleteSuccess} taskId={task.id}/>

@@ -1,4 +1,4 @@
-import {Avatar, Box, Card, Chip, Stack, Typography} from "@mui/material";
+import {Avatar, Box, Card, Chip, Stack, Tooltip, Typography} from "@mui/material";
 import IdeaIcon from "@mui/icons-material/Lightbulb";
 import TimerIcon from "@mui/icons-material/AccessTime";
 import React from "react";
@@ -175,10 +175,21 @@ const TaskListDump = ({tasks, handleNavigate, handleDeleteSuccess}) => {
                                             {daysUntil(task.due_date)} d
                                         </Typography>
                                     </Box>
-
-                                    <Avatar
-
-                                    />
+                                    {task?.user &&
+                                        <Tooltip
+                                            key={task.user.id}
+                                            title={
+                                                <Typography variant="caption" display="block">
+                                                    {task.user.username}
+                                                </Typography>
+                                            }
+                                            arrow
+                                        >
+                                            <Avatar
+                                                alt={task.user.username}
+                                            />
+                                        </Tooltip>
+                                    }
                                     <DeleteTask handleDeleteSuccess={handleDeleteSuccess} taskId={task.id}/>
                                 </Stack>
                             </Card>

@@ -73,12 +73,27 @@ const ProjectDetails = () => {
         <Box sx={{p: 0}}>
             {project && (<>
 
-                {!isEditing && (
-                    <ProjecDetailsDump
-                        project={project}
-                        handleUpdate={handleProjectUpdate}
-                        handleEdit={handleEdit}
-                    />
+                {!isEditing && (<>
+                        <ProjecDetailsDump
+                            project={project}
+                            handleUpdate={handleProjectUpdate}
+                            handleEdit={handleEdit}
+                        />
+                        {tasks && tasks.length > 0 &&
+                            <TaskList
+                                propTasks={tasks}
+                            />}
+                        <Box sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            mt: 2
+                        }}>
+                            <ReturnButton label={"Wróć do projektów"} to={paths.projectList}/>
+                            <AddTaskButton projectId={projectId}/>
+                        </Box>
+                    </>
                 )}
                 {isEditing && (
                     <EditProject
@@ -88,22 +103,7 @@ const ProjectDetails = () => {
                     />
                 )}
 
-
-                {tasks && tasks.length > 0 &&
-                    <TaskList
-                        propTasks={tasks}
-                    />}
             </>)}
-            <Box sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                mt: 2
-            }}>
-                <ReturnButton label={"Wróć do projektów"} to={paths.projectList}/>
-                <AddTaskButton projectId={projectId}/>
-            </Box>
         </Box>);
 };
 
