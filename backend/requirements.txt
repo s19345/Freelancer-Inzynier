@@ -2,6 +2,7 @@ asgiref==3.8.1
 attrs==25.3.0
 certifi==2025.4.26
 charset-normalizer==3.4.2
+dj-database-url==3.0.1
 dj-rest-auth==7.0.1
 Django==5.2
 django-allauth==65.8.0
@@ -15,6 +16,8 @@ idna==3.10
 inflection==0.5.1
 jsonschema==4.23.0
 jsonschema-specifications==2025.4.1
+psycopg==3.2.9
+psycopg-binary==3.2.9
 PyJWT==2.9.0
 python-dotenv==1.1.0
 pytz==2025.2
