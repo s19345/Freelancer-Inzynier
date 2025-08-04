@@ -67,6 +67,12 @@ const Login = () => {
         navigate(paths.register);
     }
 
+    const handleResetClick = () => {
+        setShowReset((prev) => !prev);
+        // setNickname(null);
+        // setPassword(null);
+    }
+
     return (
         <Box maxWidth={400} mx="auto" mt={8} p={4} component="form" onSubmit={handleSubmit}>
             <Typography variant="h5" gutterBottom>
@@ -97,7 +103,7 @@ const Login = () => {
 
                 <Button
                     variant="text"
-                    onClick={() => setShowReset((prev) => !prev)}
+                    onClick={() => handleResetClick()}
                 >
                     {showReset ? 'Ukryj reset hasła' : 'Zapomniałeś hasła?'}
                 </Button>

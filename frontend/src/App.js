@@ -39,7 +39,6 @@ function App() {
                     <Route path={paths.userProfile} element={<UserProfile/>}/>
                     <Route path={paths.passwordReset} element={<PasswordResetConfirm/>}/>
                     <Route path={paths.editProfile} element={<EditProfile/>}/>
-                    <Route path={paths.changePassword} element={<ChangePassword/>}/>
                     <Route path={paths.clients} element={<ClientList/>}/>
                     <Route path={paths.client()} element={<ClientDetails/>}/>
                     <Route path={paths.createClient} element={<CreateClient/>}/>

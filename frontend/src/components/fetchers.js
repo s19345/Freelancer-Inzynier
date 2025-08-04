@@ -105,14 +105,10 @@ export const fetchLastActiveProjects = async (token) => {
         });
 
         if (!response.ok) {
-            console.log("B³±d podczas pobierania ostatnio aktywnych projektów.");
-            console.log("token w fetchers: ", token);
             throw new Error("B³±d podczas pobierania ostatnio aktywnych projektów.");
         }
 
         const data = await response.json();
-        console.log("data w fetchers: ", data);
-        console.log("token w fetchers: ", token);
         return data || [];
     } catch (error) {
         showMessage("Nie uda³o siê pobraæ ostatnio aktywnych projektów.", "error");
