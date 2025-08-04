@@ -18,7 +18,6 @@ const EditProject = ({setIsEditing, handleUpdate, project}) => {
     const [formData, setFormData] = useState({
         name: project.name || "",
         description: project.description || "",
-        version: project.version || "",
         status: project.status || "",
         budget: project.budget || "",
         client: project.client?.id || "",  // todo czy tu powinno być id czy cały klient
@@ -26,11 +25,9 @@ const EditProject = ({setIsEditing, handleUpdate, project}) => {
     });
 
     const [loading, setLoading] = useState(false);
-    const [submitStatus, setSubmitStatus] = useState(null);
 
 
     const handleSubmit = async (e) => {
-        setSubmitStatus(null);
 
         try {
             const response = await fetch(`${PROJECT_BACKEND_URL}projects/${projectId}/`, {
@@ -54,7 +51,8 @@ const EditProject = ({setIsEditing, handleUpdate, project}) => {
             handleUpdate(data);
 
         } catch (err) {
-            setSubmitStatus(`Błąd: ${err.message}`);
+            setMessage(err.message);
+            setType("error");
         } finally {
             setLoading(false);
             setIsEditing(false);

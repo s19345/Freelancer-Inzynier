@@ -128,17 +128,17 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
                                     borderRadius: "22px",
                                 }}
                             />
-                            <Chip
-                                label={project.version}
-                                size="medium"
-                                sx={{
-                                    ml: 1,
-                                    fontWeight: "medium",
-                                    fontSize: 14,
-                                    height: 24,
-                                    borderRadius: "22px",
-                                }}
-                            />
+                            {/*<Chip*/}
+                            {/*    label={project.version}*/}
+                            {/*    size="medium"*/}
+                            {/*    sx={{*/}
+                            {/*        ml: 1,*/}
+                            {/*        fontWeight: "medium",*/}
+                            {/*        fontSize: 14,*/}
+                            {/*        height: 24,*/}
+                            {/*        borderRadius: "22px",*/}
+                            {/*    }}*/}
+                            {/*/>*/}
                             <Chip
                                 label={project.budget + " z³"}
                                 size="medium"

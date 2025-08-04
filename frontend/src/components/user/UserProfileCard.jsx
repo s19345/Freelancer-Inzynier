@@ -1,4 +1,3 @@
-import Collections from "@mui/icons-material/Collections";
 import Email from "@mui/icons-material/Email";
 import Phone from "@mui/icons-material/Phone";
 import Work from "@mui/icons-material/Work";

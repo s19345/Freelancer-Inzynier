@@ -14,9 +14,7 @@ const EditTask = ({handleTaskUpdate, setIsEditing, task}) => {
     const [formData, setFormData] = useState({
         title: task?.title || '',
         description: task?.description || '',
-        // status: task?.status || 'to_do',
         due_date: task?.due_date || '',
-        project_version: task?.project_version || '',
         priority: task?.priority || 'medium',
         user_id: task?.user?.id || '',
     });
@@ -44,7 +42,6 @@ const EditTask = ({handleTaskUpdate, setIsEditing, task}) => {
                 const errorData = await res.json();
                 throw new Error(errorData.detail || 'Błąd podczas aktualizacji zadania');
             }
-            const data = await res.json();
             setMessage('Zadanie zostało zaktualizowane pomyślnie');
             setType('success');
             handleTaskUpdate(await res.json());

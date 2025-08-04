@@ -1,4 +1,4 @@
-import {Card, CardContent, Box, Typography, CircularProgress} from "@mui/material";
+import { Card, Box, Typography, CircularProgress } from "@mui/material";
 import React from "react";
 
 const StaticsBox = () => {

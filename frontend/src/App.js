@@ -31,7 +31,7 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route element={<Home/>}>
-                    <Route path={paths.home} element={<Dashboard/>}/>
+                    <Route path={paths.home} element={<Login/>}/>
                     <Route path={paths.dashboard} element={<Dashboard/>}/>
                     <Route path={paths.login} element={<Login/>}/>
                     <Route path={paths.logout} element={<Logout/>}/>

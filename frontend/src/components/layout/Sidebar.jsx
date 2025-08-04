@@ -10,15 +10,14 @@ import ClientsIcon from "@mui/icons-material/People";
 
 import {
     Box,
-    Divider,
     List,
     ListItem,
     ListItemIcon,
     ListItemText,
     Typography,
 } from "@mui/material";
-import React, {useState} from "react";
-import {Link} from "react-router"
+import React, {useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router"
 import paths from "../../paths";
 import useAuthStore from "../../zustand_store/authStore";
 
@@ -26,6 +25,7 @@ import useAuthStore from "../../zustand_store/authStore";
 const Sidebar = () => {
     const [selectedItem, setSelectedItem] = useState("Clients");
     const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+    const navigate = useNavigate();
 
     const topMenuItems = [
         {text: "Dashboard", icon: <DashboardIcon/>, adress: paths.dashboard},
@@ -39,6 +39,12 @@ const Sidebar = () => {
         {text: "Zaproszenia", icon: <InvitationsIcon/>, adress: paths.invitationList},
         {text: "Wyloguj", icon: <LogOutIcon/>, adress: paths.logout},
     ];
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            navigate(paths.login);
+        }
+    }, [isLoggedIn, navigate]);
 
     const handleItemClick = (text) => {
         setSelectedItem(text);

@@ -19,7 +19,6 @@ const CollaboratorBox = ({collaborator, newFriendsSearching, handleInvite}) => {
     const navigate = useNavigate();
     const handleClick = () => {
         if (!newFriendsSearching) {
-            console.log(`Przejd¼ do profilu ${collaborator.username}`);
             navigate(paths.friendDetails(collaborator.id));
         }
     }

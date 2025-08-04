@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
 import {useParams} from "react-router";
@@ -20,13 +20,11 @@ const TaskDetails = () => {
     const token = useAuthStore((state) => state.token);
 
     const [task, setTask] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [contextText, setContextText] = useState("zadania");
     const [isEditing, setIsEditing] = useState(false);
 
-    const fetchTask = async () => {
-        setLoading(true);
+    const fetchTask = useCallback(async () => {
         setError(null);
         try {
             const res = await fetch(`${PROJECT_BACKEND_URL}tasks/${taskId}/`, {
@@ -44,14 +42,12 @@ const TaskDetails = () => {
             setTask(data);
         } catch (err) {
             setError(err.message);
-        } finally {
-            setLoading(false);
         }
-    };
+    }, [taskId, token, contextText]);
+
     useEffect(() => {
         fetchTask();
-
-    }, [taskId, token]);
+    }, [fetchTask]);
 
     useEffect(() => {
         if (task && 'parent_task' in task) {

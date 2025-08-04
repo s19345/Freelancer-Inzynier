@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react";
-import {Box, TextField, Button, Typography, Alert, MenuItem} from '@mui/material';
+import React, {useState} from "react";
+import {Box} from '@mui/material';
 import useAuthStore from "../../zustand_store/authStore";
-import {PROJECT_BACKEND_URL, USERS_LIST_URL} from "../../settings";
-import {Link, useParams, useNavigate} from "react-router";
+import {PROJECT_BACKEND_URL} from "../../settings";
+import {useParams, useNavigate} from "react-router";
 import useGlobalStore from '../../zustand_store/globalInfoStore';
 import paths from "../../paths";
 import TaskForm from "./TaskForm";
@@ -20,14 +20,11 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
         description: "",
         status: "to_do",
         due_date: "",
-        project_version: "",
         priority: "medium",
         user: "",
         parent_task: "",
     });
 
-    const [statusMsg, setStatusMsg] = useState(null);
-    const [statusType, setStatusType] = useState("success");
     const token = useAuthStore(state => state.token);
     const returnUrl = parentTaskId ? paths.taskDetails(projectId, parentTaskId) : paths.project(projectId)
     const contextText = parentTaskId ? "podzadanie" : "zadanie";
@@ -69,19 +66,16 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
                 setMessage(successMessage, "zrobione");
                 setType("success")
                 navigate(returnUrl)
-                console.log("Utworzono podzadanie:", data);
             } else {
 
                 const errorMessage = typeof data === "object"
                     ? Object.values(data).flat().join(" ")
                     : "Wystąpił błąd podczas tworzenia zadania";
-                setStatusMsg(errorMessage);
-                setStatusType("error");
+                console.error(errorMessage);
             }
         } catch (error) {
             console.error("Błąd sieci:", error);
-            setStatusMsg("Błąd połączenia z serwerem");
-            setStatusType("error");
+            console.error("Błąd połączenia z serwerem");
         }
     };
 

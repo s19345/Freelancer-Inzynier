@@ -105,7 +105,6 @@ export const fetchLastActiveProjects = async () => {
         });
 
         if (!response.ok) {
-            showMessage("B³±d podczas pobierania ostatnio aktywnych projektów.", "error");
             throw new Error("B³±d podczas pobierania ostatnio aktywnych projektów.");
         }
 

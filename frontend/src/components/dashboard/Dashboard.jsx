@@ -8,7 +8,6 @@ import {
     Bar,
     XAxis,
     YAxis,
-    CartesianGrid,
     Tooltip as TooltipRecharts,
     ResponsiveContainer,
 } from "recharts";
@@ -207,7 +206,7 @@ const TeamCard = ({project}) => {
 }
 
 const TimeBarChart = ({data}) => {
-    const dataMap = data.reduce((acc, item) => {
+    const dataMap = (data || []).reduce((acc, item) => {
         acc[item.date] = item.total_time; // sekundy
         return acc;
     }, {});
@@ -309,7 +308,6 @@ const Dashboard = () => {
     useEffect(() => {
         const loadProjects = async () => {
             const data = await fetchLastActiveProjects();
-            console.log("Fetched projects:", data);
             setProjects(data.projects);
             setDailyTimes(data.total_daily_times);
         };
@@ -318,66 +316,68 @@ const Dashboard = () => {
     }, []);
 
     useEffect(() => {
-        const tasks = projects.flatMap(project => project.user_tasks_prefetched)
+        const tasks = (projects || []).flatMap(project => project.user_tasks_prefetched)
         setAllTasks(tasks.sort((a, b) => new Date(a.due_date) - new Date(b.due_date)).slice(0, 5));
     }, [projects]);
-
-
-    return (<Box id="dashboard">
-        <Box id={"dashboard-header"}>
-            <Typography variant="h3" gutterBottom sx={{fontWeight: '900', marginTop: 2}}>
-                Cze¶æ {user.username},
-            </Typography>
-            <Typography variant="h4" gutterBottom sx={{fontWeight: '900', marginTop: 2}}>
-                Mo¿esz tu zarz±dzaæ swoj± prac±
-            </Typography>
+    return (
+        <Box id="dashboard">
+            <Box id={"dashboard-header"}>
+                {user && <>
+                    <Typography variant="h3" gutterBottom sx={{fontWeight: '900', marginTop: 2}}>
+                        Cze¶æ {user.username},
+                    </Typography>
+                    <Typography variant="h4" gutterBottom sx={{fontWeight: '900', marginTop: 2}}>
+                        Mo¿esz tu zarz±dzaæ swoj± prac±
+                    </Typography>
+                </>}
+            </Box>
+            <Box id="first-row"
+                 sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between',}}>
+                <Box id="left-column" sx={{flex: 7, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
+                    <Typography variant="h6">
+                        Czas pracy w ci±gu ostatnich 30 dni
+                    </Typography>
+                    <TimeBarChart data={dailyTimes}/>
+                </Box>
+                <Box id="first-right-column"
+                     sx={{flex: 2, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
+                    <Typography variant="h6">
+                        Zespo³y
+                    </Typography>
+                    {projects && projects.map((project) => (
+                        project.users.length > 0 && (
+                            <TeamCard key={project.id} project={project}/>
+                        )
+                    ))}
+                </Box>
+            </Box>
+            <Box id="second-row" sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Box id="second-left-column"
+                     sx={{flex: 3, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
+                    <Typography variant="h6">
+                        Najpilniejsze zadania
+                    </Typography>
+                    {allTasks && allTasks.map(task => (
+                        <TaskCard key={task.id} task={task}/>
+                    ))}
+                </Box>
+                <Box id="second-right-column"
+                     sx={{flex: 7, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
+                    <Typography variant="h6" sx={{ml: 2}}>
+                        Ostatnie Projekty
+                    </Typography>
+                    <Grid container spacing={2}>
+                        {projects &&
+                            projects.slice(0, 8).map((project) => (
+                                <Grid item xs={12} sm={6} md={4} lg={3} key={project.id}>
+                                    <ProjectCard project={project}/>
+                                </Grid>
+                            ))}
+                    </Grid>
+                </Box>
+            </Box>
         </Box>
-
-        <Box id="first-row"
-             sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between',}}>
-            <Box id="left-column" sx={{flex: 7, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
-                <Typography variant="h6">
-                    Czas pracy w ci±gu ostatnich 30 dni
-                </Typography>
-                <TimeBarChart data={dailyTimes}/>
-            </Box>
-            <Box id="first-right-column" sx={{flex: 2, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
-                <Typography variant="h6">
-                    Zespo³y
-                </Typography>
-                {projects.map((project) => (
-                    project.users.length > 0 && (
-                        <TeamCard key={project.id} project={project}/>
-                    )
-                ))}
-            </Box>
-        </Box>
-        <Box id="second-row" sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Box id="second-left-column"
-                 sx={{flex: 3, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
-                <Typography variant="h6">
-                    Najpilniejsze zadania
-                </Typography>
-                {allTasks && allTasks.map(task => (
-                    <TaskCard key={task.id} task={task}/>
-                ))}
-            </Box>
-            <Box id="second-right-column"
-                 sx={{flex: 7, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
-                <Typography variant="h6" sx={{ml: 2}}>
-                    Ostatnie Projekty
-                </Typography>
-                <Grid container spacing={2}>
-                    {projects &&
-                        projects.slice(0, 8).map((project) => (
-                            <Grid item xs={12} sm={6} md={4} lg={3} key={project.id}>
-                                <ProjectCard project={project}/>
-                            </Grid>
-                        ))}
-                </Grid>
-            </Box>
-        </Box>
-    </Box>)
+    )
 }
 
 export default Dashboard;

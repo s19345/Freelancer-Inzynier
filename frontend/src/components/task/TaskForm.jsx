@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import SubmitButton from "../common/SubmitButton";
 import StdButton from "../common/StdButton";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {USERS_LIST_URL} from "../../settings";
 import useAuthStore from "../../zustand_store/authStore";
 
@@ -27,22 +27,19 @@ const TaskForm = ({
 
     const [friends, setFriends] = useState([]);
     const [friendsFetchingError, setFriendsFetchingError] = useState(null);
-    const [friendsFetchingLoading, setFriendsFetchingLoading] = useState(false);
-    const params = new URLSearchParams({page_size: 10000});
+    const params = useMemo(() => new URLSearchParams({page_size: 10000}), []);
     const invalidText = "To pole jest wymagane";
 
     const validate = () => {
         const newErrors = {};
         if (!formData.title.trim()) newErrors.title = "Tytu³ jest wymagany";
         if (!formData.due_date) newErrors.due_date = "Termin wykonania jest wymagany";
-        if (!formData.project_version.trim()) newErrors.project_version = "Wersja projektu jest wymagana";
         if (!formData.priority) newErrors.priority = "Priorytet jest wymagany";
         if (!formData.description.trim()) newErrors.description = "Opis jest wymagany";
         return newErrors;
     };
 
-    const fetchFriends = async () => {
-        setFriendsFetchingLoading(true);
+    const fetchFriends = useCallback(async () => {
         try {
             const res = await fetch(`${USERS_LIST_URL}friends/?${params}`, {
                 headers: {
@@ -64,13 +61,13 @@ const TaskForm = ({
         } catch (err) {
             setFriendsFetchingError(err.message);
         } finally {
-            setFriendsFetchingLoading(false);
         }
-    };
+
+    }, [params, token, user.id, user.profile_picture, user.username]);
 
     useEffect(() => {
             fetchFriends();
-        }, [token]
+        }, [fetchFriends]
     );
 
     const handleChange = (e) => {
@@ -177,20 +174,6 @@ const TaskForm = ({
                             </TextField>
                         </Box>
                         <Box sx={{display: "flex", flexDirection: "column", flex: 1}}>
-                            <Typography variant="h6" sx={{ml: 1}}>Wersja</Typography>
-                            <TextField
-                                onInvalid={(e) => e.target.setCustomValidity(invalidText)}
-                                onInput={(e) => e.target.setCustomValidity("")}
-                                required
-                                name="project_version"
-                                value={formData.project_version}
-                                onChange={handleChange}
-                                error={!!errors.project_version}
-                                helperText={errors.project_version}
-                                fullWidth
-                            />
-                        </Box>
-                        <Box sx={{display: "flex", flexDirection: "column", flex: 1}}>
                             <Typography variant="h6" sx={{ml: 1}}>Priorytet</Typography>
                             <TextField
                                 onInvalid={(e) => e.target.setCustomValidity(invalidText)}
@@ -207,24 +190,6 @@ const TaskForm = ({
                                 <MenuItem value="high">Wysoki</MenuItem>
                             </TextField>
                         </Box>
-                        {/*<Box sx={{display: "flex", flexDirection: "column", flex: 1}}>*/}
-                        {/*    <Typography variant="h6" sx={{ml: 1}}>Status</Typography>*/}
-                        {/*    <TextField*/}
-                        {/*        onInvalid={(e) => e.target.setCustomValidity(invalidText)}*/}
-                        {/*        onInput={(e) => e.target.setCustomValidity("")}*/}
-                        {/*        required*/}
-                        {/*        select*/}
-                        {/*        label="Status"*/}
-                        {/*        name="status"*/}
-                        {/*        value={formData.status}*/}
-                        {/*        onChange={handleChange}*/}
-                        {/*        fullWidth*/}
-                        {/*    >*/}
-                        {/*        <MenuItem value="to_do">Do zrobienia</MenuItem>*/}
-                        {/*        <MenuItem value="in_progress">W trakcie</MenuItem>*/}
-                        {/*        <MenuItem value="completed">Zakoñczone</MenuItem>*/}
-                        {/*    </TextField>*/}
-                        {/*</Box>*/}
                     </Box>
                 </Card>
                 <Box sx={{display: "flex", flexDirection: "row", gap: 5, mt: 2, mr: 10, justifyContent: "flex-end"}}>

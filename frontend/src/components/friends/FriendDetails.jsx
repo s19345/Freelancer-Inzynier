@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
     Box,
     Grid,
@@ -89,7 +89,6 @@ const TextBox = ({
                     friend_notes: updatedNotes,
                 }));
 
-                console.log(`Zapisano ${field}:`, inputValue);
                 setOpen(false);
             } catch (error) {
                 console.error("B³±d przy zapisie notatki:", error);
@@ -150,27 +149,27 @@ export default function FriendDetails() {
     const token = useAuthStore((state) => state.token);
 
 
-    useEffect(() => {
-        const fetchUserDetails = async (id) => {
-            try {
-                const response = await fetch(`${USERS_LIST_URL}friends/${id}/`, {
-                    headers: {
-                        Authorization: `Token ${token}`,
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error('Nie uda³o siê pobraæ szczegó³ów znajomego');
+    const fetchUserDetails = useCallback(async (id) => {
+        try {
+            const response = await fetch(`${USERS_LIST_URL}friends/${id}/`, {
+                headers: {
+                    Authorization: `Token ${token}`,
                 }
-                const data = await response.json();
-                setFriend(data);
-            } catch (error) {
-                console.error('B³±d podczas pobierania szczegó³ów znajomego:', error);
+            });
+            if (!response.ok) {
+                throw new Error('Nie uda³o siê pobraæ szczegó³ów znajomego');
             }
-
+            const data = await response.json();
+            setFriend(data);
+        } catch (error) {
+            console.error('B³±d podczas pobierania szczegó³ów znajomego:', error);
         }
 
+    }, [token])
+
+    useEffect(() => {
         fetchUserDetails(friendId);
-    }, []);
+    }, [fetchUserDetails, friendId]);
 
     return (
         <>
@@ -253,13 +252,6 @@ export default function FriendDetails() {
                                 </TextBox>
                             </Grid>
 
-
-                            {/*    <Typography variant="subtitle2">Projekty nad którymi wspó³pracowali¶cie</Typography>*/}
-                            {/*    <TextBox>*/}
-                            {/*        {friend.project ? friend.project : "Jeszcze nie wspó³pracowali¶cie nad ¿adnym projektem."}*/}
-                            {/*    </TextBox>*/}
-                            {/*</Grid>*/}
-
                         </Grid>
                     </>
                 )}
@@ -267,7 +259,9 @@ export default function FriendDetails() {
             </Paper>
             {
                 friend?.collaboration_history &&
-                <CollaborationHistory history={friend.collaboration_history}/>
+                <Box sx={{p: 3, borderRadius: 4, maxWidth: 900, mx: 'auto'}}>
+                    <CollaborationHistory history={friend.collaboration_history}/>
+                </Box>
             }
         </>
     );

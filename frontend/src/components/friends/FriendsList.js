@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {USERS_LIST_URL} from "../../settings";
 import FriendsDump from "./FriendsListDump"
@@ -7,15 +7,13 @@ import useGlobalStore from "../../zustand_store/globalInfoStore";
 const FriendList = () => {
     const token = useAuthStore(state => state.token);
     const [friends, setFriends] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [pagination, setPagination] = useState({next: null, prev: null, pages: 0, currentPage: 1});
     const [pageSize, setPageSize] = useState(10);
     const [newFriendsSearching, setNewFriendsSearching] = useState(false);
     const setMessage = useGlobalStore((state) => state.setMessage);
     const setType = useGlobalStore((state) => state.setType);
 
-    const fetchFriends = async (page) => {
+    const fetchFriends = useCallback(async (page) => {
         const url = newFriendsSearching ? USERS_LIST_URL : USERS_LIST_URL + "friends/";
         if (page) {
             try {
@@ -27,7 +25,7 @@ const FriendList = () => {
                 });
 
                 if (!res.ok) {
-                    throw new Error("Nie uda³o siê pobraæ klientów");
+                    throw new Error("Nie uda³o siê pobraæ znajomych");
                 }
 
                 const data = await res.json();
@@ -50,12 +48,10 @@ const FriendList = () => {
                     currentPage: data.current_page
                 });
             } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
+                console.error(err.message);
             }
         }
-    };
+    }, [token, newFriendsSearching, pageSize]);
 
     const handleInvite = async (friend) => {
         try {
@@ -81,7 +77,8 @@ const FriendList = () => {
 
 
         } catch (error) {
-            setError("Nie uda³o siê wys³aæ zaproszenia (b³±d sieci)");
+            setMessage("Nie uda³o siê wys³aæ zaproszenia (b³±d sieci)");
+            setType("error");
         }
     };
 
@@ -98,7 +95,7 @@ const FriendList = () => {
 
     useEffect(() => {
         fetchFriends(pagination.currentPage);
-    }, [token, newFriendsSearching, pagination.currentPage, pageSize]);
+    }, [fetchFriends, pagination.currentPage]);
 
     const handlePageChange = (page) => {
         setPagination((prev) => ({

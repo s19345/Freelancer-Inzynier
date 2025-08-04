@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
@@ -23,7 +23,7 @@ const TaskList = ({addTaskButton, returnButton}) => {
         const navigate = useNavigate()
         const [pagination, setPagination] = useState({next: null, prev: null, pages: 0, currentPage: 1});
 
-        const fetchTasks = async (page) => {
+        const fetchTasks = useCallback(async (page) => {
             let url
             if (!taskId) {
                 url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}`;
@@ -54,7 +54,7 @@ const TaskList = ({addTaskButton, returnButton}) => {
             } finally {
                 setLoading(false);
             }
-        };
+        }, [projectId, taskId, token]);
 
         const handlePageChange = (page) => {
             setPagination((prev) => ({
@@ -65,10 +65,9 @@ const TaskList = ({addTaskButton, returnButton}) => {
         }
 
         useEffect(() => {
+            fetchTasks();
+        }, [fetchTasks]);
 
-                fetchTasks();
-            }, [token, projectId]
-        );
 
         const handleNavigate = (e, taskId) => {
             e.stopPropagation();

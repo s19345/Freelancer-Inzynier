@@ -3,10 +3,6 @@ import {
     Box,
     Card,
     Chip,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
     TextField,
     Typography
 } from "@mui/material";
@@ -76,61 +72,32 @@ function ProjectBox({project}) {
                 borderRight="1px dashed #ccc"
                 width={"30%"}
             >
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        pl: 3,
-                        pr: 3,
-                        mb: 2
-                    }}
-                >
-                    <Typography>
-                        Status
-                    </Typography>
-                    <Chip
-                        label={project.status}
-                        size="small"
-                        sx={{
-                            backgroundColor: `${statusColors[`${project.status}_bcg`]}`,
-                            color: `${statusColors[`${project.status}_color`]}`,
-                            fontWeight: "medium",
-                            fontSize: 12,
-                            height: 24,
-                            borderRadius: "22px",
-                            ml: 1
-                        }}
-                    />
-                </Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        pl: 3,
-                        pr: 3,
-                        mb: 2
-                    }}
-                >
-                    <Typography>
-                        wersja
-                    </Typography>
-                    <Chip
-                        label={project.version}
-                        size="medium"
-                        sx={{
-                            ml: 1,
-                            fontWeight: "medium",
-                            fontSize: 14,
-                            height: 24,
-                            borderRadius: "22px",
-                        }}
-                    />
-
-                </Box>
+                {/*<Box*/}
+                {/*    sx={{*/}
+                {/*        display: "flex",*/}
+                {/*        flexDirection: "row",*/}
+                {/*        alignItems: "center",*/}
+                {/*        justifyContent: "space-between",*/}
+                {/*        pl: 3,*/}
+                {/*        pr: 3,*/}
+                {/*        mb: 2*/}
+                {/*    }}*/}
+                {/*>*/}
+                {/*    <Typography>*/}
+                {/*        wersja*/}
+                {/*    </Typography>*/}
+                {/*    <Chip*/}
+                {/*        label={project.version}*/}
+                {/*        size="medium"*/}
+                {/*        sx={{*/}
+                {/*            ml: 1,*/}
+                {/*            fontWeight: "medium",*/}
+                {/*            fontSize: 14,*/}
+                {/*            height: 24,*/}
+                {/*            borderRadius: "22px",*/}
+                {/*        }}*/}
+                {/*    />*/}
+                {/*</Box>*/}
                 <Box
                     sx={{
                         display: "flex",
@@ -175,7 +142,8 @@ function ProjectBox({project}) {
                 </Typography>
             </Box>
         </Card>
-    );
+    )
+        ;
 }
 
 const ProjectListDump = ({

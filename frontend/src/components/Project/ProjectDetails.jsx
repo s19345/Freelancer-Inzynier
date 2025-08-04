@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {useParams} from "react-router";
 import {PROJECT_BACKEND_URL} from "../../settings";
@@ -23,11 +24,10 @@ const ProjectDetails = () => {
     const {projectId} = useParams();
     const token = useAuthStore((state) => state.token);
     const [project, setProject] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
 
-    const fetchProject = async () => {
+    const fetchProject = useCallback(async () => {
         try {
             const response = await fetch(`${PROJECT_BACKEND_URL}projects/${projectId}/`, {
                 headers: {
@@ -43,10 +43,8 @@ const ProjectDetails = () => {
         } catch (err) {
             console.error("Błąd:", err);
             setError(err.message);
-        } finally {
-            setLoading(false);
         }
-    };
+    }, [projectId, token]);
 
     const handleEdit = () => {
         setIsEditing(!isEditing);
@@ -54,7 +52,7 @@ const ProjectDetails = () => {
 
     useEffect(() => {
             fetchProject();
-        }, [projectId, token]
+        }, [fetchProject]);
     );
     const handleProjectUpdate = () => {
         fetchProject();

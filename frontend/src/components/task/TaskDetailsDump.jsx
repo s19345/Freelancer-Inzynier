@@ -1,4 +1,4 @@
-import {Avatar, Box, Button, Card, Chip, Stack, Typography} from "@mui/material";
+import {Avatar, Box, Button, Chip, Stack, Typography} from "@mui/material";
 import IdeaIcon from "@mui/icons-material/Lightbulb";
 import TimerIcon from "@mui/icons-material/AccessTime";
 import DeleteTask from "./DeleteTask";
@@ -111,10 +111,10 @@ const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick, handleTask
                 <Button
                     onClick={() => handleTaskStartOrPause(task.id)}
                 >
-                    {task.status == "to_do" && <Typography variant={"subtitle2"}>Rozpocznij zadanie</Typography>}
-                    {task.status == "in_progress" && <Typography variant={"subtitle2"}>Wstrzymaj zadanie</Typography>}
+                    {task.status === "to_do" && <Typography variant={"subtitle2"}>Rozpocznij zadanie</Typography>}
+                    {task.status === "in_progress" && <Typography variant={"subtitle2"}>Wstrzymaj zadanie</Typography>}
                 </Button>
-                {task.status == "in_progress" && (
+                {task.status === "in_progress" && (
                     <Button
                         onClick={() => handleEndTask(task.id)}
                     >

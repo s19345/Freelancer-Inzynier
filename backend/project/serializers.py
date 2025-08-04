@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from datetime import timedelta
 from users.serializers import FriendListSerializer
 from .models import Client, Project, Task, TimeLog
 from users.models import CustomUser
@@ -45,7 +44,7 @@ class ProjectWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = [
-            'name', 'description', 'version', 'budget',
+            'name', 'description', 'budget',
             'client', 'status', 'collabolators', 'id'
         ]
         read_only_fields = ['id', 'created_at', 'manager']

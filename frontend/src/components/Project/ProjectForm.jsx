@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import SubmitButton from "../common/SubmitButton";
 import StdButton from "../common/StdButton";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {PROJECT_BACKEND_URL, USERS_LIST_URL} from "../../settings";
 import useAuthStore from "../../zustand_store/authStore";
 
@@ -29,12 +29,10 @@ const ProjectForm = ({
 
     const [clients, setClients] = useState([]);
     const [clientsFetchingError, setClientsFetchingError] = useState(null);
-    const [clientsFetchingLoading, setClientsFetchingLoading] = useState(false);
 
     const [friends, setFriends] = useState([]);
     const [friendsFetchingError, setFriendsFetchingError] = useState(null);
-    const [friendsFetchingLoading, setFriendsFetchingLoading] = useState(false);
-    const params = new URLSearchParams({page_size: 10000});
+    const params = useMemo(() => new URLSearchParams({page_size: 10000}), []);
 
     const validate = () => {
         const newErrors = {};
@@ -45,8 +43,7 @@ const ProjectForm = ({
         return newErrors;
     };
 
-    const fetchClients = async () => {
-        setClientsFetchingLoading(true);
+    const fetchClients = useCallback(async () => {
         try {
             const res = await fetch(`${PROJECT_BACKEND_URL}clients/?${params}`, {
                 headers: {
@@ -63,10 +60,9 @@ const ProjectForm = ({
         } finally {
             setClientsFetchingLoading(false);
         }
-    };
+    }, [token, params]);
 
-    const fetchFriends = async () => {
-        setFriendsFetchingLoading(true);
+    const fetchFriends = useCallback(async () => {
         try {
             const res = await fetch(`${USERS_LIST_URL}friends/?${params}`, {
                 headers: {
@@ -81,15 +77,14 @@ const ProjectForm = ({
         } catch (err) {
             setFriendsFetchingError(err.message);
         } finally {
-            setFriendsFetchingLoading(false);
         }
-    };
+    }, [token, params]);
 
     useEffect(() => {
-            fetchClients();
-            fetchFriends();
-        }, [token]
-    );
+        fetchClients();
+        fetchFriends();
+    }, [fetchClients, fetchFriends]);
+
     const handleChange = (e) => {
         const {name, value} = e.target;
 
@@ -140,16 +135,6 @@ const ProjectForm = ({
                                 required
                                 error={!!errors.name}
                                 helperText={errors.name}
-                                disabled={loading}
-                            />
-                        </Box>
-                        <Box sx={{display: "flex", flexDirection: "column"}}>
-                            <Typography variant="h6" sx={{ml: 1}}>Wersja</Typography>
-                            <TextField
-                                name="version"
-                                required
-                                value={formData.version}
-                                onChange={handleChange}
                                 disabled={loading}
                             />
                         </Box>

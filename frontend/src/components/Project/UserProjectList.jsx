@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
 import {
@@ -18,7 +18,7 @@ const UserProjectsList = () => {
     const [error, setError] = useState(null);
     const [pagination, setPagination] = useState({next: null, prev: null, pages: 0, currentPage: 1});
 
-    const fetchProjects = async (page) => {
+    const fetchProjects = useCallback(async (page) => {
         try {
             const res = await fetch(`${PROJECT_BACKEND_URL}projects/?page=${page || 1}`, {
                 headers: {
@@ -43,13 +43,12 @@ const UserProjectsList = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [token])
 
     useEffect(() => {
 
-            fetchProjects();
-        },
-        [token]);
+        fetchProjects();
+    }, [fetchProjects]);
 
     const handlePageChange = (page) => {
         setPagination((prev) => ({
