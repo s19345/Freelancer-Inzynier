@@ -9,6 +9,7 @@ import ExpandableText from "../common/ExpandableText";
 import EditButton from "../common/EditButton";
 
 const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick, handleTaskStartOrPause, handleEndTask}) => {
+    const contextText = task.parent_task ? 'podzadanie' : 'zadanie';
 
 
     return (
@@ -57,7 +58,7 @@ const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick, handleTask
                                 width: "fit-content",
                             }}
                         >
-                            {task.title}
+                            {task?.title}
                         </Typography>
                     </Stack>
 
@@ -111,14 +112,15 @@ const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick, handleTask
                 <Button
                     onClick={() => handleTaskStartOrPause(task.id)}
                 >
-                    {task.status === "to_do" && <Typography variant={"subtitle2"}>Rozpocznij zadanie</Typography>}
-                    {task.status === "in_progress" && <Typography variant={"subtitle2"}>Wstrzymaj zadanie</Typography>}
+                    {task.status === "to_do" && <Typography variant={"subtitle2"}>Rozpocznij {contextText}</Typography>}
+                    {task.status === "in_progress" &&
+                        <Typography variant={"subtitle2"}>Wstrzymaj {contextText}</Typography>}
                 </Button>
                 {task.status === "in_progress" && (
                     <Button
                         onClick={() => handleEndTask(task.id)}
                     >
-                        <Typography variant={"subtitle1"}>Zakoñcz zadanie</Typography>
+                        <Typography variant={"subtitle2"}>Zakoñcz {contextText}</Typography>
                     </Button>
                 )}
                 <Box

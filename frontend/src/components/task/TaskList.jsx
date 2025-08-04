@@ -13,17 +13,18 @@ import TaskListDump from "./TaskListDump";
 import paths from "../../paths";
 import PaginationFrame from "../common/Pagination";
 
-const TaskList = ({addTaskButton, returnButton}) => {
+const TaskList = ({addTaskButton, returnButton, propTasks}) => {
         const {projectId} = useParams();
         let {taskId} = useParams();
         const token = useAuthStore(state => state.token);
         const [tasks, setTasks] = useState([]);
-        const [loading, setLoading] = useState(true);
+        const [loading, setLoading] = useState(false);
         const [error, setError] = useState(null);
         const navigate = useNavigate()
         const [pagination, setPagination] = useState({next: null, prev: null, pages: 0, currentPage: 1});
 
-        const fetchTasks = useCallback(async (page) => {
+        const fetchTasks = useCallback(async (page, projectId, taskId) => {
+
             let url
             if (!taskId) {
                 url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}`;
@@ -61,12 +62,16 @@ const TaskList = ({addTaskButton, returnButton}) => {
                 ...prev,
                 currentPage: page,
             }));
-            fetchTasks(page);
+            fetchTasks(page, projectId, taskId);
         }
 
         useEffect(() => {
-            fetchTasks();
-        }, [fetchTasks]);
+            if (!propTasks) fetchTasks(pagination.currentPage, projectId, taskId);
+            else {
+                setTasks(propTasks);
+            }
+
+        }, [projectId, fetchTasks, taskId, propTasks, pagination.currentPage]);
 
 
         const handleNavigate = (e, taskId) => {

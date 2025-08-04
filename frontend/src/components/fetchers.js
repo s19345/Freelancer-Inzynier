@@ -218,3 +218,31 @@ export const endTaskTimelog = async (taskId) => {
         return null;
     }
 };
+
+export const fetchTasks = async (token, page, projectId, taskId) => {
+    let url
+    if (!taskId) {
+        url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}`;
+    } else {
+        url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}&parent_task=${taskId}`;
+    }
+    try {
+        const res = await fetch(url, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Token ${token}`,
+            },
+        });
+        if (!res.ok) {
+
+            throw new Error("Nie uda³o siê pobraæ zadañ");
+        }
+        const data = await res.json();
+        console.log("pobrane zadania: ", data)
+        return data
+
+
+    } catch (err) {
+        console.error("B³±d:", err);
+    }
+};

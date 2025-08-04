@@ -89,38 +89,6 @@ const InvitationList = () => {
         );
 
 
-// ******************************************************************************
-// todo: tymczasowe zdjêcia ? zamieniæ na prawdziwe zdjêcia userów
-        const fetchFriendsWithPhotos = useCallback(async () => {
-                    const user = isSelectedReceived ? "sender" : "receiver";
-                    try {
-                        const res = await fetch("https://picsum.photos/v2/list");
-                        const data = await res.json();
-
-                        setFriendsInvitations((prevFriends) =>
-                            prevFriends.map((friend, index) => ({
-                                ...friend,
-                                [user]: {
-                                    ...friend[user],
-                                    profile_picture: data[index % data.length].download_url,
-                                },
-                            }))
-                        );
-                    } catch (error) {
-                        console.error("B³±d podczas pobierania zdjêæ:", error);
-                    }
-                }, [isSelectedReceived]
-            )
-        ;
-        useEffect(() => {
-                fetchFriendsWithPhotos()
-            },
-            [fetchFriendsWithPhotos]
-        )
-        ;
-// ******************************************************************************
-
-
         const acceptFriendInvitations = async (id) => {
             try {
                 const res = await fetch(`${USERS_LIST_URL}friend-request-receive/`, {

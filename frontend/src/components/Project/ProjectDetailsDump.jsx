@@ -3,7 +3,7 @@ import {
     Box,
     Chip,
     Typography,
-    Tooltip
+    Tooltip, Card
 } from "@mui/material";
 import React from "react";
 import DeleteProject from "./DeleteProject";
@@ -74,7 +74,7 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
 
 
     return (
-        <Box>
+        <Card sx={{p: 2}}>
             {project && (
                 <Box sx={{
                     display: "flex",
@@ -191,9 +191,8 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
                         <DeleteProject projectId={project.id}/>
                     </Box>
                 </Box>
-            )
-            }
-        </Box>
+            )}
+        </Card>
     );
 };
 

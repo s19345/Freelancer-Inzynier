@@ -12,7 +12,7 @@ import TaskDetailsDump from "./TaskDetailsDump";
 import AddButton from "../common/AddButton";
 import paths from "../../paths";
 import ReturnButton from "../common/ReturnButton";
-import {endTaskTimelog, startTaskTimelog, stopTaskTimelog} from "../fetchers";
+import {endTaskTimelog, fetchTasks, startTaskTimelog, stopTaskTimelog} from "../fetchers";
 
 
 const TaskDetails = () => {
@@ -23,6 +23,8 @@ const TaskDetails = () => {
     const [error, setError] = useState(null);
     const [contextText, setContextText] = useState("zadania");
     const [isEditing, setIsEditing] = useState(false);
+    const [subtasks, setSubtasks] = useState([]);
+    const page = 1
 
     const fetchTask = useCallback(async () => {
         setError(null);
@@ -45,9 +47,16 @@ const TaskDetails = () => {
         }
     }, [taskId, token, contextText]);
 
+    const getTasks = useCallback(async () => {
+        const result = await fetchTasks(token, page, projectId, taskId);
+        setSubtasks(result.results);
+
+    }, [projectId, token, page, taskId]);
+
     useEffect(() => {
         fetchTask();
-    }, [fetchTask]);
+        getTasks();
+    }, [fetchTask, getTasks]);
 
     useEffect(() => {
         if (task && 'parent_task' in task) {
@@ -75,7 +84,6 @@ const TaskDetails = () => {
             }
 
         } else if (task.status === "in_progress") {
-            console.log("zaraz zatrzymam to zadanie")
             result = await stopTaskTimelog(taskId);
             if (result && result.end_time) {
                 setTask(prev => ({
@@ -111,34 +119,61 @@ const TaskDetails = () => {
 
     return (
         <Box sx={{mx: "auto", p: 0}}>
-            {error && <Alert severity="error"> {error}</Alert>}
-            {task &&
-                <Card>
-                    {isEditing ?
-                        (<EditTask task={task} handleTaskUpdate={handleTaskUpdate} setIsEditing={setIsEditing}/>) :
-                        (<TaskDetailsDump
+            {error && <Alert severity="error">{error}</Alert>}
+
+            {task && (
+                isEditing ? (
+                    <EditTask
+                        task={task}
+                        handleTaskUpdate={handleTaskUpdate}
+                        setIsEditing={setIsEditing}
+                    />
+                ) : (
+                    <>
+                        <TaskDetailsDump
+                            key={task.id}
                             task={task}
                             handleDeleteSuccess={handleDeleteSuccess}
                             handleEditClick={handleEditClick}
                             handleTaskStartOrPause={handleTaskStartOrPause}
                             handleEndTask={handleEndTask}
-                        />)
-                    }
-                    {!task.parent_task && <TaskList
-                        addTaskButton={<AddButton label={"Dodaj podzadanie"}
-                                                  to={paths.createSubtask(projectId, taskId)}/>}
-                        returnButton={<ReturnButton label={"Wróć do projektu"} to={paths.project(projectId)}/>}
-                    />}
+                        />
+                        <Box sx={{p: 3}}>
+                            {subtasks && subtasks.length > 0 && (
+                                <TaskList propTasks={subtasks}/>
+                            )}
 
-                </Card>
-            }
-            <Box sx={{p: 3}}>
-                {task?.parent_task &&
-                    <ReturnButton
-                        label={"Wróć do zadania nadrzędnego"}
-                        to={paths.taskDetails(projectId, task.parent_task.id)}
-                    />}
-            </Box>
+                            {task.parent_task && (
+                                <ReturnButton
+                                    label={"Wróć do zadania nadrzędnego"}
+                                    to={paths.taskDetails(projectId, task.parent_task.id)}
+                                />
+                            )}
+
+                            {!task.parent_task && (
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        mt: 2,
+                                    }}
+                                >
+                                    <ReturnButton
+                                        label={"Wróć do projektu"}
+                                        to={paths.project(projectId)}
+                                    />
+                                    <AddButton
+                                        label={"Dodaj podzadanie"}
+                                        to={paths.createSubtask(projectId, taskId)}
+                                    />
+                                </Box>
+                            )}
+                        </Box>
+                    </>
+                )
+            )}
         </Box>
     );
 };

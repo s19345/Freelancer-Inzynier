@@ -108,7 +108,7 @@ const TaskForm = ({
                 >
                     <Box sx={{display: "flex", flexDirection: "row", gap: 1, alignItems: "space-between"}}>
                         <Box sx={{display: "flex", flexDirection: "column", flex: 4}}>
-                            <Typography variant="h6" sx={{ml: 1}}>Nazwa zadania</Typography>
+                            <Typography variant="h6" sx={{ml: 1}}>Nazwa</Typography>
                             <TextField
                                 onInvalid={(e) => e.target.setCustomValidity(invalidText)}
                                 onInput={(e) => e.target.setCustomValidity("")}

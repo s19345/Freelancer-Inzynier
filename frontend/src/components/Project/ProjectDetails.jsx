@@ -6,13 +6,14 @@ import {PROJECT_BACKEND_URL} from "../../settings";
 import AddButton from "../common/AddButton";
 
 import {
-    Box, Alert,
+    Box, Alert, Card,
 } from "@mui/material";
 import TaskList from "../task/TaskList";
 import paths from "../../paths";
 import ProjecDetailsDump from "./ProjectDetailsDump";
 import ReturnButton from "../common/ReturnButton";
 import EditProject from "./EditProject";
+import {fetchTasks} from "../fetchers";
 
 const AddTaskButton = ({projectId}) => {
     return (
@@ -26,6 +27,8 @@ const ProjectDetails = () => {
     const [project, setProject] = useState(null);
     const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
+    const [tasks, setTasks] = useState([]);
+    const [page, setPage] = useState(1);
 
     const fetchProject = useCallback(async () => {
         try {
@@ -46,20 +49,24 @@ const ProjectDetails = () => {
         }
     }, [projectId, token]);
 
+    const getTasks = useCallback(async () => {
+        const result = await fetchTasks(token, page, projectId);
+        setTasks(result.results);
+
+    }, [projectId, token, page]);
+
     const handleEdit = () => {
         setIsEditing(!isEditing);
     }
 
     useEffect(() => {
-            fetchProject();
-        }, [fetchProject]);
-    );
+        fetchProject();
+        getTasks();
+    }, [fetchProject, getTasks]);
+
     const handleProjectUpdate = () => {
         fetchProject();
     };
-
-
-    if (error) return <Alert severity="error">Błąd: {error}</Alert>;
 
 
     return (
@@ -82,11 +89,21 @@ const ProjectDetails = () => {
                 )}
 
 
-                <TaskList
-                    addTaskButton={<AddTaskButton projectId={projectId}/>}
-                    returnButton={<ReturnButton label={"Wróć do projektów"} to={paths.projectList}/>}
-                />
+                {tasks && tasks.length > 0 &&
+                    <TaskList
+                        propTasks={tasks}
+                    />}
             </>)}
+            <Box sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mt: 2
+            }}>
+                <ReturnButton label={"Wróć do projektów"} to={paths.projectList}/>
+                <AddTaskButton projectId={projectId}/>
+            </Box>
         </Box>);
 };
 

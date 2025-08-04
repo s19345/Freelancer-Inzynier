@@ -1,5 +1,6 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
+    Avatar,
     Box,
     Button,
     Card,
@@ -92,17 +93,7 @@ const InvitationBox = ({invitations, handleAccept, pagination, handleChange, han
                                                 sx={{ml: 1}}
                                             >
 
-                                                <Box
-                                                    component="img"
-                                                    src={user.profile_picture}
-                                                    alt={`${user.username} avatar`}
-                                                    sx={{
-                                                        width: 50,
-                                                        height: 50,
-                                                        objectFit: "cover",
-                                                        borderRadius: "50%",
-                                                    }}
-                                                />
+                                                <Avatar alt={user.username}/>
                                                 <Typography
                                                     variant="subtitle1"
                                                     fontWeight="bold"
