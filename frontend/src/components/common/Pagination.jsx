@@ -6,7 +6,7 @@ const PaginationFrame = ({pagination, handleChange}) => {
         <Box id="pagination-box" key={pagination.pages} sx={{
             width: "100%",
             maxWidth: 1053,
-            padding: "40px",
+            margin: "40px",
             display: "flex",
             justifyContent: "center",
         }}>

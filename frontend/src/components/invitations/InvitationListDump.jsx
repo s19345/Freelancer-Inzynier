@@ -93,14 +93,14 @@ const InvitationBox = ({invitations, handleAccept, pagination, handleChange, han
                                                 sx={{ml: 1}}
                                             >
 
-                                                <Avatar alt={user.username}/>
+                                                <Avatar alt={user?.username}/>
                                                 <Typography
                                                     variant="subtitle1"
                                                     fontWeight="bold"
                                                     fontFamily="Montserrat, sans-serif"
                                                     fontSize="0.875rem"
                                                 >
-                                                    {user.username}
+                                                    {user?.username}
                                                 </Typography>
                                             </Stack>
                                             <Stack direction="row" spacing={2}

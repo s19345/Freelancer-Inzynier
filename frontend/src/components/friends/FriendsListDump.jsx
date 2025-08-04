@@ -28,7 +28,7 @@ const CollaboratorBox = ({collaborator, newFriendsSearching, handleInvite}) => {
             <Box
                 onClick={() => handleClick()}
             >
-                <Avatar alt={collaborator.username} sx={{ width: 60, height: 60 }}></Avatar>
+                <Avatar alt={collaborator.username} sx={{width: 60, height: 60}}></Avatar>
             </Box>
             <Typography
                 variant="body2"
@@ -131,39 +131,37 @@ const Box1 = ({
                                 <MenuItem value={60}>60</MenuItem>
                             </Select>
                         </FormControl>
-
-                        <Typography
-                            sx={{
-                                fontFamily: "DM Sans, sans-serif",
-                                fontWeight: 500,
-                                color: "#2c2e32",
-                                fontSize: "18.8px",
-                            }}
-                        >
-                            Sortuj po
-                        </Typography>
-
-                        <FormControl sx={{minWidth: 146}}>
-                            <Select
-                                value="specialization"
-                                displayEmpty
-                                sx={{
-                                    height: 33,
-                                    fontSize: "15px",
-                                    fontFamily: "DM Sans, sans-serif",
-                                    border: "1px solid #ecedee",
-                                    borderRadius: "6px",
-                                    "& .MuiSelect-select": {
-                                        padding: "4px 14px",
-                                    },
-                                }}
-                                IconComponent={KeyboardArrowDownIcon}
-                            >
-                                <MenuItem value="specialization">Specjalizacja</MenuItem>
-                                <MenuItem value="department">Wydzia³</MenuItem>
-                                <MenuItem value="location">Lokalizacja</MenuItem>
-                            </Select>
-                        </FormControl>
+                        {/*<Typography*/}
+                        {/*    sx={{*/}
+                        {/*        fontFamily: "DM Sans, sans-serif",*/}
+                        {/*        fontWeight: 500,*/}
+                        {/*        color: "#2c2e32",*/}
+                        {/*        fontSize: "18.8px",*/}
+                        {/*    }}*/}
+                        {/*>*/}
+                        {/*    Sortuj po*/}
+                        {/*</Typography>*/}
+                        {/*<FormControl sx={{minWidth: 146}}>*/}
+                        {/*    <Select*/}
+                        {/*        value="specialization"*/}
+                        {/*        displayEmpty*/}
+                        {/*        sx={{*/}
+                        {/*            height: 33,*/}
+                        {/*            fontSize: "15px",*/}
+                        {/*            fontFamily: "DM Sans, sans-serif",*/}
+                        {/*            border: "1px solid #ecedee",*/}
+                        {/*            borderRadius: "6px",*/}
+                        {/*            "& .MuiSelect-select": {*/}
+                        {/*                padding: "4px 14px",*/}
+                        {/*            },*/}
+                        {/*        }}*/}
+                        {/*        IconComponent={KeyboardArrowDownIcon}*/}
+                        {/*    >*/}
+                        {/*        <MenuItem value="specialization">Specjalizacja</MenuItem>*/}
+                        {/*        <MenuItem value="department">Wydzia³</MenuItem>*/}
+                        {/*        <MenuItem value="location">Lokalizacja</MenuItem>*/}
+                        {/*    </Select>*/}
+                        {/*</FormControl>*/}
                     </Stack>
                 </Stack>
 

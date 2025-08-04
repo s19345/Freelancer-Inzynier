@@ -20,7 +20,7 @@ const UserProjectsList = () => {
 
     const fetchProjects = useCallback(async (page) => {
         try {
-            const res = await fetch(`${PROJECT_BACKEND_URL}projects/?page=${page || 1}`, {
+            const res = await fetch(`${PROJECT_BACKEND_URL}projects/?page=${page || 1}&page_size=4`, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Token ${token}`,
@@ -64,8 +64,16 @@ const UserProjectsList = () => {
     return (
         <Box mt={4}>
             <ProjectListDump projects={projects}/>
-            <Box sx={{display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", mb: 2}}>
-                <PaginationFrame pagination={pagination} handleChange={handlePageChange}/>
+            <Box sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                m: "40px"
+            }}>
+                {pagination.pages > 1 &&
+                    <PaginationFrame pagination={pagination} handleChange={handlePageChange}/>
+                }
                 <AddButton label={"Stwórz nowy projekt"} to={paths.createProject}/>
             </Box>
 
