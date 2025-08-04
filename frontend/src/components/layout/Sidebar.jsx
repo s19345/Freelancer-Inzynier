@@ -1,6 +1,3 @@
-import FinancesIcon from "@mui/icons-material/AttachMoney";
-import StatisticsIcon from "@mui/icons-material/BarChart";
-import CalendarIcon from "@mui/icons-material/CalendarToday";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import LogOutIcon from "@mui/icons-material/ExitToApp";
 import ProjectsIcon from "@mui/icons-material/FolderOpen";
@@ -32,10 +29,9 @@ const Sidebar = () => {
         {text: "Projekty", icon: <ProjectsIcon/>, adress: paths.projectList},
         {text: "Klienci", icon: <ClientsIcon/>, adress: paths.clients},
         {text: "Znajomi", icon: <CollaboratorsIcon/>, adress: paths.friends},
-        {text: "Kalendarz", icon: <CalendarIcon/>, adress: paths.calendar},
-
-        {text: "Statystyki", icon: <StatisticsIcon/>, adress: paths.statistics},
-        {text: "Finanse", icon: <FinancesIcon/>, adress: paths.finances},
+        // {text: "Kalendarz", icon: <CalendarIcon/>, adress: paths.calendar},
+        // {text: "Statystyki", icon: <StatisticsIcon/>, adress: paths.statistics},
+        // {text: "Finanse", icon: <FinancesIcon/>, adress: paths.finances},
         {text: "Zaproszenia", icon: <InvitationsIcon/>, adress: paths.invitationList},
         {text: "Wyloguj", icon: <LogOutIcon/>, adress: paths.logout},
     ];
