@@ -14,7 +14,7 @@ export default function Home() {
                     <Sidebar/>
                 }
                 <Box sx={{flexGrow: 1, display: 'flex', flexDirection: 'column', width: '100%'}}>
-                    <Header/>
+                    {isLoggedIn && <Header/> }
 
                     <Container maxWidth="lg" sx={{flexGrow: 1, overflowY: 'auto', py: 4}}>
                         <Outlet/>

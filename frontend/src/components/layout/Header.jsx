@@ -86,7 +86,7 @@ export default function Header() {
                             }}
 
                         >
-                            <Avatar src={user.avatar} alt={user.name} sx={{width: 45, height: 45}}/>
+                            <Avatar src={user.profile_picture} alt={user.name} sx={{width: 45, height: 45}}/>
                             <Stack>
                                 <Typography variant="body1" fontWeight="bold" color="text.primary">
                                     {user.username}

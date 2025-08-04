@@ -304,16 +304,22 @@ const Dashboard = () => {
     const [projects, setProjects] = useState([]);
     const [allTasks, setAllTasks] = useState([]);
     const [dailyTimes, setDailyTimes] = useState([]);
+    const token = useAuthStore((state) => state.token);
 
     useEffect(() => {
+        console.log("token w dashboasd", token)
+        console.log("user w dashboard: ", user)
+        if (!token) return
         const loadProjects = async () => {
-            const data = await fetchLastActiveProjects();
+            const data = await fetchLastActiveProjects(token);
+            console.log("data: ", data)
             setProjects(data.projects);
             setDailyTimes(data.total_daily_times);
         };
+        console.log(projects)
 
         loadProjects();
-    }, []);
+    }, [token]);
 
     useEffect(() => {
         const tasks = (projects || []).flatMap(project => project.user_tasks_prefetched)

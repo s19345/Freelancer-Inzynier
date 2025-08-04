@@ -29,18 +29,7 @@ const FriendList = () => {
                 }
 
                 const data = await res.json();
-                const photosRes = await fetch("https://picsum.photos/v2/list");
-                const photos = await photosRes.json();
-
-
-                // __________________________________________________________
-                // todo, tymczasowy kod do pobierania zdjêæ profilowych z otwartego api. zamieniæ na prawdziwe zdjêcia userów
-                const friendsWithPhotos = data.results.map((friend, index) => ({
-                    ...friend,
-                    profile_picture: photos[index % photos.length].download_url,
-                }));
-                // __________________________________________________________
-                setFriends(friendsWithPhotos);
+                setFriends(data.results);
                 setPagination({
                     next: data.next,
                     prev: data.previous,

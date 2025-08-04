@@ -1,5 +1,6 @@
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
+    Avatar,
     Box, Button,
     FormControl,
     Grid,
@@ -27,17 +28,7 @@ const CollaboratorBox = ({collaborator, newFriendsSearching, handleInvite}) => {
             <Box
                 onClick={() => handleClick()}
             >
-                <Box
-                    component="img"
-                    src={collaborator.profile_picture}
-                    alt={`${collaborator.username} avatar`}
-                    sx={{
-                        width: 100,
-                        height: 100,
-                        objectFit: "cover",
-                        borderRadius: "50%",
-                    }}
-                />
+                <Avatar alt={collaborator.username} sx={{ width: 60, height: 60 }}></Avatar>
             </Box>
             <Typography
                 variant="body2"
