@@ -6,7 +6,36 @@ import ProjectsCard from "./ProjectsCard";
 import StaticsBox from "./UserStatics";
 
 const UserProfile = () => {
-    const {user, isLoggedIn, fetchUser, setUser} = useAuthStore();
+    const {user, isLoggedIn, fetchUser, setUser, token} = useAuthStore();
+    const [workTimeSeconds, setWorkTimeSeconds] = React.useState(null);
+
+    useEffect(() => {
+        const loadWorkTime = async () => {
+            try {
+                const data = await fetchLastActiveProjects(token);
+
+                let totalSeconds = 0;
+
+                for (let i = 0; i < 7; i++) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    const dateStr = date.toISOString().split("T")[0]; // "YYYY-MM-DD"
+
+                    const entry = data.total_daily_times
+                        .find(item => item.date === dateStr);
+                    if (entry) {
+                        totalSeconds += entry.total_time;
+                    }
+                }
+
+                setWorkTimeSeconds((totalSeconds));
+            } catch (err) {
+                console.error("Błąd przy pobieraniu czasu pracy:", err);
+            }
+        };
+
+        loadWorkTime();
+    }, [token]);
 
 
     useEffect(() => {
@@ -37,7 +66,7 @@ const UserProfile = () => {
             <UserProfileCard user={user}/>
             <Stack spacing={2}>
                 <ProjectsCard/>
-                <StaticsBox/>
+                <StaticsBox workTime={workTimeSeconds}/>
             </Stack>
         </Box>
     );

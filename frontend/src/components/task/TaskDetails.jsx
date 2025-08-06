@@ -1,30 +1,32 @@
 import React, {useCallback, useEffect, useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import {
     Box,
     Alert
 } from "@mui/material";
 import EditTask from "./EditTask";
-import TaskList from "./TaskList";
 import TaskDetailsDump from "./TaskDetailsDump";
 import AddButton from "../common/AddButton";
 import paths from "../../paths";
 import ReturnButton from "../common/ReturnButton";
 import {endTaskTimelog, fetchTasks, startTaskTimelog, stopTaskTimelog} from "../fetchers";
+import TaskListDump from "./TaskListDump";
+import PaginationFrame from "../common/Pagination";
 
 
 const TaskDetails = () => {
     const {taskId, projectId} = useParams();
     const token = useAuthStore((state) => state.token);
+    const navigate = useNavigate()
 
     const [task, setTask] = useState(null);
     const [error, setError] = useState(null);
     const [contextText, setContextText] = useState("zadania");
     const [isEditing, setIsEditing] = useState(false);
     const [subtasks, setSubtasks] = useState([]);
-    const page = 1
+    const [subtasksPagination, setSubtasksPagination] = useState({next: null, prev: null, pages: 0, currentPage: 1});
 
     const fetchTask = useCallback(async () => {
         setError(null);
@@ -47,16 +49,24 @@ const TaskDetails = () => {
         }
     }, [taskId, token, contextText]);
 
-    const getTasks = useCallback(async () => {
+    const getTasks = useCallback(async (page) => {
         const result = await fetchTasks(token, page, projectId, taskId);
         setSubtasks(result.results);
+        setSubtasksPagination({
+            next: result.next,
+            prev: result.previous,
+            pages: result.total_pages,
+            currentPage: result.current_page
+        })
 
-    }, [projectId, token, page, taskId]);
+    }, [projectId, token, taskId]);
 
     useEffect(() => {
-        fetchTask();
-        getTasks();
-    }, [fetchTask, getTasks]);
+    }, [fetchTask,]);
+
+    useEffect(() => {
+        getTasks(subtasksPagination.currentPage);
+    }, [getTasks, subtasksPagination.currentPage]);
 
     useEffect(() => {
         if (task && 'parent_task' in task) {
@@ -110,10 +120,25 @@ const TaskDetails = () => {
         setIsEditing(!isEditing);
     }
 
-    const handleDeleteSuccess = (deletedId) => {
-        setTask(prev => ({
+    const handleDeleteSuccess = () => {
+        if (task.parent_task) {
+            navigate(paths.taskDetails(projectId, task.parent_task.id));
+        } else {
+            navigate(paths.project(projectId));
+        }
+    };
+
+    const handleDeleteTaskSuccess = (taskId) => {
+        setSubtasks(prev => prev.filter(task => task.id !== taskId));
+    }
+
+    const handleNavigate = (taskId) => {
+        navigate(paths.taskDetails(projectId, taskId));
+    }
+    const handlePageChange = (page) => {
+        setSubtasksPagination((prev) => ({
             ...prev,
-            subtasks: prev.subtasks.filter(subtask => subtask.id !== deletedId),
+            currentPage: page,
         }));
     };
 
@@ -140,7 +165,8 @@ const TaskDetails = () => {
                         />
                         <Box sx={{p: 3}}>
                             {subtasks && subtasks.length > 0 && (
-                                <TaskList propTasks={subtasks}/>
+                                <TaskListDump tasks={subtasks} handleDeleteSuccess={handleDeleteTaskSuccess}
+                                              handleNavigate={handleNavigate}/>
                             )}
 
                             {task.parent_task && (
@@ -164,6 +190,7 @@ const TaskDetails = () => {
                                         label={"Wróć do projektu"}
                                         to={paths.project(projectId)}
                                     />
+                                    <PaginationFrame pagination={subtasksPagination} handleChange={handlePageChange}/>
                                     <AddButton
                                         label={"Dodaj podzadanie"}
                                         to={paths.createSubtask(projectId, taskId)}

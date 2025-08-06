@@ -40,7 +40,6 @@ const ClientList = () => {
                 }
 
                 const data = await res.json();
-                console.log("Klienci:", data);
                 setClients(data.results);
                 setPagination({
                     next: data.next,

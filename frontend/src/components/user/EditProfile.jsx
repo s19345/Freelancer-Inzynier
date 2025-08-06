@@ -20,10 +20,11 @@ import {fetchTimezones} from "../fetchers";
 
 const EditProfile = () => {
     const [timezones, setTimezones] = useState([]);
+    const token = useAuthStore((state) => state.token);
 
     useEffect(() => {
-        fetchTimezones().then(setTimezones)
-    }, []);
+        fetchTimezones(token).then(setTimezones)
+    }, [token]);
 
     const user = useAuthStore((state) => state.user);
     const updateUserData = useAuthStore((state) => state.updateUserData);
@@ -153,10 +154,10 @@ const EditProfile = () => {
                     fullWidth
                 />
 
-                <Button variant="outlined" component="label">
-                    Dodaj zdjêcie profilowe
-                    <input type="file" name="profile_picture" hidden onChange={handleChange} accept="image/*"/>
-                </Button>
+                {/*<Button variant="outlined" component="label">*/}
+                {/*    Dodaj zdjêcie profilowe*/}
+                {/*    <input type="file" name="profile_picture" hidden onChange={handleChange} accept="image/*"/>*/}
+                {/*</Button>*/}
                 <Box sx={{display: "flex", flexDirection: "row"}}>
                     <Button variant="contained" type="submit" sx={{mt: 2, width: "50%"}}>
                         Zapisz zmiany

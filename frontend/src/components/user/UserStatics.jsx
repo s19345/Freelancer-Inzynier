@@ -1,7 +1,15 @@
-import { Card, Box, Typography, CircularProgress } from "@mui/material";
+import {Card, Box, Typography, CircularProgress} from "@mui/material";
 import React from "react";
 
-const StaticsBox = () => {
+const StaticsBox = ({workTime}) => {
+    const workHours = Math.floor(workTime / 3600);
+
+    function getWorkPercentage(timeInSeconds) {
+        const fullTimeInSeconds = 40 * 3600; // 40 godzin = 144000 sekund
+        const percentage = (timeInSeconds / fullTimeInSeconds) * 100;
+        return Number(percentage.toFixed(2));
+    }
+
     return (
         <Card
             sx={{
@@ -23,7 +31,7 @@ const StaticsBox = () => {
                     fontSize: "21px",
                 }}
             >
-                Ogólny czas pracy
+                Tygodniowy czas pracy
             </Typography>
 
             <Box
@@ -33,7 +41,7 @@ const StaticsBox = () => {
                     mt: 2,
                 }}
             >
-                <CircularProgress size={190} thickness={4} value={78} variant="determinate"/>
+                <CircularProgress size={190} thickness={4} value={getWorkPercentage(workTime)} variant="determinate"/>
 
                 <Typography
                     sx={{
@@ -46,7 +54,7 @@ const StaticsBox = () => {
                         fontSize: "1.8rem",
                     }}
                 >
-                    5w: 2d
+                    {workHours} h
                 </Typography>
             </Box>
         </Card>

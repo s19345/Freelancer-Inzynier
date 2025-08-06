@@ -81,11 +81,11 @@ const SkillEditor = ({initialSkills = []}) => {
 
     useEffect(() => {
         const loadSkills = async () => {
-            const fetchedSkills = await fetchUserSkills();
+            const fetchedSkills = await fetchUserSkills(token);
             setSkills(fetchedSkills);
         };
         loadSkills();
-    }, []);
+    }, [token]);
 
     return (
         <Box

@@ -1,19 +1,20 @@
 import React, {useEffect, useState} from "react";
 import React, {useCallback, useEffect, useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import {PROJECT_BACKEND_URL} from "../../settings";
 import AddButton from "../common/AddButton";
 
 import {
-    Box, Alert, Card,
+    Box
 } from "@mui/material";
-import TaskList from "../task/TaskList";
 import paths from "../../paths";
 import ProjecDetailsDump from "./ProjectDetailsDump";
 import ReturnButton from "../common/ReturnButton";
 import EditProject from "./EditProject";
 import {fetchTasks} from "../fetchers";
+import PaginationFrame from "../common/Pagination";
+import TaskListDump from "../task/TaskListDump";
 
 const AddTaskButton = ({projectId}) => {
     return (
@@ -25,10 +26,10 @@ const ProjectDetails = () => {
     const {projectId} = useParams();
     const token = useAuthStore((state) => state.token);
     const [project, setProject] = useState(null);
-    const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [tasks, setTasks] = useState([]);
-    const [page, setPage] = useState(1);
+    const [tasksPagination, setTasksPagination] = useState({next: null, prev: null, pages: 0, currentPage: 1});
+    const navigate = useNavigate()
 
     const fetchProject = useCallback(async () => {
         try {
@@ -45,15 +46,20 @@ const ProjectDetails = () => {
             setProject(data);
         } catch (err) {
             console.error("Błąd:", err);
-            setError(err.message);
         }
     }, [projectId, token]);
 
-    const getTasks = useCallback(async () => {
+    const getTasks = useCallback(async (page) => {
         const result = await fetchTasks(token, page, projectId);
         setTasks(result.results);
+        setTasksPagination({
+            next: result.next,
+            prev: result.previous,
+            pages: result.total_pages,
+            currentPage: result.current_page
+        });
 
-    }, [projectId, token, page]);
+    }, [projectId, token]);
 
     const handleEdit = () => {
         setIsEditing(!isEditing);
@@ -61,12 +67,29 @@ const ProjectDetails = () => {
 
     useEffect(() => {
         fetchProject();
-        getTasks();
-    }, [fetchProject, getTasks]);
+    }, [fetchProject]);
+
+    useEffect(() => {
+        getTasks(tasksPagination.currentPage);
+    }, [getTasks, tasksPagination.currentPage]);
+
+    const handleTasksPageChange = (page) => {
+        setTasksPagination(
+            prev => ({...prev, currentPage: page})
+        )
+    }
+
+    const handleTaskDeleteSuccess = (taskId) => {
+        setTasks(prev => prev.filter(task => task.id !== taskId));
+    }
 
     const handleProjectUpdate = () => {
         fetchProject();
     };
+
+    const handleTaskNavigate = (taskId) => {
+        navigate(paths.taskDetails(projectId, taskId));
+    }
 
 
     return (
@@ -80,17 +103,17 @@ const ProjectDetails = () => {
                             handleEdit={handleEdit}
                         />
                         {tasks && tasks.length > 0 &&
-                            <TaskList
-                                propTasks={tasks}
-                            />}
+                            <TaskListDump tasks={tasks} handleDeleteSuccess={handleTaskDeleteSuccess}
+                                          handleNavigate={handleTaskNavigate}/>
+                        }
                         <Box sx={{
                             display: "flex",
                             flexDirection: "row",
                             justifyContent: "space-between",
                             alignItems: "center",
-                            mt: 2
                         }}>
                             <ReturnButton label={"Wróć do projektów"} to={paths.projectList}/>
+                            <PaginationFrame pagination={tasksPagination} handleChange={handleTasksPageChange}/>
                             <AddTaskButton projectId={projectId}/>
                         </Box>
                     </>

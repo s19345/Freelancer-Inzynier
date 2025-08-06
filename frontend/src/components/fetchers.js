@@ -12,7 +12,7 @@ const showMessage = (message, type) => {
     setType(type);
 };
 
-export const fetchUserSkills = async () => {
+export const fetchUserSkills = async (token) => {
 
     try {
         const response = await fetch(`${USERS_LIST_URL}skills/`, {
@@ -37,7 +37,7 @@ export const fetchUserSkills = async () => {
 
 };
 
-export const fetchTimezones = async () => {
+export const fetchTimezones = async (token) => {
     try {
         const response = await fetch(`${USERS_LIST_URL}timezones/`, {
             headers: {
@@ -222,7 +222,7 @@ export const fetchTasks = async (token, page, projectId, taskId) => {
     if (!taskId) {
         url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}`;
     } else {
-        url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}&parent_task=${taskId}`;
+        url = `${PROJECT_BACKEND_URL}tasks/?project=${projectId}&parent_task=${taskId}`;
     }
     try {
         const res = await fetch(url, {

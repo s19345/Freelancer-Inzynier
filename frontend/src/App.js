@@ -6,7 +6,6 @@ import Logout from "./components/user/Logout";
 import Register from "./components/user/Register";
 import UserProfile from "./components/user/UserProfile";
 import EditProfile from "./components/user/EditProfile";
-import ChangePassword from "./components/user/ChangePassword";
 import Home from "./components/layout/Home";
 import PasswordResetConfirm from "./components/user/PasswordResetConfirm";
 import CreateProject from "./components/Project/CreateProject";

@@ -1,12 +1,10 @@
 import {
-    Autocomplete,
     Box,
     Card,
     Chip,
-    TextField,
     Typography
 } from "@mui/material";
-import React, {useState} from "react";
+import React from "react";
 import {statusColors} from "./ProjectDetailsDump";
 import paths from "../../paths";
 import {useNavigate} from "react-router";
@@ -44,7 +42,7 @@ function ProjectBox({project}) {
                 borderRight="1px dashed #ccc"
                 width="30%"
             >
-                <Box sx={{ml: 2,mr: 2, mb: 1, display: "flex", flexDirection: "column", alignItems: "space-between"}}>
+                <Box sx={{ml: 2, mr: 2, mb: 1, display: "flex", flexDirection: "column", alignItems: "space-between"}}>
                     <Typography
                         variant="h6"
                     >
@@ -52,7 +50,7 @@ function ProjectBox({project}) {
                     </Typography>
                     <Box
                         id="client-box"
-                        sx={{alignItems: "center", display: "flex", flexDirection: "column", }}
+                        sx={{alignItems: "center", display: "flex", flexDirection: "column",}}
                     >
                         {project.client && (<>
                                 <Typography variant="subtitle1">
@@ -100,33 +98,7 @@ function ProjectBox({project}) {
                         }}
                     />
                 </Box>
-                {/*<Box*/}
-                {/*    sx={{*/}
-                {/*        display: "flex",*/}
-                {/*        flexDirection: "row",*/}
-                {/*        alignItems: "center",*/}
-                {/*        justifyContent: "space-between",*/}
-                {/*        pl: 3,*/}
-                {/*        pr: 3,*/}
-                {/*        mb: 2*/}
-                {/*    }}*/}
-                {/*>*/}
-                {/*    <Typography>*/}
-                {/*        wersja*/}
-                {/*    </Typography>*/}
-                {/*    <Chip*/}
-                {/*        label={project.version}*/}
-                {/*        size="medium"*/}
-                {/*        sx={{*/}
-                {/*            ml: 1,*/}
-                {/*            fontWeight: "medium",*/}
-                {/*            fontSize: 14,*/}
-                {/*            height: 24,*/}
-                {/*            borderRadius: "22px",*/}
-                {/*        }}*/}
-                {/*    />*/}
 
-                {/*</Box>*/}
                 <Box
                     sx={{
                         display: "flex",
@@ -158,7 +130,7 @@ function ProjectBox({project}) {
                 sx={{
                     ml: 3,
                     width: "40%"
-            }}
+                }}
             >
                 <Typography
                     variant={"subtitle1"}
@@ -177,17 +149,11 @@ function ProjectBox({project}) {
 const ProjectListDump = ({
                              projects
                          }) => {
-    const options = [
-        {value: "", label: "Wszystkie"},
-        {value: "active", label: "Active"},
-        {value: "completed", label: "Completed"},
-        {value: "paused", label: "Paused"},
-    ];
-    const [status, setStatus] = useState(options[0]);
+
 
     return (
         <Card
-            sx={{ borderRadius: 5}}
+            sx={{borderRadius: 5}}
         >
             <Box
                 id="project-list-header"
@@ -202,21 +168,7 @@ const ProjectListDump = ({
                 <Typography variant="h4">
                     Ostatnie projekty
                 </Typography>
-                {/*<Box sx={{display: 'flex', alignItems: 'center', flexDirection: "row"}}>*/}
-                {/*    <Typography variant="h6">*/}
-                {/*        Status*/}
-                {/*    </Typography>*/}
-                {/*    <Autocomplete*/}
-                {/*        options={options}*/}
-                {/*        getOptionLabel={(option) => option.label}*/}
-                {/*        value={status}*/}
-                {/*        onChange={(e, newValue) => setStatus(newValue)} // tu mamy ca³y obiekt*/}
-                {/*        renderInput={(params) => (*/}
-                {/*            <TextField {...params} size="small"/>*/}
-                {/*        )}*/}
-                {/*        sx={{width: 180, ml: 2, borderRadius: 5}}*/}
-                {/*    />*/}
-                {/*</Box>*/}
+
             </Box>
             <Box>
                 {projects.map((project) => (

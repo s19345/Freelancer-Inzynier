@@ -6,7 +6,7 @@ import {
     Typography,
     Grid,
     Chip,
-    Stack,
+    Stack
 } from "@mui/material";
 import {PROJECT_BACKEND_URL} from "../../settings";
 import useAuthStore from "../../zustand_store/authStore";
@@ -16,7 +16,7 @@ const getStatusColor = (status) => {
         case "active":
             return "success";
         case "completed":
-            return "primary";
+            return "error";
         case "paused":
             return "warning";
         default:
@@ -51,6 +51,7 @@ const ProjectsCard = () => {
         fetchProjects();
     }, [token]);
 
+
     return (
         <Box
             width="auto"
@@ -66,7 +67,7 @@ const ProjectsCard = () => {
             </Typography>
 
             <Grid container spacing={2}>
-                {projects.map((project) => (
+                {projects.slice(0, 6).map((project) => (
                     <Grid xs={12} sm={6} md={4} key={project.id}>
                         <Card
                             sx={{
@@ -76,11 +77,22 @@ const ProjectsCard = () => {
                                 flexDirection: "column",
                                 justifyContent: "center",
                                 p: 2,
+                                width: 170
                             }}
                         >
                             <CardContent>
                                 <Stack spacing={1}>
-                                    <Typography variant="h6" fontWeight="bold">
+                                    <Typography
+                                        variant="h6"
+                                        fontWeight="bold"
+                                        noWrap
+                                        title={project.name}
+                                        sx={{
+                                            maxWidth: 90,
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                        }}
+                                    >
                                         {project.name}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
