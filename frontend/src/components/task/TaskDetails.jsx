@@ -84,7 +84,7 @@ const TaskDetails = () => {
     const handleTaskStartOrPause = async (taskId) => {
         let result;
         if (task.status === "to_do") {
-            result = await startTaskTimelog(taskId);
+            result = await startTaskTimelog(taskId, token);
             if (result && result.start_time) {
                 setTask(prev => ({
                     ...prev,
@@ -94,7 +94,7 @@ const TaskDetails = () => {
             }
 
         } else if (task.status === "in_progress") {
-            result = await stopTaskTimelog(taskId);
+            result = await stopTaskTimelog(taskId, token);
             if (result && result.end_time) {
                 setTask(prev => ({
                     ...prev,
@@ -106,7 +106,7 @@ const TaskDetails = () => {
     }
 
     const handleEndTask = async (taskId) => {
-        const result = await endTaskTimelog(taskId)
+        const result = await endTaskTimelog(taskId, token)
         if (result) {
             setTask(prev => ({
                 ...prev,

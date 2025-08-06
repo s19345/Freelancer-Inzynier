@@ -58,7 +58,6 @@ const ClientList = () => {
         fetchClients();
     }, [fetchClients]);
 
-    console.log("Clients fetched:", clients);
     const handlePageChange = (page) => {
         setPagination((prev) => ({
             ...prev,

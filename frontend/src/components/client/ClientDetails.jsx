@@ -49,8 +49,6 @@ const ClientDetails = () => {
             }, [clientId, token]
         );
 
-        console.log('ClientDetails component rendered with clientId:', client);
-
         if (loading) {
             return (
                 <Box display="flex" justifyContent="center" mt={4}>
