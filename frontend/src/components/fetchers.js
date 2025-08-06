@@ -116,7 +116,7 @@ export const fetchLastActiveProjects = async (token) => {
     }
 };
 
-export const startTaskTimelog = async (taskId) => {
+export const startTaskTimelog = async (taskId, token) => {
     try {
         const response = await fetch(`${PROJECT_BACKEND_URL}start-task-timelog/`, {
             method: "POST",
@@ -149,7 +149,7 @@ export const startTaskTimelog = async (taskId) => {
     }
 };
 
-export const stopTaskTimelog = async (taskId) => {
+export const stopTaskTimelog = async (taskId, token) => {
     try {
         const response = await fetch(`${PROJECT_BACKEND_URL}stop-task-timelog/`, {
             method: "POST",
@@ -183,7 +183,7 @@ export const stopTaskTimelog = async (taskId) => {
     }
 };
 
-export const endTaskTimelog = async (taskId) => {
+export const endTaskTimelog = async (taskId, token) => {
     try {
         const response = await fetch(`${PROJECT_BACKEND_URL}end-task-timelog/`, {
             method: "POST",
@@ -220,9 +220,9 @@ export const endTaskTimelog = async (taskId) => {
 export const fetchTasks = async (token, page, projectId, taskId) => {
     let url
     if (!taskId) {
-        url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}`;
+        url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}&page_size=2`;
     } else {
-        url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}&parent_task=${taskId}`;
+        url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}&parent_task=${taskId}&page_size=2`;
     }
     try {
         const res = await fetch(url, {
