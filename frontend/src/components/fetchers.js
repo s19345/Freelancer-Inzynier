@@ -220,9 +220,9 @@ export const endTaskTimelog = async (taskId, token) => {
 export const fetchTasks = async (token, page, projectId, taskId) => {
     let url
     if (!taskId) {
-        url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}&page_size=2`;
+        url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}`;
     } else {
-        url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}&parent_task=${taskId}&page_size=2`;
+        url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}&parent_task=${taskId}`;
     }
     try {
         const res = await fetch(url, {
