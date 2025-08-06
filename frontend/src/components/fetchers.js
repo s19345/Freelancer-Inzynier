@@ -222,7 +222,7 @@ export const fetchTasks = async (token, page, projectId, taskId) => {
     if (!taskId) {
         url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}`;
     } else {
-        url = `${PROJECT_BACKEND_URL}tasks/?project=${projectId}&parent_task=${taskId}`;
+        url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}&parent_task=${taskId}`;
     }
     try {
         const res = await fetch(url, {

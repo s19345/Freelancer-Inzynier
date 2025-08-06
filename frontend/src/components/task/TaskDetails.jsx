@@ -39,7 +39,7 @@ const TaskDetails = () => {
             });
 
             if (!res.ok) {
-                throw new Error(` Nie udało się pobrać danych ${contextText}`);
+                throw new Error(`Nie udało się pobrać danych ${contextText}`);
             }
 
             const data = await res.json();

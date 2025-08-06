@@ -47,8 +47,9 @@ const ClientDetails = () => {
 
                 fetchClient();
             }, [clientId, token]
-        )
-        ;
+        );
+
+        console.log('ClientDetails component rendered with clientId:', client);
 
         if (loading) {
             return (
@@ -93,10 +94,11 @@ const ClientDetails = () => {
 
                 <Stack spacing={1} mb={3}>
                     <Typography><strong>Nazwa firmy:</strong> {client.company_name}</Typography>
+                    <Typography><strong>Branża:</strong> {client.industry}</Typography>
                     <Typography><strong>Osoba kontaktowa:</strong> {client.contact_person}</Typography>
                     <Typography><strong>Email:</strong> {client.email}</Typography>
                     <Typography><strong>Telefon:</strong> {client.phone || 'Brak danych'}</Typography>
-                    {/* moge dodać tu pozniej więcej pól*/}
+                    <Typography><strong>Notes:</strong> {client.notes || 'Brak danych'}</Typography>
                 </Stack>
 
                 <Button

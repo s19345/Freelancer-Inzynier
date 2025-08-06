@@ -28,7 +28,6 @@ const EditTask = ({handleTaskUpdate, setIsEditing, task}) => {
         setError(null);
 
         try {
-            console.log("Updating task with data:", formData);
             const res = await fetch(`${PROJECT_BACKEND_URL}tasks/${taskId}/`, {
                 method: 'PATCH',
                 headers: {

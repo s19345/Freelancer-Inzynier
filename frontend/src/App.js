@@ -12,7 +12,7 @@ import CreateProject from "./components/Project/CreateProject";
 import CreateClient from "./components/client/CreateClient";
 import ProjectDetails from "./components/Project/ProjectDetails";
 import EditProject from "./components/Project/EditProject";
-import UserProjectsList from "./components/Project/UserProjectList";
+import UserProjectsList from "./components/Project/ProjectList";
 import ClientList from "./components/client/ClientList";
 import ClientDetails from './components/client/ClientDetails';
 import EditClient from './components/client/EditClient';
