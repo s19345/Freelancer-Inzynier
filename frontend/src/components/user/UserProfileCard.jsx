@@ -73,7 +73,6 @@ const UserProfileCard = ({user}) => {
                  alignItems="center"
                  p={3}
             >
-
                 <Avatar
                     src={user.profile_picture || "/default-avatar.png"}
                     alt={fullName || username}

@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
     Box,
+
     Grid,
     Typography,
     Paper, Stack, Popover, DialogTitle, Dialog, DialogContent, TextField, DialogActions, Button
@@ -69,85 +70,82 @@ const TextBox = ({
                      initialValue = "",
                      setFriend
                  }) => {
-        const [open, setOpen] = useState(false);
-        const [inputValue, setInputValue] = useState(initialValue);
+    const [open, setOpen] = useState(false);
+    const [inputValue, setInputValue] = useState(initialValue);
 
-        const handleOpen = () => {
-            if (editable) setOpen(true);
-        };
-        const handleClose = () => setOpen(false);
+    const handleOpen = () => {
+        if (editable) setOpen(true);
+    };
+    const handleClose = () => setOpen(false);
 
-        const handleSave = async () => {
-            const notes = field === "notes" ? inputValue : null;
-            const rate = field === "rate" ? inputValue : null;
+    const handleSave = async () => {
+        const notes = field === "notes" ? inputValue : null;
+        const rate = field === "rate" ? inputValue : null;
 
-            try {
-                const updatedNotes = await updateOrCreateNotes(friendId, notes, rate);
+        try {
+            const updatedNotes = await updateOrCreateNotes(friendId, notes, rate);
 
-                setFriend((prevFriend) => ({
-                    ...prevFriend,
-                    friend_notes: updatedNotes,
-                }));
+            setFriend((prevFriend) => ({
+                ...prevFriend,
+                friend_notes: updatedNotes,
+            }));
+            setOpen(false);
+        } catch (error) {
+            console.error("BÅ‚Ä…d przy zapisie notatki:", error);
+        }
+    };
 
-                setOpen(false);
-            } catch (error) {
-                console.error("B³±d przy zapisie notatki:", error);
-            }
-        };
+    return (
+        <>
+            <Box
+                sx={{
+                    mt: 1,
+                    color: "text.secondary",
+                    border: "1px solid black",
+                    p: 1,
+                    borderRadius: 3,
+                    cursor: editable ? "pointer" : "default",
+                    textAlign: "center",
+                    ...sx,
+                }}
+                onClick={handleOpen}
+            >
+                {children}
+            </Box>
 
-        return (
-            <>
-                <Box
-                    sx={{
-                        mt: 1,
-                        color: "text.secondary",
-                        border: "1px solid black",
-                        p: 1,
-                        borderRadius: 3,
-                        cursor: editable ? "pointer" : "default",
-                        textAlign: "center",
-                        ...sx,
-                    }}
-                    onClick={handleOpen}
-                >
-                    {children}
-                </Box>
-
-                {editable && (
-                    <Dialog open={open} onClose={handleClose}>
-                        <DialogTitle>
-                            {field === "notes" ? "Edytuj notatkê" : "Edytuj ocenê"}
-                        </DialogTitle>
-                        <DialogContent>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                label={field === "notes" ? "Wpisz notatkê" : "Podaj ocenê"}
-                                type="text"
-                                fullWidth
-                                variant="outlined"
-                                value={inputValue}
-                                onChange={(e) => setInputValue(e.target.value)}
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleClose}>Anuluj</Button>
-                            <Button onClick={handleSave} variant="contained">
-                                Zapisz
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                )}
-            </>
-        );
-    }
-;
+            {editable && (
+                <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>
+                        {field === "notes" ? "Edytuj notatkÄ™" : "Edytuj ocenÄ™"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            label={field === "notes" ? "Wpisz notatkÄ™" : "Podaj ocenÄ™"}
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose}>Anuluj</Button>
+                        <Button onClick={handleSave} variant="contained">
+                            Zapisz
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            )}
+        </>
+    );
+};
 
 export default function FriendDetails() {
     const [friend, setFriend] = useState()
     const {friendId} = useParams();
     const token = useAuthStore((state) => state.token);
-
 
     const fetchUserDetails = useCallback(async (id) => {
         try {
@@ -157,12 +155,12 @@ export default function FriendDetails() {
                 }
             });
             if (!response.ok) {
-                throw new Error('Nie uda³o siê pobraæ szczegó³ów znajomego');
+                throw new Error('Nie udaÅ‚o siÄ™ pobraÄ‡ szczegÃ³Å‚Ã³w znajomego');
             }
             const data = await response.json();
             setFriend(data);
         } catch (error) {
-            console.error('B³±d podczas pobierania szczegó³ów znajomego:', error);
+            console.error('BÅ‚Ä…d podczas pobierania szczegÃ³Å‚Ã³w znajomego:', error);
         }
 
     }, [token])
@@ -179,7 +177,7 @@ export default function FriendDetails() {
                         <Typography variant="h5" align={"center"} gutterBottom>{friend.username}</Typography>
                         <Grid container spacing={3}>
                             <Grid item xs={12} sm={4}>
-                                <Typography variant="subtitle2">Imiê i Nazwisko</Typography>
+                                <Typography variant="subtitle2">ImiÄ™ i Nazwisko</Typography>
                                 <TextBox>
                                     {friend.first_name || friend.last_name
                                         ? `${friend.first_name || ''} ${friend.last_name || ''}`.trim()
@@ -210,8 +208,7 @@ export default function FriendDetails() {
 
                             <Grid>
                                 <ExpandableText
-                                    label="umiejêtno¶ci"
-
+                                    label="umiejÄ™tnoÅ›ci"
 
                                     text={
                                         friend.skills?.length
@@ -236,7 +233,7 @@ export default function FriendDetails() {
                                     initialValue={friend.friend_notes ? friend.friend_notes.rate : ""}
                                     setFriend={setFriend}
                                 >
-                                    {friend.friend_notes ? `${friend.friend_notes.rate}` : "Kliknij aby dodaæ swoj± ocenê"}
+                                    {friend.friend_notes ? `${friend.friend_notes.rate}` : "Kliknij aby dodaÄ‡ swojÄ… ocenÄ™"}
                                 </TextBox>
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -248,17 +245,15 @@ export default function FriendDetails() {
                                     initialValue={friend.friend_notes ? friend.friend_notes.notes : ""}
                                     setFriend={setFriend}
                                 >
-                                    {friend.friend_notes ? friend.friend_notes.notes : "Dodaj notatkê."}
+                                    {friend.friend_notes ? friend.friend_notes.notes : "Dodaj notatkÄ™."}
                                 </TextBox>
                             </Grid>
-
                         </Grid>
                     </>
                 )}
 
             </Paper>
-            {
-                friend?.collaboration_history &&
+            {friend?.collaboration_history &&
                 <Box sx={{p: 3, borderRadius: 4, maxWidth: 900, mx: 'auto'}}>
                     <CollaborationHistory history={friend.collaboration_history}/>
                 </Box>

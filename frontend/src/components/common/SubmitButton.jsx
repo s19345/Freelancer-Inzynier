@@ -1,4 +1,3 @@
-import {useNavigate} from "react-router";
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import {Button, Typography} from "@mui/material";
 import theme from "../../theme";

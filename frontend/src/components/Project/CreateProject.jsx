@@ -16,15 +16,12 @@ const CreateProject = () => {
         name: "",
         description: "",
         // version: "",
-        title: "",
         status: "",
         budget: "",
         client: "",
         collabolators: [],
     });
 
-    const [errors, setErrors] = useState({});
-    const [successMessage, setSuccessMessage] = useState(null);
     const [loading, setLoading] = useState(false);
     const [clients, setClients] = useState([]);
     const [clientsFetchingError, setClientsFetchingError] = useState(null);
@@ -110,12 +107,12 @@ const CreateProject = () => {
         }
     };
 
+
     const handleSubmit = () => {
         createProject(formData);
     };
 
     return (
-
         <ProjectForm
             handleSubmit={handleSubmit}
             returnPath={paths.projectList}

@@ -23,13 +23,14 @@ const FriendList = () => {
                         Authorization: `Token ${token}`,
                     },
                 });
-
                 if (!res.ok) {
-                    throw new Error("Nie uda³o siê pobraæ znajomych");
+                    throw new Error("Nie udaÅ‚o siÄ™ pobraÄ‡ znajomych");
                 }
 
                 const data = await res.json();
+
                 setFriends(data.results);
+
                 setPagination({
                     next: data.next,
                     prev: data.previous,
@@ -57,16 +58,15 @@ const FriendList = () => {
 
             if (!res.ok) {
                 setType(data.key || "error");
-                setMessage(data.error || "Nie uda³o siê wys³aæ zaproszenia");
+                setMessage(data.error || "Nie udaÅ‚o siÄ™ wysÅ‚aÄ‡ zaproszenia");
                 return;
             }
 
             setType(data.key || "success");
-            setMessage(data.value || "Zaproszenie wys³ane");
-
+            setMessage(data.value || "Zaproszenie wysÅ‚ane");
 
         } catch (error) {
-            setMessage("Nie uda³o siê wys³aæ zaproszenia (b³±d sieci)");
+            setMessage("Nie udaÅ‚o siÄ™ wysÅ‚aÄ‡ zaproszenia (bÅ‚Ä…d sieci)");
             setType("error");
         }
     };

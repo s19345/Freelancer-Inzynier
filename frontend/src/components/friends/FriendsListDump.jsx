@@ -42,7 +42,7 @@ const CollaboratorBox = ({collaborator, newFriendsSearching, handleInvite}) => {
                 <Button
                     onClick={() => handleInvite(collaborator.id)}
                 >
-                    Zapro∂
+                    Zapro≈õ
                 </Button>
             )}
         </Stack>
@@ -60,19 +60,19 @@ const Box1 = ({
                   handleInvite
               }) => {
 
+
     return (
         <Box>
             <Paper
                 elevation={0}
                 sx={{
-                    // width: 664,  <- sta≥a szeroko∂Ê
+                    // width: 664,  <- sta≈Ça szeroko≈õƒá
                     bgcolor: "#fcfdff",
                     borderRadius: "20px",
                     p: 0,
                 }}
             >
-                {/* Header */
-                }
+                {/* Header */}
                 <Stack
                     direction="row"
                     justifyContent="space-between"
@@ -90,14 +90,13 @@ const Box1 = ({
                     >
                         Znajomi
                     </Typography>
-
                     <Button onClick={() => toggleNewFriendsSearching()}>
                         <Typography>
                             {newFriendsSearching ? "Twoi znajomi" : "Szukaj znajomych"}
                         </Typography>
                     </Button>
-
                     <Stack direction="row" alignItems="center" spacing={2}>
+
                         <Typography
                             sx={{
                                 fontFamily: "DM Sans, sans-serif",
@@ -131,6 +130,7 @@ const Box1 = ({
                                 <MenuItem value={60}>60</MenuItem>
                             </Select>
                         </FormControl>
+
                         {/*<Typography*/}
                         {/*    sx={{*/}
                         {/*        fontFamily: "DM Sans, sans-serif",*/}
@@ -158,13 +158,12 @@ const Box1 = ({
                         {/*        IconComponent={KeyboardArrowDownIcon}*/}
                         {/*    >*/}
                         {/*        <MenuItem value="specialization">Specjalizacja</MenuItem>*/}
-                        {/*        <MenuItem value="department">Wydzia≥</MenuItem>*/}
+                        {/*        <MenuItem value="department">Wydzia≈Ç</MenuItem>*/}
                         {/*        <MenuItem value="location">Lokalizacja</MenuItem>*/}
                         {/*    </Select>*/}
                         {/*</FormControl>*/}
                     </Stack>
                 </Stack>
-
 
                 <Grid container spacing={2} justifyContent={"center"} sx={{mt: 10}}>
                     {collaborators.map((collaborator) => (

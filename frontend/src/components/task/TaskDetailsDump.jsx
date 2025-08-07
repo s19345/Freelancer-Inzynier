@@ -119,7 +119,7 @@ const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick, handleTask
                     <Button
                         onClick={() => handleEndTask(task.id)}
                     >
-                        <Typography variant={"subtitle2"}>Zakoñcz {contextText}</Typography>
+                        <Typography variant={"subtitle2"}>ZakoÅ„cz {contextText}</Typography>
                     </Button>
                 )}
                 <Box

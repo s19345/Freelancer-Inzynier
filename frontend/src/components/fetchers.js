@@ -23,18 +23,16 @@ export const fetchUserSkills = async (token) => {
         });
 
         if (!response.ok) {
-            showMessage("B³±d podczas pobierania umiejêtno¶ci.", "error");
-            throw new Error("B³±d podczas pobierania umiejêtno¶ci.");
+            showMessage("BÅ‚Ä…d podczas pobierania umiejÄ™tnoÅ›ci.", "error");
+            throw new Error("BÅ‚Ä…d podczas pobierania umiejÄ™tnoÅ›ci.");
         }
 
         const data = await response.json();
-        return data || [{id: 0, name: "Brak umiejêtno¶ci"}];
+        return data || [{id: 0, name: "Brak umiejÄ™tnoÅ›ci"}];
     } catch (error) {
-        showMessage("Nie uda³o siê pobraæ umiejêtno¶ci.", "error");
+        showMessage("Nie udaÅ‚o siÄ™ pobraÄ‡ umiejÄ™tnoÅ›ci.", "error");
         return [];
     }
-
-
 };
 
 export const fetchTimezones = async (token) => {
@@ -47,17 +45,16 @@ export const fetchTimezones = async (token) => {
         });
 
         if (!response.ok) {
-            showMessage("B³±d podczas pobierania stref czasowych.", "error");
-            throw new Error("B³±d podczas pobierania stref czasowych.");
+            showMessage("BÅ‚Ä…d podczas pobierania stref czasowych.", "error");
+            throw new Error("BÅ‚Ä…d podczas pobierania stref czasowych.");
         }
 
         const data = await response.json();
         return data || [];
     } catch (error) {
-        showMessage("Nie uda³o siê pobraæ stref czasowych.", "error");
+        showMessage("Nie udaÅ‚o siÄ™ pobraÄ‡ stref czasowych.", "error");
         return [];
     }
-
 };
 
 export const updateOrCreateNotes = async (friendId, notes, rate) => {
@@ -80,19 +77,16 @@ export const updateOrCreateNotes = async (friendId, notes, rate) => {
         );
 
         if (!response.ok) {
-            showMessage("B³±d podczas zapisywania notatki.", "error");
-            throw new Error("B³±d podczas zapisywania notatki.");
+            showMessage("BÅ‚Ä…d podczas zapisywania notatki.", "error");
+            throw new Error("BÅ‚Ä…d podczas zapisywania notatki.");
         }
 
         const data = await response.json();
         return data;
     } catch (error) {
-        showMessage("Nie uda³o siê zapisaæ notatki.", "error");
+        showMessage("Nie udaÅ‚o siÄ™ zapisaÄ‡ notatki.", "error");
         return null;
-
     }
-
-
 };
 
 export const fetchLastActiveProjects = async (token) => {
@@ -105,13 +99,13 @@ export const fetchLastActiveProjects = async (token) => {
         });
 
         if (!response.ok) {
-            throw new Error("B³±d podczas pobierania ostatnio aktywnych projektów.");
+            throw new Error("BÅ‚Ä…d podczas pobierania ostatnio aktywnych projektÃ³w.");
         }
 
         const data = await response.json();
         return data || [];
     } catch (error) {
-        showMessage("Nie uda³o siê pobraæ ostatnio aktywnych projektów.", "error");
+        showMessage("Nie udaÅ‚o siÄ™ pobraÄ‡ ostatnio aktywnych projektÃ³w.", "error");
         return [];
     }
 };
@@ -130,7 +124,7 @@ export const startTaskTimelog = async (taskId, token) => {
 
         if (!response.ok) {
             const errorData = await response.json();
-            let errorMessage = "B³±d podczas uruchamiania timeloga zadania.";
+            let errorMessage = "BÅ‚Ä…d podczas uruchamiania timeloga zadania.";
 
             if (errorData?.non_field_errors && errorData.non_field_errors.length > 0) {
                 errorMessage = errorData.non_field_errors[0];
@@ -164,7 +158,7 @@ export const stopTaskTimelog = async (taskId, token) => {
         const data = await response.json();
 
         if (!response.ok) {
-            let errorMessage = "B³±d podczas zatrzymywania timeloga zadania.";
+            let errorMessage = "BÅ‚Ä…d podczas zatrzymywania timeloga zadania.";
             if (data?.non_field_errors && data.non_field_errors.length > 0) {
                 errorMessage = data.non_field_errors[0];
             }
@@ -178,7 +172,7 @@ export const stopTaskTimelog = async (taskId, token) => {
 
         return data;
     } catch (error) {
-        showMessage("Wyst±pi³ b³±d po³±czenia z serwerem.", "error");
+        showMessage("WystÄ…piÅ‚ bÅ‚Ä…d poÅ‚Ä…czenia z serwerem.", "error");
         return null;
     }
 };
@@ -198,7 +192,7 @@ export const endTaskTimelog = async (taskId, token) => {
         const data = await response.json();
 
         if (!response.ok) {
-            let errorMessage = "B³±d podczas koñczenia zadania.";
+            let errorMessage = "BÅ‚Ä…d podczas koÅ„czenia zadania.";
             if (data?.non_field_errors && data.non_field_errors.length > 0) {
                 errorMessage = data.non_field_errors[0];
             }
@@ -212,7 +206,7 @@ export const endTaskTimelog = async (taskId, token) => {
 
         return data;
     } catch (error) {
-        showMessage("Wyst±pi³ b³±d po³±czenia z serwerem.", "error");
+        showMessage("WystÄ…piÅ‚ bÅ‚Ä…d poÅ‚Ä…czenia z serwerem.", "error");
         return null;
     }
 };
@@ -224,6 +218,8 @@ export const fetchTasks = async (token, page, projectId, taskId) => {
     } else {
         url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}&parent_task=${taskId}`;
     }
+
+    console.log("pobieram taski z url:", url);
     try {
         const res = await fetch(url, {
             headers: {
@@ -233,13 +229,13 @@ export const fetchTasks = async (token, page, projectId, taskId) => {
         });
         if (!res.ok) {
 
-            throw new Error("Nie uda³o siê pobraæ zadañ");
+            throw new Error("Nie udaÅ‚o siÄ™ pobraÄ‡ zadaÅ„");
         }
         const data = await res.json();
         return data
 
 
     } catch (err) {
-        console.error("B³±d:", err);
+        console.error("BÅ‚Ä…d:", err);
     }
 };

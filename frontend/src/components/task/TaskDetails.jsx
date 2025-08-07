@@ -2,9 +2,10 @@ import React, {useCallback, useEffect, useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
 import {useNavigate, useParams} from "react-router";
+
 import {
     Box,
-    Alert
+    Alert,
 } from "@mui/material";
 import EditTask from "./EditTask";
 import TaskDetailsDump from "./TaskDetailsDump";
@@ -62,6 +63,7 @@ const TaskDetails = () => {
     }, [projectId, token, taskId]);
 
     useEffect(() => {
+        fetchTask();
     }, [fetchTask,]);
 
     useEffect(() => {
@@ -77,6 +79,7 @@ const TaskDetails = () => {
             }
         }
     }, [task]);
+
     const handleTaskUpdate = (updatedTask) => {
         setTask(updatedTask);
     };
@@ -140,7 +143,7 @@ const TaskDetails = () => {
             ...prev,
             currentPage: page,
         }));
-    };
+    }
 
     return (
         <Box sx={{mx: "auto", p: 0}}>

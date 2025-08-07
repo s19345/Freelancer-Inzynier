@@ -24,6 +24,7 @@ export const priorityColors = {
 
 const TaskListDump = ({tasks, handleNavigate, handleDeleteSuccess}) => {
 
+
     return (
         <Box
 
@@ -55,7 +56,7 @@ const TaskListDump = ({tasks, handleNavigate, handleDeleteSuccess}) => {
                                   }}
                                   onClick={(e) => handleNavigate(task.id)}
                             >
-                                < IdeaIcon
+                                <IdeaIcon
                                     sx={{
                                         color: "#666",
                                         fontSize: 25,

@@ -19,7 +19,7 @@ const ChangePassword = ({setIsEdited}) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (newPassword1 !== newPassword2) {
-            setLocalError("Nowe has≥a nie s± takie same!");
+            setLocalError("Nowe has≈Ça nie sƒÖ takie same!");
             return;
         }
         setLocalError(null);
@@ -49,11 +49,11 @@ const ChangePassword = ({setIsEdited}) => {
                 onSubmit={handleSubmit}
             >
                 <Typography variant="h5" component="h2" gutterBottom>
-                    ZmieÒ has≥o
+                    Zmie≈Ñ has≈Ço
                 </Typography>
 
                 <TextField
-                    label="Aktualne has≥o"
+                    label="Aktualne has≈Ço"
                     type="password"
                     value={oldPassword}
                     onChange={(e) => setOldPassword(e.target.value)}
@@ -62,7 +62,7 @@ const ChangePassword = ({setIsEdited}) => {
                 />
 
                 <TextField
-                    label="Nowe has≥o"
+                    label="Nowe has≈Ço"
                     type="password"
                     value={newPassword1}
                     onChange={(e) => setNewPassword1(e.target.value)}
@@ -71,7 +71,7 @@ const ChangePassword = ({setIsEdited}) => {
                 />
 
                 <TextField
-                    label="PowtÛrz nowe has≥o"
+                    label="Powt√≥rz nowe has≈Ço"
                     type="password"
                     value={newPassword2}
                     onChange={(e) => setNewPassword2(e.target.value)}
@@ -81,7 +81,7 @@ const ChangePassword = ({setIsEdited}) => {
 
                 <Stack direction="row" spacing={2}>
                     <Button type="submit" variant="contained" disabled={loading}>
-                        ZmieÒ has≥o
+                        Zmie≈Ñ has≈Ço
                     </Button>
                     <Button variant="outlined" onClick={() => setIsEdited(false)}>
                         Anuluj

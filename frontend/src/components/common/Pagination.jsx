@@ -41,7 +41,7 @@ const PaginationFrame = ({pagination, handleChange}) => {
                     }
                     if (item.type === "next") {
                         return (
-                            // przycisk nastêpnej strony
+                            // przycisk nastepnej strony
                             <PaginationItem
                                 {...item}
                                 component={Typography}

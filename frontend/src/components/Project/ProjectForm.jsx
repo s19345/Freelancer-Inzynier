@@ -39,7 +39,7 @@ const ProjectForm = ({
         if (!formData.name.trim()) newErrors.name = "Nazwa projektu jest wymagana";
         if (!formData.status) newErrors.status = "Status projektu jest wymagany";
         if (formData.budget && Number(formData.budget) < 0)
-            newErrors.budget = "Bud¿et nie mo¿e byæ ujemny";
+            newErrors.budget = "BudÅ¼et nie moÅ¼e byÄ‡ ujemny";
         return newErrors;
     };
 
@@ -52,13 +52,12 @@ const ProjectForm = ({
                 },
             });
 
-            if (!res.ok) throw new Error("Nie uda³o siê pobraæ klientów");
+            if (!res.ok) throw new Error("Nie udaÅ‚o siÄ™ pobraÄ‡ klientÃ³w");
             const data = await res.json();
             setClients(data.results);
         } catch (err) {
             setClientsFetchingError(err.message);
         } finally {
-            setClientsFetchingLoading(false);
         }
     }, [token, params]);
 
@@ -71,7 +70,7 @@ const ProjectForm = ({
                 },
             });
 
-            if (!res.ok) throw new Error("Nie uda³o siê pobraæ znajomych");
+            if (!res.ok) throw new Error("Nie udaÅ‚o siÄ™ pobraÄ‡ znajomych");
             const data = await res.json();
             setFriends(data.results);
         } catch (err) {
@@ -84,12 +83,10 @@ const ProjectForm = ({
         fetchClients();
         fetchFriends();
     }, [fetchClients, fetchFriends]);
-
     const handleChange = (e) => {
         const {name, value} = e.target;
 
         setFormData((prev) => ({...prev, [name]: value}));
-
     };
 
     const handleLocalSubmit = (e) => {
@@ -113,10 +110,10 @@ const ProjectForm = ({
     return (
         <Box sx={{mx: "auto", mt: 4}}>
             {clientsFetchingError && (
-                <Alert severity="error">B³±d pobierania klientów: {clientsFetchingError}</Alert>
+                <Alert severity="error">BÅ‚Ä…d pobierania klientÃ³w: {clientsFetchingError}</Alert>
             )}
             {friendsFetchingError && (
-                <Alert severity="error">B³±d pobierania znajomych: {friendsFetchingError}</Alert>
+                <Alert severity="error">BÅ‚Ä…d pobierania znajomych: {friendsFetchingError}</Alert>
             )}
 
             <Box component="form" onSubmit={handleLocalSubmit} sx={{display: "flex", flexDirection: "column", gap: 2}}>
@@ -154,14 +151,14 @@ const ProjectForm = ({
                                 >
                                     <MenuItem value="">-- Wybierz status --</MenuItem>
                                     <MenuItem value="active">Aktywny</MenuItem>
-                                    <MenuItem value="completed">Ukoñczony</MenuItem>
+                                    <MenuItem value="completed">UkoÅ„czony</MenuItem>
                                     <MenuItem value="paused">Wstrzymany</MenuItem>
                                 </Select>
                                 {errors.status && <FormHelperText>{errors.status}</FormHelperText>}
                             </FormControl>
                         </Box>
                         <Box sx={{display: "flex", flexDirection: "column"}}>
-                            <Typography variant="h6" sx={{ml: 1}}>Bud¿et</Typography>
+                            <Typography variant="h6" sx={{ml: 1}}>BudÅ¼et</Typography>
                             <TextField
                                 name="budget"
                                 type="number"
@@ -214,7 +211,7 @@ const ProjectForm = ({
                     </Box>
                     <Box sx={{display: "flex", flexDirection: "row", gap: 1, maxWidth: "200px", mt: 3}}>
                         <Box sx={{display: "flex", flexDirection: "column"}}>
-                            <Typography variant="h6" sx={{ml: 1}}>Wspó³pracownicy</Typography>
+                            <Typography variant="h6" sx={{ml: 1}}>WspÃ³Å‚pracownicy</Typography>
                             <FormControl fullWidth error={!!errors.collabolators} disabled={loading}>
                                 <Select
                                     name="collabolators"

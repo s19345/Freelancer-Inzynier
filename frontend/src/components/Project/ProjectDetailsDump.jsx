@@ -46,7 +46,6 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
     }
     ;
 
-
     function daysSince(startDate) {
         const now = new Date();
         const start = new Date(startDate);
@@ -71,7 +70,6 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
 
         return parts.join(" : ");
     }
-
 
     return (
         <Card sx={{p: 2}}>
@@ -106,13 +104,11 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
                                             </>
                                         }
                                     >
-
                                         <Avatar sx={{width: 32, height: 32}}>
                                             JK
                                         </Avatar>
                                     </Tooltip>
                                 </Box>
-
                             )}
                         </Box>
                         <Box sx={{display: "flex", flexDirection: "row", mt: 2}}>
@@ -140,7 +136,7 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
                             {/*    }}*/}
                             {/*/>*/}
                             <Chip
-                                label={project.budget + " z³"}
+                                label={project.budget + " zÅ‚"}
                                 size="medium"
                                 sx={{
                                     ml: 1,
@@ -182,7 +178,7 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
 
 
                     <Box>
-                        <TimeInfo time={daysSince(project.created_at)} label={"Spêdzony czas"}/>
+                        <TimeInfo time={daysSince(project.created_at)} label={"SpÄ™dzony czas"}/>
                     </Box>
 
 
@@ -191,9 +187,11 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
                         <DeleteProject projectId={project.id}/>
                     </Box>
                 </Box>
-            )}
+            )
+            }
         </Card>
-    );
+    )
+        ;
 };
 
 export default ProjecDetailsDump;

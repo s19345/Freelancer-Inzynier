@@ -4,6 +4,7 @@ import {Box, Typography, Stack} from '@mui/material';
 import UserProfileCard from "./UserProfileCard";
 import ProjectsCard from "./ProjectsCard";
 import StaticsBox from "./UserStatics";
+import {fetchLastActiveProjects} from "../fetchers";
 
 const UserProfile = () => {
     const {user, isLoggedIn, fetchUser, setUser, token} = useAuthStore();
@@ -39,18 +40,16 @@ const UserProfile = () => {
 
 
     useEffect(() => {
-            const fetchData = async () => {
-                try {
-                    await fetchUser();
-                } catch (error) {
-                    console.error("Błąd przy pobieraniu danych użytkownika lub umiejętności:", error);
-                }
-            };
+        const fetchData = async () => {
+            try {
+                await fetchUser();
+            } catch (error) {
+                console.error("Błąd przy pobieraniu danych użytkownika lub umiejętności:", error);
+            }
+        };
 
-            fetchData();
-        }, [isLoggedIn, fetchUser, setUser]
-    )
-    ;
+        fetchData();
+    }, [isLoggedIn, fetchUser, setUser]);
 
     if (!isLoggedIn) {
         return <Typography variant="body1">Musisz być zalogowany, aby zobaczyć profil użytkownika.</Typography>;
@@ -61,7 +60,6 @@ const UserProfile = () => {
     }
 
     return (
-
         <Box sx={{display: "flex", flexDirection: "row", gap: 2}}>
             <UserProfileCard user={user}/>
             <Stack spacing={2}>

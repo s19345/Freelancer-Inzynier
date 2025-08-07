@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {useParams, useNavigate, Link} from 'react-router';
+import React, {useEffect, useState} from 'react';
+import {useParams, Link as RouterLink} from 'react-router';
 import useAuthStore from '../../zustand_store/authStore';
 import {PROJECT_BACKEND_URL} from '../../settings';
 import {
@@ -11,17 +11,18 @@ import {
     Stack
 } from '@mui/material';
 import paths from "../../paths";
-
+import DeleteClient from "./DeleteClient";
 
 const ClientDetails = () => {
-        const {clientId} = useParams();
-        const token = useAuthStore(state => state.token);
+    const {clientId} = useParams();
+    const token = useAuthStore(state => state.token);
 
-        const [client, setClient] = useState(null);
-        const [loading, setLoading] = useState(true);
-        const [error, setError] = useState(null);
+    const [client, setClient] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-        const fetchClient = useCallback(async () => {
+    useEffect(() => {
+        const fetchClient = async () => {
             try {
                 const res = await fetch(`${PROJECT_BACKEND_URL}clients/${clientId}/`, {
                     headers: {
@@ -41,74 +42,70 @@ const ClientDetails = () => {
             } finally {
                 setLoading(false);
             }
-        }, [fetchClient]);
+        };
 
-        useEffect(() => {
+        fetchClient();
+    }, [clientId, token]);
 
-                fetchClient();
-            }, [clientId, token]
-        );
 
-        if (loading) {
-            return (
-                <Box display="flex" justifyContent="center" mt={4}>
-                    <CircularProgress/>
-                </Box>
-            );
-        }
-
-        if (error) {
-            return (
-                <Alert severity="error" sx={{mt: 3}}>
-                    Błąd: {error}
-                </Alert>
-            );
-        }
-
-        if (!client) {
-            return (
-                <Alert severity="warning" sx={{mt: 3}}>
-                    Nie znaleziono klienta.
-                </Alert>
-            );
-        }
-
+    if (loading) {
         return (
-            <Box mt={4}>
-                <Box display="flex" justifyContent="flex-start" alignItems="center" mb={2}>
-                    <Typography variant="h5" gutterBottom>
-                        Szczegóły klienta
-                    </Typography>
-                    <Button
-                        component={RouterLink}
-                        to={paths.editClient(clientId)}
-                        size="small"
-                        sx={{ml: 2}}
-                    >
-                        Edytuj
-                    </Button>
-                    <DeleteClient clientId={clientId}/>
-                </Box>
-
-                <Stack spacing={1} mb={3}>
-                    <Typography><strong>Nazwa firmy:</strong> {client.company_name}</Typography>
-                    <Typography><strong>Branża:</strong> {client.industry}</Typography>
-                    <Typography><strong>Osoba kontaktowa:</strong> {client.contact_person}</Typography>
-                    <Typography><strong>Email:</strong> {client.email}</Typography>
-                    <Typography><strong>Telefon:</strong> {client.phone || 'Brak danych'}</Typography>
-                    <Typography><strong>Notes:</strong> {client.notes || 'Brak danych'}</Typography>
-                </Stack>
-
-                <Button
-                    variant="outlined"
-                    component={RouterLink}
-                    to="/clients"
-                >
-                    &larr; Powrót do listy klientów
-                </Button>
+            <Box display="flex" justifyContent="center" mt={4}>
+                <CircularProgress/>
             </Box>
         );
     }
-;
+
+    if (error) {
+        return (
+            <Alert severity="error" sx={{mt: 3}}>
+                Błąd: {error}
+            </Alert>
+        );
+    }
+
+    if (!client) {
+        return (
+            <Alert severity="warning" sx={{mt: 3}}>
+                Nie znaleziono klienta.
+            </Alert>
+        );
+    }
+
+    return (
+        <Box mt={4}>
+            <Box display="flex" justifyContent="flex-start" alignItems="center" mb={2}>
+                <Typography variant="h5" gutterBottom>
+                    Szczegóły klienta
+                </Typography>
+                <Button
+                    component={RouterLink}
+                    to={paths.editClient(clientId)}
+                    size="small"
+                    sx={{ml: 2}}
+                >
+                    Edytuj
+                </Button>
+                <DeleteClient clientId={clientId}/>
+            </Box>
+            <Stack spacing={1} mb={3}>
+                <Typography><strong>Nazwa firmy:</strong> {client.company_name}</Typography>
+                <Typography><strong>Branża:</strong> {client.industry}</Typography>
+                <Typography><strong>Osoba kontaktowa:</strong> {client.contact_person}</Typography>
+                <Typography><strong>Email:</strong> {client.email}</Typography>
+                <Typography><strong>Telefon:</strong> {client.phone || 'Brak danych'}</Typography>
+                <Typography><strong>Notes:</strong> {client.notes || 'Brak danych'}</Typography>
+            </Stack>
+
+            <Button
+                variant="outlined"
+                component={RouterLink}
+                to="/clients"
+            >
+                &larr; Powrót do listy klientów
+            </Button>
+        </Box>
+    );
+};
 
 export default ClientDetails;

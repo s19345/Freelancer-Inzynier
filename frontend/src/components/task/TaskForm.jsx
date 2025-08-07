@@ -32,7 +32,7 @@ const TaskForm = ({
 
     const validate = () => {
         const newErrors = {};
-        if (!formData.title.trim()) newErrors.title = "Tytu³ jest wymagany";
+        if (!formData.title.trim()) newErrors.title = "TytuÅ‚ jest wymagany";
         if (!formData.due_date) newErrors.due_date = "Termin wykonania jest wymagany";
         if (!formData.priority) newErrors.priority = "Priorytet jest wymagany";
         if (!formData.description.trim()) newErrors.description = "Opis jest wymagany";
@@ -48,7 +48,7 @@ const TaskForm = ({
                 },
             });
 
-            if (!res.ok) throw new Error("Nie uda³o siê pobraæ znajomych");
+            if (!res.ok) throw new Error("Nie udaÅ‚o siÄ™ pobraÄ‡ znajomych");
             const data = await res.json();
 
             const currentUser = {
@@ -62,7 +62,6 @@ const TaskForm = ({
             setFriendsFetchingError(err.message);
         } finally {
         }
-
     }, [params, token, user.id, user.profile_picture, user.username]);
 
     useEffect(() => {
@@ -97,7 +96,7 @@ const TaskForm = ({
     return (
         <Box sx={{mx: "auto", mt: 4}}>
             {friendsFetchingError && (
-                <Alert severity="error">B³±d pobierania znajomych: {friendsFetchingError}</Alert>
+                <Alert severity="error">BÅ‚Ä…d pobierania znajomych: {friendsFetchingError}</Alert>
             )}
 
             <Box component="form" onSubmit={handleLocalSubmit} sx={{display: "flex", flexDirection: "column", gap: 2}}>
@@ -165,7 +164,7 @@ const TaskForm = ({
                                 onChange={handleChange}
                                 fullWidth
                             >
-                                <MenuItem value="">? Brak ?</MenuItem>
+                                <MenuItem value="">â€” Brak â€”</MenuItem>
                                 {friends.map(user => (
                                     <MenuItem key={user.id} value={user.id}>
                                         {user.username}
@@ -173,6 +172,7 @@ const TaskForm = ({
                                 ))}
                             </TextField>
                         </Box>
+
                         <Box sx={{display: "flex", flexDirection: "column", flex: 1}}>
                             <Typography variant="h6" sx={{ml: 1}}>Priorytet</Typography>
                             <TextField
@@ -186,7 +186,7 @@ const TaskForm = ({
                                 fullWidth
                             >
                                 <MenuItem value="low">Niski</MenuItem>
-                                <MenuItem value="medium">¦redni</MenuItem>
+                                <MenuItem value="medium">Åšredni</MenuItem>
                                 <MenuItem value="high">Wysoki</MenuItem>
                             </TextField>
                         </Box>

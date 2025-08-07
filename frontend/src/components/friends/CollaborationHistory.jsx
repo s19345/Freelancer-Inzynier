@@ -12,28 +12,28 @@ const CollaborationHistory = ({history}) => {
 
 
                     <Box sx={{display: "flex", justifyContent: "left", mb: 1}}>
-                        <Typography variant="body2">Wsp髄ne projekty</Typography>
+                        <Typography variant="body2">Wsp贸lne projekty</Typography>
                         <Typography sx={{ml: 3}} variant="body2"
                                     fontStyle="italic">{history.common_projects_count}</Typography>
                     </Box>
 
                     <Divider sx={{mb: 1}}/>
                     <Box sx={{display: "flex", justifyContent: "left", mb: 1}}>
-                        <Typography variant="body2">Pierwszy wsp髄ny projekt</Typography>
+                        <Typography variant="body2">Pierwszy wsp贸lny projekt</Typography>
                         <Typography sx={{ml: 3}} variant="body2"
                                     fontStyle="italic">{history.first_project_date}</Typography>
                     </Box>
                     <Divider sx={{mb: 1}}/>
 
                     <Box sx={{display: "flex", justifyContent: "left", mb: 1}}>
-                        <Typography variant="body2">Ostatni wsp髄ny projekt</Typography>
+                        <Typography variant="body2">Ostatni wsp贸lny projekt</Typography>
                         <Typography sx={{ml: 3}} variant="body2"
                                     fontStyle="italic">{history.last_project_date}</Typography>
                     </Box>
                     <Divider sx={{mb: 1}}/>
 
                     <Box sx={{display: "flex", justifyContent: "left"}}>
-                        <Typography variant="body2">Godzin sp阣zonych nad wsp髄nymi projektami</Typography>
+                        <Typography variant="body2">Godzin sp臋dzonych nad wsp贸lnymi projektami</Typography>
                         <Typography sx={{ml: 3}} variant="body2" fontStyle="italic">{history.total_hours}</Typography>
                     </Box>
                 </CardContent>

@@ -50,7 +50,7 @@ const ProjectCard = ({project}) => {
                         textOverflow: "ellipsis",
                         width: "100%",
                         minWidth: 100,
-                        height: "46px" // wysoko¶æ dostosowana do 2 linii tekstu
+                        height: "46px" // wysokoÅ›Ä‡ dostosowana do 2 linii tekstu
                     }}
                 >
                     {project.name}
@@ -163,7 +163,6 @@ const TaskCard = ({task}) => {
             </Typography>
         </Card>
     )
-
 }
 
 const TeamCard = ({project}) => {
@@ -237,7 +236,7 @@ const TimeBarChart = ({data}) => {
         };
     });
 
-    // Grupuj daty po miesi±cach, aby wiedzieæ gdzie wstawiæ nazwê miesi±ca
+    // Grupuj daty po miesiÄ…cach, aby wiedzieÄ‡ gdzie wstawiÄ‡ nazwÄ™ miesiÄ…ca
     const monthTicks = [];
     for (let i = 0; i < last30Days.length; i++) {
         if (i === 0 || last30Days[i].monthKey !== last30Days[i - 1].monthKey) {
@@ -254,7 +253,7 @@ const TimeBarChart = ({data}) => {
                 data={last30Days}
                 margin={{top: 20, right: 30, left: 20, bottom: 30}}
             >
-                {/* Górna o¶ z dniami */}
+                {/* GÃ³rna oÅ› z dniami */}
                 <XAxis
                     dataKey="date"
                     tickFormatter={(dateStr, index) => {
@@ -267,7 +266,7 @@ const TimeBarChart = ({data}) => {
                     height={20}
                 />
 
-                {/* Dolna o¶ z miesi±cami */}
+                {/* Dolna oÅ› z miesiÄ…cami */}
                 <XAxis
                     dataKey="date"
                     xAxisId="month"
@@ -306,14 +305,15 @@ const Dashboard = () => {
     const [dailyTimes, setDailyTimes] = useState([]);
     const token = useAuthStore((state) => state.token);
 
+
     useEffect(() => {
         if (!token) return
+
         const loadProjects = async () => {
             const data = await fetchLastActiveProjects(token);
             setProjects(data.projects);
             setDailyTimes(data.total_daily_times);
         };
-
         loadProjects();
     }, [token]);
 
@@ -321,30 +321,36 @@ const Dashboard = () => {
         const tasks = (projects || []).flatMap(project => project.user_tasks_prefetched)
         setAllTasks(tasks.sort((a, b) => new Date(a.due_date) - new Date(b.due_date)).slice(0, 5));
     }, [projects]);
+
+
+    useEffect(() => {
+    }, [projects]);
+
     return (
         <Box id="dashboard">
             <Box id={"dashboard-header"}>
                 {user && <>
                     <Typography variant="h3" gutterBottom sx={{fontWeight: '900', marginTop: 2}}>
-                        Cze¶æ {user.username},
+                        CzeÅ›Ä‡ {user.username},
                     </Typography>
                     <Typography variant="h4" gutterBottom sx={{fontWeight: '900', marginTop: 2}}>
-                        Mo¿esz tu zarz±dzaæ swoj± prac±
+                        MoÅ¼esz tu zarzÄ…dzaÄ‡ swojÄ… pracÄ…
                     </Typography>
                 </>}
             </Box>
+
             <Box id="first-row"
                  sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between',}}>
                 <Box id="left-column" sx={{flex: 7, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
                     <Typography variant="h6">
-                        Czas pracy w ci±gu ostatnich 30 dni
+                        Czas pracy w ciÄ…gu ostatnich 30 dni
                     </Typography>
                     <TimeBarChart data={dailyTimes}/>
                 </Box>
                 <Box id="first-right-column"
                      sx={{flex: 2, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
                     <Typography variant="h6">
-                        Zespo³y
+                        ZespoÅ‚y
                     </Typography>
                     {projects && projects.map((project) => (
                         project.users.length > 0 && (

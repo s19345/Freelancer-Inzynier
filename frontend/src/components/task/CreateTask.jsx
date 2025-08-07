@@ -33,16 +33,17 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
 
     const handleSubmit = async () => {
 
+
         const payload = {
             title: formData.title,
             description: formData.description,
             status: formData.status,
             due_date: formData.due_date,
-            project_version: formData.project_version,
             priority: formData.priority,
             project_id: parseInt(projectId),
             user_id: formData.user_id || null,
         };
+
 
         if (parentTaskId) {
             payload.parent_task_id = parentTaskId;
@@ -76,7 +77,8 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
             console.error("Błąd sieci:", error);
             console.error("Błąd połączenia z serwerem");
         }
-    };
+    }
+
 
     return (
         <Box>
@@ -86,7 +88,9 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
                 submitMessage={`utwórz ${contextText}`}
                 returnPath={returnUrl}
                 handleSubmit={handleSubmit}
+
             />
+
         </Box>
     );
 };

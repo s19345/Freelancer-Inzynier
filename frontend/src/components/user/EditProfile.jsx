@@ -118,29 +118,23 @@ const EditProfile = () => {
 
                 <TextField label="Nick" name="username" value={form.username} onChange={handleChange} required
                            fullWidth/>
-                <TextField label="Imię" name="first_name" value={form.first_name} onChange={handleChange}
-                           fullWidth/>
-                <TextField label="Nazwisko" name="last_name" value={form.last_name} onChange={handleChange}
-                           fullWidth/>
-                <TextField label="Email" name="email" type="email" value={form.email} onChange={handleChange}
-                           required
+                <TextField label="Imię" name="first_name" value={form.first_name} onChange={handleChange} fullWidth/>
+                <TextField label="Nazwisko" name="last_name" value={form.last_name} onChange={handleChange} fullWidth/>
+                <TextField label="Email" name="email" type="email" value={form.email} onChange={handleChange} required
                            fullWidth/>
                 <TextField label="Telefon" name="phone_number" value={form.phone_number} onChange={handleChange}
                            fullWidth/>
-                <TextField label="Lokalizacja" name="location" value={form.location} onChange={handleChange}
-                           fullWidth/>
+                <TextField label="Lokalizacja" name="location" value={form.location} onChange={handleChange} fullWidth/>
                 <TextField label="Specjalizacja" name="specialization" value={form.specialization}
                            onChange={handleChange} fullWidth/>
                 <FormControl fullWidth>
                     <InputLabel>Strefa czasowa</InputLabel>
                     <Select name="timezone" value={form.timezone} label="Strefa czasowa" onChange={handleChange}>
-                        {
-                            timezones.map((tz) => (
-                                <MenuItem key={tz} value={tz}>
-                                    {tz}
-                                </MenuItem>
-                            ))
-                        }
+                        {timezones.map((tz) => (
+                            <MenuItem key={tz} value={tz}>
+                                {tz}
+                            </MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
 
@@ -162,6 +156,7 @@ const EditProfile = () => {
                     <Button variant="contained" type="submit" sx={{mt: 2, width: "50%"}}>
                         Zapisz zmiany
                     </Button>
+
                     <Button
                         sx={{mt: 2, ml: 2, width: "50%"}}
                         variant="outlined"

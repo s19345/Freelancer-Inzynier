@@ -39,7 +39,7 @@ const SkillEditor = ({initialSkills = []}) => {
             });
 
             if (!res.ok) {
-                throw new Error('B³±d dodawania umiejêtno¶ci')
+                throw new Error('BÅ‚Ä…d dodawania umiejÄ™tnoÅ›ci')
             }
             ;
             const data = await res.json();
@@ -54,30 +54,25 @@ const SkillEditor = ({initialSkills = []}) => {
     };
 
     const handleDelete = async (skill) => {
-            setLoading(true);
-            try {
-                const res = await fetch(`${API_URL}${skill.id}/`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Token ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
+        setLoading(true);
+        try {
+            const res = await fetch(`${API_URL}${skill.id}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
 
-                if (
-                    !res.ok
-                )
-                    throw new Error('B³±d usuwania umiejêtno¶ci');
+            if (!res.ok) throw new Error('BÅ‚Ä…d usuwania umiejÄ™tnoÅ›ci');
 
-                setSkills((prev) => prev.filter((s) => s !== skill));
-            } catch
-                (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
+            setSkills((prev) => prev.filter((s) => s !== skill));
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
         }
-    ;
+    };
 
     useEffect(() => {
         const loadSkills = async () => {
@@ -99,7 +94,7 @@ const SkillEditor = ({initialSkills = []}) => {
             }}
         >
             <Typography variant="h6" gutterBottom>
-                Twoje umiejêtno¶ci
+                Twoje umiejÄ™tnoÅ›ci
             </Typography>
 
             <Stack direction="row" spacing={1} flexWrap="wrap" mb={2} gap={1}>
@@ -116,7 +111,7 @@ const SkillEditor = ({initialSkills = []}) => {
 
             <Stack direction="row" spacing={2}>
                 <TextField
-                    label="Dodaj umiejêtno¶ci (oddziel przecinkami)"
+                    label="Dodaj umiejÄ™tnoÅ›ci (oddziel przecinkami)"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     fullWidth

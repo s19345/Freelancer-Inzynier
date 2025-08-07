@@ -98,7 +98,6 @@ function ProjectBox({project}) {
                         }}
                     />
                 </Box>
-
                 <Box
                     sx={{
                         display: "flex",
@@ -110,10 +109,10 @@ function ProjectBox({project}) {
                     }}
                 >
                     <Typography>
-                        Budøet
+                        Bud≈ºet
                     </Typography>
                     <Chip
-                        label={project.budget + " z≥"}
+                        label={project.budget + " z≈Ç"}
                         size="medium"
                         sx={{
                             ml: 1,
@@ -149,8 +148,6 @@ function ProjectBox({project}) {
 const ProjectListDump = ({
                              projects
                          }) => {
-
-
     return (
         <Card
             sx={{borderRadius: 5}}
@@ -168,7 +165,6 @@ const ProjectListDump = ({
                 <Typography variant="h4">
                     Ostatnie projekty
                 </Typography>
-
             </Box>
             <Box>
                 {projects.map((project) => (
