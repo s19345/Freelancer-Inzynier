@@ -77,11 +77,11 @@ const EditProfile = () => {
         const success = await updateUserData(form);
 
         if (success) {
-            setMessage('Dane u¿ytkownika zosta³y zaktualizowane');
+            setMessage('Dane uÅ¼ytkownika zostaÅ‚y zaktualizowane');
             setType('success');
             navigate(paths.userProfile);
         } else {
-            setMessage('Wyst±pi³ b³±d podczas aktualizacji');
+            setMessage('WystÄ…piÅ‚ bÅ‚Ä…d podczas aktualizacji');
             setType('error');
         }
     };
@@ -89,7 +89,7 @@ const EditProfile = () => {
     if (!isLoggedIn) {
         return (
             <Typography variant="body1" sx={{mt: 2, textAlign: 'center'}}>
-                Musisz byæ zalogowany, aby edytowaæ profil.
+                Musisz byÄ‡ zalogowany, aby edytowaÄ‡ profil.
             </Typography>
         );
     }
@@ -118,7 +118,7 @@ const EditProfile = () => {
 
                 <TextField label="Nick" name="username" value={form.username} onChange={handleChange} required
                            fullWidth/>
-                <TextField label="Imiê" name="first_name" value={form.first_name} onChange={handleChange}
+                <TextField label="ImiÄ™" name="first_name" value={form.first_name} onChange={handleChange}
                            fullWidth/>
                 <TextField label="Nazwisko" name="last_name" value={form.last_name} onChange={handleChange}
                            fullWidth/>
@@ -155,7 +155,7 @@ const EditProfile = () => {
                 />
 
                 {/*<Button variant="outlined" component="label">*/}
-                {/*    Dodaj zdjêcie profilowe*/}
+                {/*    Dodaj zdjÄ™cie profilowe*/}
                 {/*    <input type="file" name="profile_picture" hidden onChange={handleChange} accept="image/*"/>*/}
                 {/*</Button>*/}
                 <Box sx={{display: "flex", flexDirection: "row"}}>
@@ -168,7 +168,7 @@ const EditProfile = () => {
                         onClick={() => setIsEdited(!isEdited)}
 
                     >
-                        Zmieñ has³o
+                        ZmieÅ„ hasÅ‚o
                     </Button>
                 </Box>
             </Box>

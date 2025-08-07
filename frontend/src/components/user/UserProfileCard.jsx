@@ -49,14 +49,14 @@ const UserProfileCard = ({user}) => {
     if (!user) return null;
 
     const fullName = `${user.first_name || ""} ${user.last_name || ""}`.trim();
-    const username = user.username || "U¿ytkownik";
+    const username = user.username || "UÅ¼ytkownik";
 
     const contactInfo = [
-        {icon: <PersonIcon/>, text: fullName || "Dodaj imiê i nazwisko"},
+        {icon: <PersonIcon/>, text: fullName || "Dodaj imiÄ™ i nazwisko"},
         {icon: <Email/>, text: user.email || "Dodaj email"},
         {icon: <Phone/>, text: user.phone_number || "Dodaj numer telefonu"},
-        {icon: <AccessTimeIcon/>, text: user.timezone || "Dodaj strefê czasow±"},
-        {icon: <Work/>, text: user.specialization || "Dodaj specjalizacjê"},
+        {icon: <AccessTimeIcon/>, text: user.timezone || "Dodaj strefÄ™ czasowÄ…"},
+        {icon: <Work/>, text: user.specialization || "Dodaj specjalizacjÄ™"},
     ];
 
     return (
@@ -131,7 +131,7 @@ const UserProfileCard = ({user}) => {
 
                 {/* Skills */}
                 <ExpandableText
-                    label="umiejêtno¶ci"
+                    label="umiejÄ™tnoÅ›ci"
                     icon={<SchoolSharpIcon/>}
                     text={
                         user.skills?.length

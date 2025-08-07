@@ -39,7 +39,7 @@ const ProjectsCard = () => {
                 });
 
                 if (!res.ok) {
-                    throw new Error("Nie uda≥o siÍ pobraÊ projektÛw");
+                    throw new Error("Nie uda≈Ço siƒô pobraƒá projekt√≥w");
                 }
 
                 const data = await res.json();
@@ -63,7 +63,7 @@ const ProjectsCard = () => {
             p={3}
         >
             <Typography variant="h6" fontWeight="bold" mb={2}>
-                Projekty uøytkownika
+                Projekty u≈ºytkownika
             </Typography>
 
             <Grid container spacing={2}>

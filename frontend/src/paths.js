@@ -25,6 +25,7 @@ const paths = {
     editTask: (projectId = ":projectId", taskId = ":taskId") => `/project/${projectId}/task/${taskId}/edit`,
     createSubtask: (projectId = ":projectId", taskId = ":taskId") => `/project/${projectId}/task/${taskId}/subtasks/create`,
     friends: "/friends",
+    friendDetails: (friendId = ":friendId") => `/friend/${friendId}`,
 };
 
 export default paths;
