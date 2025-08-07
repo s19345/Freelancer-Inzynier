@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from users.serializers import FriendListSerializer
 from .models import Client, Project, Task, TimeLog
 from users.models import CustomUser
@@ -35,6 +36,11 @@ class ProjectSerializer(serializers.ModelSerializer):
     manager = FriendListSerializer(read_only=True)
     client = ClientSimpleSerializer(read_only=True)
 
+    class Meta:
+        model = Project
+        fields = '__all__'
+        read_only_fields = ['manager']
+
 
 class ProjectWriteSerializer(serializers.ModelSerializer):
     collabolators = serializers.PrimaryKeyRelatedField(
@@ -48,12 +54,6 @@ class ProjectWriteSerializer(serializers.ModelSerializer):
             'client', 'status', 'collabolators', 'id'
         ]
         read_only_fields = ['id', 'created_at', 'manager']
-
-
-class Meta:
-    model = Project
-    fields = '__all__'
-    read_only_fields = ['manager']
 
 
 class TaskSimpleSerializer(serializers.ModelSerializer):
@@ -72,6 +72,7 @@ class TaskSerializer(serializers.ModelSerializer):
         required=False,
         allow_null=True
     )
+
     project = ProjectSimpleSerializer(read_only=True)
     parent_task = TaskSimpleSerializer(read_only=True)
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
@@ -79,7 +80,6 @@ class TaskSerializer(serializers.ModelSerializer):
     project_id = serializers.PrimaryKeyRelatedField(
         queryset=Project.objects.all(), source='project', write_only=True
     )
-
     parent_task_id = serializers.PrimaryKeyRelatedField(
         queryset=Task.objects.all(), source='parent_task', write_only=True, required=False, allow_null=True
     )
@@ -145,18 +145,18 @@ class ProjectWithUserTasksSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['id', 'name', 'user_tasks_prefetched', "users",]
+        fields = ['id', 'name', 'user_tasks_prefetched', "users", ]
 
-        def get_users(self, obj):
-            collaborators = getattr(obj, 'prefetched_collaborators', [])
-            return [
-                {
-                    'id': user.id,
-                    'username': user.username,
-                    'profile_picture': user.profile_picture,
-                }
-                for user in collaborators
-            ]
+    def get_users(self, obj):
+        collaborators = getattr(obj, 'prefetched_collaborators', [])
+        return [
+            {
+                'id': user.id,
+                'username': user.username,
+                'profile_picture': user.profile_picture,
+            }
+            for user in collaborators
+        ]
 
 
 class ProjectWithTasksSerializer(serializers.ModelSerializer):
