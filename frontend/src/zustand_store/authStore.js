@@ -53,10 +53,10 @@ const useAuthStore = create(
 
                     if (!response.ok) {
                         const data = await response.json();
-                        throw new Error(data.detail || "B³±d zmiany has³a");
+                        throw new Error(data.detail || "BÅ‚Ä…d zmiany hasÅ‚a");
                     }
 
-                    set({successMessage: "Has³o zosta³o zmienione pomy¶lnie!"});
+                    set({successMessage: "HasÅ‚o zostaÅ‚o zmienione pomyÅ›lnie!"});
                 } catch (err) {
                     set({error: err.message});
                 } finally {
@@ -76,7 +76,7 @@ const useAuthStore = create(
                     });
 
                     if (!res.ok) {
-                        set({error: 'Nie uda³o siê pobraæ danych u¿ytkownika', loading: false});
+                        set({error: 'Nie udaÅ‚o siÄ™ pobraÄ‡ danych uÅ¼ytkownika', loading: false});
                         return null;
                     }
 
@@ -84,7 +84,7 @@ const useAuthStore = create(
                     set({user: data, loading: false, error: null});
                     return data;
                 } catch (error) {
-                    set({error: 'B³±d sieci przy pobieraniu danych u¿ytkownika', loading: false});
+                    set({error: 'BÅ‚Ä…d sieci przy pobieraniu danych uÅ¼ytkownika', loading: false});
                     return null;
                 }
             },
@@ -114,11 +114,11 @@ const useAuthStore = create(
                         user: data,
                         loading: false,
                         error: null,
-                        successMessage: 'Dane u¿ytkownika zosta³y zaktualizowane'
+                        successMessage: 'Dane uÅ¼ytkownika zostaÅ‚y zaktualizowane'
                     });
                     return true;
                 } catch (error) {
-                    set({error: 'B³±d aktualizacji danych', loading: false});
+                    set({error: 'BÅ‚Ä…d aktualizacji danych', loading: false});
                     return false;
                 }
             },
@@ -137,9 +137,9 @@ const useAuthStore = create(
 
                     if (!res.ok) {
                         const firstErrorKey = Object.keys(data)[0];
-                        const firstErrorMessage = Array.isArray(data[firstErrorKey]) ? data[firstErrorKey][0] : "Wyst±pi³ b³±d.";
+                        const firstErrorMessage = Array.isArray(data[firstErrorKey]) ? data[firstErrorKey][0] : "Wystï¿½piï¿½ bï¿½ï¿½d.";
                         if (firstErrorKey === "password1") {
-                            set({error: "Has³o musi mieæ co najmniej 8 znaków."});
+                            set({error: "HasÅ‚o musi mieÄ‡ co najmniej 8 znakÃ³w."});
                             return false;
                         }
                         set({error: firstErrorMessage});
@@ -147,7 +147,7 @@ const useAuthStore = create(
                     }
 
 
-                    set({successMessage: "Rejestracja zakoñczona sukcesem!"});
+                    set({successMessage: "Rejestracja zakoÅ„czona sukcesem!"});
                     return true;
                 } catch (err) {
                     set({error: err.message});
