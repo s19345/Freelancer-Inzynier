@@ -1,103 +1,132 @@
-import {Box, Stack, Typography, Avatar, Autocomplete, TextField} from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import {Link} from "react-router";
-import paths from "../../paths";
 import useAuthStore from "../../zustand_store/authStore";
+import React, {useCallback, useEffect, useState} from "react";
+import {USERS_LIST_URL} from "../../settings";
+import InvitationsDump from "./InvitationListDump";
+import useGlobalStore from "../../zustand_store/globalInfoStore";
 
-export default function Header() {
-    const user = useAuthStore((state) => state.user);
+
+const InvitationList = () => {
+    const token = useAuthStore(state => state.token);
+    const backendReceivedURL = `${USERS_LIST_URL}friend-request-receive`
+    const backendSentURL = `${USERS_LIST_URL}friend-request-send`;
+    const [friendsInvitations, setFriendsInvitations] = useState([]);
+    const setMessage = useGlobalStore((state) => state.setMessage);
+    const setType = useGlobalStore((state) => state.setType);
+    const [pagination, setPagination] = useState({next: null, prev: null, pages: 0, currentPage: 1});
+    const [isSelectedReceived, setIsSelectedReceived] = useState(true);
+
+    const fetchInvitations = useCallback(async (url, page) => {
+        try {
+            const res = await fetch(`${url}/?page=${page}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Token ${token}`,
+                },
+            });
+
+            if (!res.ok) {
+                throw new Error("Nie udało się pobrać zaproszeń");
+            }
+
+            const data = await res.json();
+            setFriendsInvitations(data.results);
+            setPagination({
+                next: data.next,
+                prev: data.previous,
+                pages: data.total_pages,
+                currentPage: data.current_page
+            });
+        } catch (err) {
+            console.error(err.message);
+        }
+    }, [token]);
+
+    const deleteFriendInvitation = async (id) => {
+        try {
+            const res = await fetch(`${USERS_LIST_URL}friend-request-delete/${id}/`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Token ${token}`,
+                },
+            });
+
+            if (!res.ok) {
+                throw new Error("Nie udało się usunąć zaproszenia");
+            }
+
+            const data = await res.json();
+            const key = Object.keys(data)[0];
+            const message = data[key];
+            setFriendsInvitations(friendsInvitations.filter(invitation => invitation.id !== id));
+            setMessage(message);
+            setType(key);
+
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const handleDelete = (projectId) => {
+        deleteFriendInvitation(projectId);
+    };
+
+    const handlePageChange = (page) => {
+        setPagination((prev) => ({
+            ...prev,
+            currentPage: page,
+        }));
+        fetchInvitations(page);
+    }
+
+    useEffect(() => {
+        isSelectedReceived ?
+            fetchInvitations(backendReceivedURL, pagination.currentPage) :
+            fetchInvitations(backendSentURL, pagination.currentPage);
+    }, [token, isSelectedReceived, fetchInvitations, backendReceivedURL, backendSentURL, pagination.currentPage]);
+
+
+    const acceptFriendInvitations = async (id) => {
+        try {
+            const res = await fetch(`${USERS_LIST_URL}friend-request-receive/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Token ${token}`,
+                },
+                body: JSON.stringify({id: id}),
+            });
+
+            if (!res.ok) {
+                throw new Error("Nie udało się zaakceptować zaproszenia");
+            }
+
+            const data = await res.json();
+            const key = Object.keys(data)[0];
+            const message = data[key];
+            setFriendsInvitations(friendsInvitations.filter(invitation => invitation.id !== id));
+            setMessage(message);
+            setType(key);
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+
+    const handleAccept = (projectId) => {
+        acceptFriendInvitations(projectId);
+    };
+
 
     return (
-        <Box
-            sx={{
-                width: "100%",
-                px: 2,
-                py: 1,
-                position: "relative",
-                boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.1)",
-                bgcolor: "background.default",
-            }}
-        >
-            <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                width="100%"
-                spacing={2}
-            >
-                {/* Search box */}
-                <Box
-                    sx={{
-                        flexGrow: 1,
-                        maxWidth: 480,
-                        height: 45,
-                        bgcolor: "background.paper",
-                        borderRadius: "22px",
-                        boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.15)",
-                        overflow: "hidden",
-                    }}
-                >
-                    <Stack
-                        direction="row"
-                        alignItems="center"
-                        spacing={1}
-                        sx={{height: "100%", px: 2}}
-                    >
-                        <SearchIcon sx={{color: "text.secondary", fontSize: 20}}/>
-                        <Autocomplete
-                            freeSolo
-                            options={[]}
-                            fullWidth
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    placeholder="Search"
-                                    variant="standard"
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        disableUnderline: true,
-                                    }}
-                                    sx={{
-                                        "& .MuiInputBase-root": {
-                                            fontSize: "0.95rem",
-                                            fontFamily: "inherit",
-                                            color: "text.secondary",
-                                        },
-                                    }}
-                                />
-                            )}
-                        />
-                    </Stack>
-                </Box>
+        <InvitationsDump
+            invitations={friendsInvitations}
+            handleAccept={handleAccept}
+            pagination={pagination}
+            handleChange={handlePageChange}
+            handleDelete={handleDelete}
+            setIsSelectedReceived={setIsSelectedReceived}
+        />
+    )
+};
 
-                {/* User info */}
-                {user &&
-                    <Stack direction="row" spacing={2} alignItems="center" sx={{minWidth: 200}}>
-                        <Box
-                            component={Link}
-                            to={paths.userProfile}
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                textDecoration: "none",
-                                color: "inherit",
-                                cursor: "pointer",
-                                gap: 1,
-                            }}
-
-                        >
-                            <Avatar src={user.profile_picture} alt={user.name} sx={{width: 45, height: 45}}/>
-                            <Stack>
-                                <Typography variant="body1" fontWeight="bold" color="text.primary">
-                                    {user.username}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    {user.email}
-                                </Typography>
-                            </Stack>
-                        </Box>
-                    </Stack>}
-            </Stack>
-        </Box>
-    );
-}
+export default InvitationList;
