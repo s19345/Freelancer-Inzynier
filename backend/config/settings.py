@@ -97,10 +97,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('POSTGRES_DB'),
@@ -157,6 +153,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
+FRONTEND_HOST = os.environ.get('FRONTEND_HOST')
+# PASSWORD_RESET_CONFIRM_URL = f"password-reset/:uid/:token"
+SITE_DOMAIN = os.environ.get('FRONTEND_HOST', 'localhost:3000')
+
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -168,6 +168,9 @@ REST_FRAMEWORK = {
 
 REST_AUTH = {
     'USER_DETAILS_SERIALIZER': 'users.serializers.CustomUserSerializer',
+    'PASSWORD_RESET_CONFIRM_URL': 'password-reset/confirm/{uid}/{token}/',
+
+    'OLD_PASSWORD_FIELD_ENABLED': True,
 }
 
 SPECTACULAR_SETTINGS = {
@@ -177,9 +180,7 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
 }
 
-SITE_ID = 1
-
-FRONTEND_HOST = os.environ.get('FRONTEND_HOST')
+SITE_ID = 2
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -200,4 +201,4 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
-PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = f'{FRONTEND_HOST}password-reset/'
+PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = f'{FRONTEND_HOST}/password-reset-confirm/'

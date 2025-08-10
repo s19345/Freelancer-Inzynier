@@ -3,12 +3,11 @@ import itertools
 from datetime import timedelta
 from rest_framework import status, generics, mixins
 from users.models import CustomUser
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
-from django.db.models import Q, Count, Case, When, IntegerField, Min, Prefetch, Sum, F, ExpressionWrapper, \
-    DurationField, Value
-from django.db.models.functions import Coalesce, Now, TruncDate
+from django.db.models import Q, Count, Case, When, IntegerField, Min, Prefetch, Value
+from django.db.models.functions import Coalesce, TruncDate
 from django.utils import timezone
 from django.utils.timezone import now
 from django.http import Http404
@@ -254,8 +253,6 @@ class RecentProjectsWithTasksView(generics.ListAPIView):
             timelog_map[date] = total_time
 
         self.timelog_map = timelog_map
-
-        print(" ")
 
         collaborators_qs = CustomUser.objects.exclude(id=user.id).annotate(
             task_count=Count('tasks', filter=Q(tasks__project_id__in=project_ids))

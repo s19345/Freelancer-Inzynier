@@ -12,7 +12,7 @@ router.register(r'skills', SkillViewSet, basename='skills')
 urlpatterns = [
     path('auth/', include('dj_rest_auth.urls')),
     path('auth/registration/', include('dj_rest_auth.registration.urls')),
-    path("/auth/password/reset/confirm/<str:uidb64>/<str:token>/", password_reset_confirm_redirect,
+    path("auth/password/reset/confirm/<str:uidb64>/<str:token>/", password_reset_confirm_redirect,
          name="password_reset_confirm"),
     path('', UserSearchListAPIView.as_view(), name='user-list'),
     path('friend-request-send/', FriendRequestSenderAPIView.as_view(), name='friend-request-send'),

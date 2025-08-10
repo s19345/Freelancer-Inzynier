@@ -9,7 +9,7 @@ const paths = {
     finances: "/finances",
     invitationList: "/invitations",
     calendar: "/calendar",
-    passwordReset: "/password-reset/:uid/:token",
+    passwordReset: "/password-reset-confirm/:uid/:token",
     editProfile: "/edit-profile",
     changePassword: "/change-password",
     clients: "/clients",
