@@ -230,10 +230,10 @@ export default function FriendDetails() {
                                     editable={true}
                                     friendId={friend.id}
                                     field="rate"
-                                    initialValue={friend.friend_notes ? friend.friend_notes.rate : ""}
+                                    initialValue={friend.friend_notes?.rate ? friend.friend_notes.rate : ""}
                                     setFriend={setFriend}
                                 >
-                                    {friend.friend_notes ? `${friend.friend_notes.rate}` : "Kliknij aby dodać swoją ocenę"}
+                                    {friend.friend_notes?.rate ? `${friend.friend_notes.rate}` : "Kliknij aby dodać swoją ocenę"}
                                 </TextBox>
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -242,10 +242,10 @@ export default function FriendDetails() {
                                     editable={true}
                                     friendId={friend.id}
                                     field="notes"
-                                    initialValue={friend.friend_notes ? friend.friend_notes.notes : ""}
+                                    initialValue={friend.friend_notes?.notes ? friend.friend_notes.notes : ""}
                                     setFriend={setFriend}
                                 >
-                                    {friend.friend_notes ? friend.friend_notes.notes : "Dodaj notatkę."}
+                                    {friend.friend_notes?.notes ? friend.friend_notes.notes : "Dodaj notatkę."}
                                 </TextBox>
                             </Grid>
                         </Grid>

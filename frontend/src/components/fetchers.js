@@ -219,7 +219,6 @@ export const fetchTasks = async (token, page, projectId, taskId) => {
         url = `${PROJECT_BACKEND_URL}tasks/?page=${page || 1}&project=${projectId}&parent_task=${taskId}`;
     }
 
-    console.log("pobieram taski z url:", url);
     try {
         const res = await fetch(url, {
             headers: {
