@@ -85,7 +85,7 @@ const CreateTaskForm = ({projectId: propProjectId}) => {
             <TaskForm
                 formData={formData}
                 setFormData={setFormData}
-                submitMessage={`utwórz ${contextText}`}
+                submitMessage={`Utwórz ${contextText}`}
                 returnPath={returnUrl}
                 handleSubmit={handleSubmit}
 

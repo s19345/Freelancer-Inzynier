@@ -168,7 +168,7 @@ const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick, handleTask
                     </Tooltip>
                 )}
                 <EditButton handleEdit={handleEditClick}/>
-                <DeleteTask handleDeleteSuccess={handleDeleteSuccess} taskId={task.id}/>
+                <DeleteTask handleDeleteSuccess={handleDeleteSuccess} taskId={task.id} contextText={contextText}/>
             </Stack>
         </Box>
     )

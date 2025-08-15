@@ -5,7 +5,7 @@ import DeleteButton from "../common/DeleteButton";
 import useGlobalStore from "../../zustand_store/globalInfoStore";
 
 
-const DeleteTask = ({taskId, handleDeleteSuccess}) => {
+const DeleteTask = ({taskId, handleDeleteSuccess, contextText}) => {
     const token = useAuthStore((state) => state.token);
     const setMessage = useGlobalStore.getState().setMessage;
     const setType = useGlobalStore.getState().setType;
@@ -22,11 +22,11 @@ const DeleteTask = ({taskId, handleDeleteSuccess}) => {
 
             if (response.ok) {
                 if (handleDeleteSuccess) handleDeleteSuccess(taskId);
-                setMessage("Zadanie zostało pomyślnie usunięte.");
+                setMessage(`${contextText} zostało pomyślnie usunięte.`);
                 setType("success");
             } else {
                 const errorData = await response.json();
-                console.error("Błąd podczas usuwania zadania:", errorData);
+                console.error(`Błąd podczas usuwania ${contextText}:`, errorData);
             }
         } catch (error) {
             console.error("Błąd sieci:", error);

@@ -38,6 +38,7 @@ const UserProfile = () => {
         loadWorkTime();
     }, [token]);
 
+    console.log(user)
 
     useEffect(() => {
         const fetchData = async () => {
