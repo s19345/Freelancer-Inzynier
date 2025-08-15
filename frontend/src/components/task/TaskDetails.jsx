@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
 import {useNavigate, useParams} from "react-router";
@@ -21,64 +21,69 @@ const TaskDetails = () => {
     const {taskId, projectId} = useParams();
     const token = useAuthStore((state) => state.token);
     const navigate = useNavigate()
-
     const [task, setTask] = useState(null);
     const [error, setError] = useState(null);
-    const [contextText, setContextText] = useState("zadania");
     const [isEditing, setIsEditing] = useState(false);
     const [subtasks, setSubtasks] = useState([]);
     const [subtasksPagination, setSubtasksPagination] = useState({next: null, prev: null, pages: 0, currentPage: 1});
 
-    const fetchTask = useCallback(async () => {
-        setError(null);
-        try {
-            const res = await fetch(`${PROJECT_BACKEND_URL}tasks/${taskId}/`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Token ${token}`,
-                },
-            });
 
-            if (!res.ok) {
-                throw new Error(`Nie udało się pobrać danych ${contextText}`);
-            }
-
-            const data = await res.json();
-            setTask(data);
-        } catch (err) {
-            setError(err.message);
-        }
-    }, [taskId, token, contextText]);
-
-    const getTasks = useCallback(async (page) => {
-        const result = await fetchTasks(token, page, projectId, taskId);
-        setSubtasks(result.results);
+    useEffect(() => {
+        setSubtasks([]);
         setSubtasksPagination({
-            next: result.next,
-            prev: result.previous,
-            pages: result.total_pages,
-            currentPage: result.current_page
-        })
-
-    }, [projectId, token, taskId]);
-
-    useEffect(() => {
-        fetchTask();
-    }, [fetchTask,]);
+            next: null,
+            prev: null,
+            pages: 0,
+            currentPage: 1
+        });
+    }, [taskId]);
 
     useEffect(() => {
-        getTasks(subtasksPagination.currentPage);
-    }, [getTasks, subtasksPagination.currentPage]);
+        let ignore = false;
 
-    useEffect(() => {
-        if (task && 'parent_task' in task) {
-            if (task.parent_task == null) {
-                setContextText("zadania");
-            } else {
-                setContextText("podzadania");
+        const runPipeline = async () => {
+            setError(null);
+
+            try {
+                const res = await fetch(`${PROJECT_BACKEND_URL}tasks/${taskId}/`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Token ${token}`,
+                    },
+                });
+
+                if (!res.ok) throw new Error(`Nie udało się pobrać danych`);
+
+                const data = await res.json();
+                if (ignore) return;
+
+                setTask(data);
+
+                if (data.parent_task == null) {
+
+                    const result = await fetchTasks(token, subtasksPagination.currentPage, projectId, taskId);
+                    if (ignore) return;
+
+                    setSubtasks(result.results);
+                    setSubtasksPagination(prev => ({
+                        ...prev,
+                        next: result.next,
+                        prev: result.previous,
+                        pages: result.total_pages,
+                        currentPage: result.current_page
+                    }));
+                } else {
+                }
+            } catch (err) {
+                if (!ignore) setError(err.message);
             }
-        }
-    }, [task]);
+        };
+
+        runPipeline();
+        return () => {
+            ignore = true;
+        };
+    }, [taskId, token, projectId, subtasksPagination.currentPage]);
 
     const handleTaskUpdate = (updatedTask) => {
         setTask(updatedTask);

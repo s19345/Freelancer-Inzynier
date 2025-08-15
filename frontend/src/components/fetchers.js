@@ -236,5 +236,6 @@ export const fetchTasks = async (token, page, projectId, taskId) => {
 
     } catch (err) {
         console.error("Błąd:", err);
+        return []
     }
 };
