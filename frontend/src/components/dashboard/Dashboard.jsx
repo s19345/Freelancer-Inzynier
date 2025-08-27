@@ -199,6 +199,9 @@ const TeamCard = ({project}) => {
                         />
                     </Tooltip>
                 ))}
+                {!project.users || project.users.length === 0 &&
+                    <Typography variant="caption">Brak członków</Typography>
+                }
             </AvatarGroup>
         </Card>
     )
@@ -282,7 +285,7 @@ const TimeBarChart = ({data}) => {
                 />
 
                 <YAxis
-                    domain={[0, (dataMax) => Math.ceil(dataMax / 3600) * 3600]} // np. do 4h => 14400s
+                    domain={[0, (dataMax) => Math.ceil(dataMax / 3600) * 3600]}
                     tickFormatter={(value) => `${Math.floor(value / 3600)}h`}
                     tickCount={10}
                 />
@@ -352,11 +355,17 @@ const Dashboard = () => {
                     <Typography variant="h6">
                         Zespoły
                     </Typography>
-                    {projects && projects.map((project) => (
-                        project.users.length > 0 && (
-                            <TeamCard key={project.id} project={project}/>
+                    {projects && projects.length > 0 ? (
+                        projects.map((project) =>
+                                project.users?.length > 0 && (
+                                    <TeamCard key={project.id} project={project}/>
+                                )
                         )
-                    ))}
+                    ) : (
+                        <Typography variant="body1">
+                            Nie masz jeszcze żadnych zespołów
+                        </Typography>
+                    )}
                 </Box>
             </Box>
             <Box id="second-row" sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -365,9 +374,15 @@ const Dashboard = () => {
                     <Typography variant="h6">
                         Najpilniejsze zadania
                     </Typography>
-                    {allTasks && allTasks.map(task => (
-                        <TaskCard key={task.id} task={task}/>
-                    ))}
+                    {allTasks && allTasks.length > 0 ? (
+                        allTasks.map((task) => (
+                            <TaskCard key={task.id} task={task}/>
+                        ))
+                    ) : (
+                        <Typography variant="body1">
+                            Nie masz jeszcze żadnych przypisanych do siebie zadań
+                        </Typography>
+                    )}
                 </Box>
                 <Box id="second-right-column"
                      sx={{flex: 7, m: 2, p: 2, border: '2px solid #eaeaea', borderRadius: '9px'}}>
@@ -375,12 +390,17 @@ const Dashboard = () => {
                         Ostatnie Projekty
                     </Typography>
                     <Grid container spacing={2}>
-                        {projects &&
+                        {projects && projects.length > 0 ? (
                             projects.slice(0, 8).map((project) => (
                                 <Grid item xs={12} sm={6} md={4} lg={3} key={project.id}>
                                     <ProjectCard project={project}/>
                                 </Grid>
-                            ))}
+                            ))
+                        ) : (
+                            <Typography variant="body1">
+                                Nie masz jeszcze żadnych projektów
+                            </Typography>
+                        )}
                     </Grid>
                 </Box>
             </Box>
