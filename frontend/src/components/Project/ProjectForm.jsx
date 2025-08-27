@@ -1,7 +1,7 @@
 import {
     Alert,
     Box,
-    Card,
+    Card, Chip,
     FormControl,
     FormHelperText,
     MenuItem,
@@ -37,8 +37,10 @@ const ProjectForm = ({
     const validate = () => {
         const newErrors = {};
         if (!formData.name.trim()) newErrors.name = "Nazwa projektu jest wymagana";
+        if (!formData.description.trim()) newErrors.description = "Opis projektu jest wymagany";
         if (!formData.status) newErrors.status = "Status projektu jest wymagany";
-        if (formData.budget && Number(formData.budget) < 0)
+        if (!formData.budget) newErrors.budget = "Budżet projektu jest wymagany";
+        else if (formData.budget && Number(formData.budget) < 0)
             newErrors.budget = "Budżet nie może być ujemny";
         return newErrors;
     };
@@ -106,7 +108,6 @@ const ProjectForm = ({
         setErrors({});
     }
 
-
     return (
         <Box sx={{mx: "auto", mt: 4}}>
             {clientsFetchingError && (
@@ -117,24 +118,32 @@ const ProjectForm = ({
             )}
 
             <Box component="form" onSubmit={handleLocalSubmit} sx={{display: "flex", flexDirection: "column", gap: 2}}>
-                <Card
-                    sx={{
-                        p: 2
-                    }}
-                >
-                    <Box sx={{display: "flex", flexDirection: "row", gap: 1}}>
-                        <Box sx={{display: "flex", flexDirection: "column"}}>
-                            <Typography variant="h6" sx={{ml: 1}}>Nazwa projektu</Typography>
-                            <TextField
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                                error={!!errors.name}
-                                helperText={errors.name}
-                                disabled={loading}
-                            />
-                        </Box>
+                <Card sx={{p: 2}}>
+                    <Box sx={{display: "flex", flexDirection: "column"}}>
+                        <Typography variant="h6" sx={{ml: 1}}>Nazwa projektu</Typography>
+                        <TextField
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            error={!!errors.name}
+                            helperText={errors.name}
+                            disabled={loading}
+                        />
+                    </Box>
+                    <Box sx={{display: "flex", flexDirection: "column", mt: 3}}>
+                        <Typography variant="h6" sx={{ml: 1}}>Opis</Typography>
+                        <TextField
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            error={!!errors.description}
+                            helperText={errors.description}
+                            multiline
+                            minRows={2}
+                            disabled={loading}
+                        />
+                    </Box>
+                    <Box sx={{display: "flex", flexDirection: "row", gap: 1, mt: 3}}>
                         <Box sx={{display: "flex", flexDirection: "column"}}>
                             <Typography variant="h6" sx={{ml: 1}}>Status</Typography>
                             <FormControl
@@ -147,7 +156,6 @@ const ProjectForm = ({
                                     name="status"
                                     value={formData.status}
                                     onChange={handleChange}
-                                    required
                                 >
                                     <MenuItem value="">-- Wybierz status --</MenuItem>
                                     <MenuItem value="active">Aktywny</MenuItem>
@@ -162,25 +170,10 @@ const ProjectForm = ({
                             <TextField
                                 name="budget"
                                 type="number"
-                                required
                                 value={formData.budget}
                                 onChange={handleChange}
                                 error={!!errors.budget}
                                 helperText={errors.budget}
-                                disabled={loading}
-                            />
-                        </Box>
-                    </Box>
-                    <Box sx={{display: "flex", flexDirection: "row", gap: 1, mt: 3}}>
-                        <Box sx={{display: "flex", flexDirection: "column"}}>
-                            <Typography variant="h6" sx={{ml: 1}}>Opis</Typography>
-                            <TextField
-                                name="description"
-                                value={formData.description}
-                                onChange={handleChange}
-                                required
-                                multiline
-                                rows={2}
                                 disabled={loading}
                             />
                         </Box>
@@ -197,11 +190,17 @@ const ProjectForm = ({
                                     value={formData.client}
                                     onChange={handleChange}
                                 >
-                                    {clients.map((client) => (
-                                        <MenuItem key={client.id} value={client.id}>
-                                            {client.company_name} - {client.contact_person}
+                                    {clients.length > 0 ? (
+                                        clients.map((client) => (
+                                            <MenuItem key={client.id} value={client.id}>
+                                                {client.company_name} - {client.contact_person}
+                                            </MenuItem>
+                                        ))
+                                    ) : (
+                                        <MenuItem disabled>
+                                            Nie znaleziono żadnych klientów
                                         </MenuItem>
-                                    ))}
+                                    )}
                                 </Select>
                                 {errors.client && <FormHelperText>{errors.client}</FormHelperText>}
                             </FormControl>
@@ -209,8 +208,8 @@ const ProjectForm = ({
 
 
                     </Box>
-                    <Box sx={{display: "flex", flexDirection: "row", gap: 1, maxWidth: "200px", mt: 3}}>
-                        <Box sx={{display: "flex", flexDirection: "column"}}>
+                    <Box sx={{display: "flex", flexDirection: "row", gap: 1, mt: 3}}>
+                        <Box sx={{display: "flex", flexDirection: "column", minWidth: 250}}>
                             <Typography variant="h6" sx={{ml: 1}}>Współpracownicy</Typography>
                             <FormControl fullWidth error={!!errors.collabolators} disabled={loading}>
                                 <Select
@@ -223,18 +222,45 @@ const ProjectForm = ({
                                             collabolators: e.target.value,
                                         }))
                                     }
-                                    renderValue={(selected) =>
-                                        friends
-                                            .filter((f) => selected.includes(f.id))
-                                            .map((f) => f.username)
-                                            .join(", ")
-                                    }
+                                    renderValue={(selected) => {
+                                        const selectedFriends = friends.filter((f) => selected.includes(f.id));
+                                        const visible = selectedFriends.slice(0, 3); // pokaż max 3
+                                        const hiddenCount = selectedFriends.length - visible.length;
+
+                                        return (
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    gap: 0.5,
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                }}
+                                            >
+                                                {visible.map((f) => (
+                                                    <Chip key={f.id} label={f.username} size="small"/>
+                                                ))}
+                                                {hiddenCount > 0 && (
+                                                    <Typography variant="body2" sx={{ml: 0.5}}>
+                                                        +{hiddenCount}
+                                                    </Typography>
+                                                )}
+                                            </Box>
+                                        );
+                                    }}
                                 >
-                                    {friends.map((friend) => (
-                                        <MenuItem key={friend.id} value={friend.id}>
-                                            {friend.username}
+                                    {friends.length > 0 ? (
+                                        friends.map((friend) => (
+                                            <MenuItem key={friend.id} value={friend.id}>
+                                                {friend.username}
+                                            </MenuItem>
+                                        ))
+                                    ) : (
+                                        <MenuItem disabled>
+                                            Nie znaleziono żadnych znajomych
                                         </MenuItem>
-                                    ))}
+                                    )}
                                 </Select>
                                 {errors.collabolators && (
                                     <FormHelperText>{errors.collabolators}</FormHelperText>
@@ -246,7 +272,7 @@ const ProjectForm = ({
                 <Box sx={{display: "flex", flexDirection: "row", gap: 5, mt: 2, mr: 10, justifyContent: "flex-end"}}>
                     <SubmitButton type={"submit"} label={submitMessage} to={returnPath}/>
                     <StdButton
-                        label={"Anuluj"}
+                        label="Anuluj"
                         to={returnPath}
                         onClick={() => handleOnClick()}
 
