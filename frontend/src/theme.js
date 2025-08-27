@@ -26,6 +26,9 @@ const theme = createTheme(
                 dark: green[700],
                 background: "rgba(115,221,140,0.2)"
             },
+            text: {
+                primary: "#000000",
+            },
         },
         components: {
             MuiOutlinedInput: {
