@@ -167,9 +167,15 @@ const ProjectListDump = ({
                 </Typography>
             </Box>
             <Box>
-                {projects.map((project) => (
-                    <ProjectBox key={project.id} project={project}/>
-                ))}
+                {projects && projects.length > 0 ? (
+                    projects.map((project) => (
+                        <ProjectBox key={project.id} project={project}/>
+                    ))
+                ) : (
+                    <Typography variant="body1" sx={{m: 4}}>
+                        Nie masz jeszcze żadnych projektów
+                    </Typography>
+                )}
             </Box>
         </Card>
 
