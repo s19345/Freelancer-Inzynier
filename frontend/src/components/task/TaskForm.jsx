@@ -114,7 +114,6 @@ const TaskForm = ({
                                 name="title"
                                 value={formData.title}
                                 onChange={handleChange}
-                                required
                                 error={!!errors.title}
                                 helperText={errors.title}
                                 disabled={loading}
@@ -125,7 +124,6 @@ const TaskForm = ({
                             <TextField
                                 onInvalid={(e) => e.target.setCustomValidity(invalidText)}
                                 onInput={(e) => e.target.setCustomValidity("")}
-                                required
                                 name="due_date"
                                 type="date"
                                 value={formData.due_date}
@@ -146,9 +144,10 @@ const TaskForm = ({
                                 name="description"
                                 value={formData.description}
                                 onChange={handleChange}
-                                required
+                                error={!!errors.description}
+                                helperText={errors.description}
                                 multiline
-                                rows={2}
+                                minRows={2}
                                 disabled={loading}
                                 fullWidth
                             />
@@ -178,7 +177,6 @@ const TaskForm = ({
                             <TextField
                                 onInvalid={(e) => e.target.setCustomValidity(invalidText)}
                                 onInput={(e) => e.target.setCustomValidity("")}
-                                required
                                 select
                                 name="priority"
                                 value={formData.priority}
