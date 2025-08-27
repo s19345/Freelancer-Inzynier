@@ -6,10 +6,12 @@ import {
     Typography,
     Grid,
     Chip,
-    Stack
+    Stack,
 } from "@mui/material";
 import {PROJECT_BACKEND_URL} from "../../settings";
 import useAuthStore from "../../zustand_store/authStore";
+import {useNavigate} from "react-router";
+import paths from "../../paths";
 
 const getStatusColor = (status) => {
     switch (status) {
@@ -25,6 +27,7 @@ const getStatusColor = (status) => {
 };
 
 const ProjectsCard = () => {
+    const navigate = useNavigate()
     const token = useAuthStore((state) => state.token);
     const [projects, setProjects] = useState([]);
 
@@ -51,6 +54,9 @@ const ProjectsCard = () => {
         fetchProjects();
     }, [token]);
 
+    const handleProjectClick = (id) => {
+        navigate(paths.project(id))
+    }
 
     return (
         <Box
@@ -67,48 +73,54 @@ const ProjectsCard = () => {
             </Typography>
 
             <Grid container spacing={2}>
-                {projects.slice(0, 6).map((project) => (
-                    <Grid xs={12} sm={6} md={4} key={project.id}>
-                        <Card
-                            sx={{
-                                aspectRatio: "1 / 1",
-                                borderRadius: 3,
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                p: 2,
-                                width: 170
-                            }}
-                        >
-                            <CardContent>
-                                <Stack spacing={1}>
-                                    <Typography
-                                        variant="h6"
-                                        fontWeight="bold"
-                                        noWrap
-                                        title={project.name}
-                                        sx={{
-                                            maxWidth: 90,
-                                            overflow: "hidden",
-                                            textOverflow: "ellipsis",
-                                        }}
-                                    >
-                                        {project.name}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Wersja: {project.version}
-                                    </Typography>
-                                    <Chip
-                                        label={project.status}
-                                        color={getStatusColor(project.status)}
-                                        size="small"
-                                        sx={{width: "fit-content"}}
-                                    />
-                                </Stack>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
+                {projects && projects.length > 0 ? (
+                    projects.slice(0, 6).map((project) => (
+                        <Grid xs={12} sm={6} md={4} key={project.id}>
+                            <Card
+                                sx={{
+                                    aspectRatio: "1 / 1",
+                                    borderRadius: 3,
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: "center",
+                                    p: 2,
+                                    width: 170,
+                                    cursor: "pointer",
+                                }}
+                                onClick={() => handleProjectClick(project.id)}
+                            >
+                                <CardContent>
+                                    <Stack spacing={1}>
+                                        <Typography
+                                            variant="h6"
+                                            fontWeight="bold"
+                                            noWrap
+                                            title={project.name}
+                                            sx={{
+                                                maxWidth: 90,
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                            }}
+                                        >
+                                            {project.name}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            Wersja: {project.version}
+                                        </Typography>
+                                        <Chip
+                                            label={project.status}
+                                            color={getStatusColor(project.status)}
+                                            size="small"
+                                            sx={{width: "fit-content"}}
+                                        />
+                                    </Stack>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))
+                ) : (
+                    <Typography variant="body1">Nie masz jeszcze projektów</Typography>
+                )}
             </Grid>
         </Box>
     );
