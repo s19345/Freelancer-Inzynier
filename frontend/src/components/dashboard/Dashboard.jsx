@@ -199,7 +199,7 @@ const TeamCard = ({project}) => {
                         />
                     </Tooltip>
                 ))}
-                {!project.users || project.users.length === 0 &&
+                {(!project.users || project.users.length === 0) &&
                     <Typography variant="caption">Brak członków</Typography>
                 }
             </AvatarGroup>
@@ -334,7 +334,7 @@ const Dashboard = () => {
             <Box id={"dashboard-header"}>
                 {user && <>
                     <Typography variant="h3" gutterBottom sx={{fontWeight: '900', marginTop: 2}}>
-                        Cześć {user.username},
+                        Cześć {user.username}
                     </Typography>
                     <Typography variant="h4" gutterBottom sx={{fontWeight: '900', marginTop: 2}}>
                         Możesz tu zarządzać swoją pracą
