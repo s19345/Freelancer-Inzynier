@@ -14,14 +14,12 @@ import PaginationFrame from "../common/Pagination";
 
 const InvitationBox = ({invitations, handleAccept, pagination, handleChange, handleDelete, setIsSelectedReceived}) => {
     const [activeTab, setActiveTab] = useState("received");
-
     return (
         <Box>
             <Box
                 id={"invitation-box"}
                 sx={{
                     width: "100%",
-                    // height: "60vh",
                     position: "relative",
                     bgcolor: "white",
                     borderRadius: "15px",
@@ -61,74 +59,77 @@ const InvitationBox = ({invitations, handleAccept, pagination, handleChange, han
                 </Box>
 
 
-                <Stack id={"stack1"} spacing={2} sx={{mt: 2, maxHeight: "70vh", p: 2}}>
-                    {invitations.map((invitation) => {
-                        const user = invitation.sender || invitation.receiver;
-                        return (
-                            <Card
-                                key={invitation.id}
-                                sx={{
-                                    height: 88,
-                                    borderRadius: "15px",
-                                    boxShadow: "2",
-                                    position: "relative",
-                                    border: "1px solid rgba(0, 0, 0, 0.05)",
-                                    display: "flex",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <CardContent sx={{width: "100%", p: 1, "&:last-child": {pb: 1}}}>
-                                    <Stack
-                                        direction="row"
-                                        alignItems="center"
-                                        justifyContent="space-between"
-                                        sx={{height: "100%"}}
-                                    >
+                <Stack id={"stack1"} spacing={2} sx={{mt: 2, p: 2}}>
+                    {invitations && invitations.length > 0 ? (
+                        invitations.map((invitation) => {
+                            const user = invitation.sender || invitation.receiver;
+                            return (
+                                <Card
+                                    key={invitation.id}
+                                    sx={{
+                                        borderRadius: "15px",
+                                        boxShadow: "2",
+                                        position: "relative",
+                                        border: "1px solid rgba(0, 0, 0, 0.05)",
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <CardContent sx={{width: "100%", p: 1, "&:last-child": {pb: 1}}}>
                                         <Stack
                                             direction="row"
                                             alignItems="center"
-                                            spacing={1}
-                                            sx={{ml: 1}}
+                                            justifyContent="space-between"
+                                            sx={{height: "100%"}}
                                         >
-                                            <Avatar alt={user?.username}/>
-                                            <Typography
-                                                variant="subtitle1"
-                                                fontWeight="bold"
-                                                fontFamily="Montserrat, sans-serif"
-                                                fontSize="0.875rem"
+                                            <Stack
+                                                direction="row"
+                                                alignItems="center"
+                                                spacing={1}
+                                                sx={{ml: 1}}
                                             >
-                                                {user?.username}
-                                            </Typography>
-                                        </Stack>
-                                        <Stack direction="row" spacing={2} alignItems="center">
-                                            {activeTab === "received" &&
-                                                <Button
-                                                    variant="contained"
-                                                    color="primary"
-                                                    sx={{
-                                                        borderRadius: "15px",
-                                                        textTransform: "none",
-                                                        fontFamily: "Inter, sans-serif",
-                                                        fontWeight: 500,
-                                                        fontSize: "1.125rem",
-                                                    }}
-                                                    onClick={() => handleAccept(invitation.id)}
+                                                <Avatar alt={user?.username}/>
+                                                <Typography
+                                                    variant="subtitle1"
+                                                    fontWeight="bold"
+                                                    fontFamily="Montserrat, sans-serif"
+                                                    fontSize="0.875rem"
                                                 >
-                                                    Akceptuj
+                                                    {user?.username}
+                                                </Typography>
+                                            </Stack>
+                                            <Stack direction="row" spacing={2} alignItems="center">
+                                                {activeTab === "received" && (
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        sx={{
+                                                            borderRadius: "15px",
+                                                            textTransform: "none",
+                                                            fontFamily: "Inter, sans-serif",
+                                                            fontWeight: 500,
+                                                            fontSize: "1.125rem",
+                                                        }}
+                                                        onClick={() => handleAccept(invitation.id)}
+                                                    >
+                                                        Akceptuj
+                                                    </Button>
+                                                )}
+                                                <Button
+                                                    onClick={() => handleDelete(invitation.id)}
+                                                    sx={{minWidth: 45, height: 40, color: "error.main"}}
+                                                >
+                                                    <DeleteIcon/>
                                                 </Button>
-                                            }
-                                            <Button
-                                                onClick={() => handleDelete(invitation.id)}
-                                                sx={{minWidth: 45, height: 40, color: "error.main"}}
-                                            >
-                                                <DeleteIcon/>
-                                            </Button>
+                                            </Stack>
                                         </Stack>
-                                    </Stack>
-                                </CardContent>
-                            </Card>
-                        )
-                    })}
+                                    </CardContent>
+                                </Card>
+                            );
+                        })
+                    ) : (
+                        <Typography variant="body1">Brak zaproszeń</Typography>
+                    )}
                 </Stack>
 
             </Box>
