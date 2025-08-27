@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import useAuthStore from "../../zustand_store/authStore";
 import {PROJECT_BACKEND_URL} from "../../settings";
-import {Link, Link as RouterLink} from "react-router";
+import {Link as RouterLink} from "react-router";
 import {
     Box,
     CircularProgress,
@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import paths from "../../paths";
 import PaginationFrame from "../common/Pagination";
+import AddButton from "../common/AddButton";
 
 const ClientList = () => {
     const token = useAuthStore(state => state.token);
@@ -24,7 +25,6 @@ const ClientList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [pagination, setPagination] = useState({next: null, prev: null, pages: 0, currentPage: 1});
-
 
     const fetchClients = useCallback(async (page) => {
         try {
@@ -57,7 +57,6 @@ const ClientList = () => {
     useEffect(() => {
         fetchClients();
     }, [fetchClients]);
-
     const handlePageChange = (page) => {
         setPagination((prev) => ({
             ...prev,
@@ -135,14 +134,8 @@ const ClientList = () => {
                         <PaginationFrame pagination={pagination} handleChange={handlePageChange}/>
                     }
                 </Box>
-                <Button
-                    component={Link}
-                    to={paths.createClient}
-                    variant="contained"
-                    color="primary"
-                >
-                    Dodaj Klienta
-                </Button>
+
+                <AddButton to={paths.createClient} label={"Dodaj Klienta"}/>
             </Box>
         </Box>
     );

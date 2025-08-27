@@ -1,18 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {useParams, useNavigate, Link} from 'react-router';
+import {useParams, useNavigate} from 'react-router';
 import useAuthStore from '../../zustand_store/authStore';
 import {PROJECT_BACKEND_URL} from '../../settings';
-import {
-    Box,
-    TextField,
-    Button,
-    Typography,
-    CircularProgress,
-    Alert,
-    Stack,
-} from '@mui/material';
+
 import paths from "../../paths";
 import useGlobalStore from "../../zustand_store/globalInfoStore";
+import ClientForm from "./ClientForm";
 
 const EditClient = () => {
     const {clientId} = useParams();
@@ -27,8 +20,6 @@ const EditClient = () => {
         email: '',
         phone: '',
     });
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     const fetchClient = useCallback(async () => {
         try {
@@ -51,9 +42,7 @@ const EditClient = () => {
                 notes: data.notes || '',
             });
         } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
+            console.error(err)
         }
     }, [clientId, token])
 
@@ -63,15 +52,7 @@ const EditClient = () => {
         fetchClient();
     }, [fetchClient]);
 
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormData(prev => ({...prev, [name]: value}));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError(null);
+    const handleSubmit = async (formData) => {
 
         try {
             const res = await fetch(`${PROJECT_BACKEND_URL}clients/${clientId}/`, {
@@ -91,103 +72,17 @@ const EditClient = () => {
             setType("success")
             navigate(paths.client(clientId));
         } catch (err) {
-            setError(err.message);
-            setLoading(false);
+            console.error(err.message);
         }
     };
 
-    if (loading)
-        return (
-            <Box display="flex" justifyContent="center" mt={4}>
-                <CircularProgress/>
-            </Box>
-        );
-
     return (
-        <Box mt={4} maxWidth={600} mx="auto">
-            <Typography variant="h5" mb={3}>
-                Edytuj klienta
-            </Typography>
-            {error && (
-                <Alert severity="error" sx={{mb: 2}}>
-                    Błąd: {error}
-                </Alert>
-            )}
-
-            <Box component="form" onSubmit={handleSubmit} noValidate>
-                <Stack spacing={3}>
-                    <TextField
-                        label="Nazwa firmy"
-                        name="company_name"
-                        value={formData.company_name}
-                        onChange={handleChange}
-                        required
-                        fullWidth
-                    />
-
-                    <TextField
-                        label="Osoba kontaktowa"
-                        name="contact_person"
-                        value={formData.contact_person}
-                        onChange={handleChange}
-                        required
-                        fullWidth
-                    />
-                    <TextField
-                        label="Branża"
-                        name="industry"
-                        value={formData.industry}
-                        onChange={handleChange}
-                        fullWidth
-                    />
-
-                    <TextField
-                        label="Email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        fullWidth
-                    />
-
-                    <TextField
-                        label="Telefon"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        fullWidth
-                    />
-                    <TextField
-                        label="Notes"
-                        name="notes"
-                        value={formData.notes}
-                        onChange={handleChange}
-                        fullWidth
-                    />
-                    <Box display="flex" justifyContent="space-between" alignItems="center">
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            disabled={loading}
-                            size="large"
-                        >
-                            Zapisz zmiany
-                        </Button>
-                        <Button
-                            component={Link}
-                            to={paths.clients}
-                            variant="outlined"
-                            color="secondary"
-                        >
-                            Anuluj
-                        </Button>
-
-
-                    </Box>
-                </Stack>
-            </Box>
-        </Box>
+        <ClientForm
+            handleSubmit={handleSubmit}
+            formData={formData}
+            setFormData={setFormData}
+            submitMessage={"Zapisz zmiany"}
+        />
     );
 };
 

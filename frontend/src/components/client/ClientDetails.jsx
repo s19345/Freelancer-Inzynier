@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useParams, Link as RouterLink} from 'react-router';
+import {useParams, useNavigate} from 'react-router';
 import useAuthStore from '../../zustand_store/authStore';
 import {PROJECT_BACKEND_URL} from '../../settings';
 import {
@@ -7,15 +7,17 @@ import {
     Typography,
     CircularProgress,
     Alert,
-    Button,
     Stack
 } from '@mui/material';
 import paths from "../../paths";
 import DeleteClient from "./DeleteClient";
+import EditButton from "../common/EditButton";
+import ReturnButton from "../common/ReturnButton";
 
 const ClientDetails = () => {
     const {clientId} = useParams();
     const token = useAuthStore(state => state.token);
+    const navigate = useNavigate();
 
     const [client, setClient] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -72,20 +74,19 @@ const ClientDetails = () => {
         );
     }
 
+    const handleEdit = () => {
+        navigate(paths.editClient(clientId));
+    }
+
     return (
         <Box mt={4}>
             <Box display="flex" justifyContent="flex-start" alignItems="center" mb={2}>
                 <Typography variant="h5" gutterBottom>
                     Szczegóły klienta
                 </Typography>
-                <Button
-                    component={RouterLink}
-                    to={paths.editClient(clientId)}
-                    size="small"
-                    sx={{ml: 2}}
-                >
-                    Edytuj
-                </Button>
+                <Box sx={{ml: 2}}>
+                    <EditButton handleEdit={handleEdit}/>
+                </Box>
                 <DeleteClient clientId={clientId}/>
             </Box>
             <Stack spacing={1} mb={3}>
@@ -96,14 +97,8 @@ const ClientDetails = () => {
                 <Typography><strong>Telefon:</strong> {client.phone || 'Brak danych'}</Typography>
                 <Typography><strong>Notes:</strong> {client.notes || 'Brak danych'}</Typography>
             </Stack>
+            <ReturnButton label="Powrót do listy klientów" to={paths.clients}/>
 
-            <Button
-                variant="outlined"
-                component={RouterLink}
-                to="/clients"
-            >
-                &larr; Powrót do listy klientów
-            </Button>
         </Box>
     );
 };

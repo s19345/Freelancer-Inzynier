@@ -11,6 +11,7 @@ import {
     DialogTitle,
 } from "@mui/material";
 import paths from "../../paths";
+import DeleteButton from "../common/DeleteButton";
 
 const DeleteClient = ({clientId}) => {
     const token = useAuthStore((state) => state.token);
@@ -41,17 +42,13 @@ const DeleteClient = ({clientId}) => {
             setDeleting(false);
         }
     };
+    const handleDeleteClick = () => {
+        setOpen(true);
+    }
 
     return (
         <>
-            <Button
-                variant="outlined"
-                color="error"
-                onClick={() => setOpen(true)}
-                disabled={deleting}
-            >
-                Usuń
-            </Button>
+            <DeleteButton handleDelete={handleDeleteClick}/>
 
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle>Potwierdzenie usunięcia</DialogTitle>
