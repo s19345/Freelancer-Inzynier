@@ -12,12 +12,20 @@ const FriendList = () => {
     const [newFriendsSearching, setNewFriendsSearching] = useState(false);
     const setMessage = useGlobalStore((state) => state.setMessage);
     const setType = useGlobalStore((state) => state.setType);
+    const [isLoading, setIsLoading] = useState(false);
+    const [filters, setFilters] = useState({});
 
-    const fetchFriends = useCallback(async (page) => {
+    const fetchFriends = useCallback(async (page, filters) => {
+        setIsLoading(true);
         const url = newFriendsSearching ? USERS_LIST_URL : USERS_LIST_URL + "friends/";
         if (page) {
             try {
-                const res = await fetch(`${url}?page=${page}&page_size=${pageSize}`, {
+                const params = new URLSearchParams({
+                    page,
+                    page_size: pageSize,
+                    ...filters,
+                });
+                const res = await fetch(`${url}?${params.toString()}`, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Token ${token}`,
@@ -28,9 +36,7 @@ const FriendList = () => {
                 }
 
                 const data = await res.json();
-
                 setFriends(data.results);
-
                 setPagination({
                     next: data.next,
                     prev: data.previous,
@@ -39,11 +45,13 @@ const FriendList = () => {
                 });
             } catch (err) {
                 console.error(err.message);
+            } finally {
+                setIsLoading(false);
             }
         }
     }, [token, newFriendsSearching, pageSize]);
 
-    const handleInvite = async (friend) => {
+    const handleInvite = async (friendId) => {
         try {
             const res = await fetch(`${USERS_LIST_URL}friend-request-send/`, {
                 method: "POST",
@@ -51,7 +59,7 @@ const FriendList = () => {
                     "Content-Type": "application/json",
                     Authorization: `Token ${token}`,
                 },
-                body: JSON.stringify({receiver: friend}),
+                body: JSON.stringify({receiver: friendId}),
             });
 
             const data = await res.json();
@@ -64,6 +72,11 @@ const FriendList = () => {
 
             setType(data.key || "success");
             setMessage(data.value || "Zaproszenie wysłane");
+            setFriends((prevFriends) =>
+                prevFriends.map((f) =>
+                    f.id === friendId ? {...f, request_sent: true} : f
+                )
+            );
 
         } catch (error) {
             setMessage("Nie udało się wysłać zaproszenia (błąd sieci)");
@@ -71,27 +84,37 @@ const FriendList = () => {
         }
     };
 
-
     const changePageSize = (newSize) => {
         setPageSize(newSize);
         setPagination(prev => ({...prev, currentPage: 1}));
     }
 
     const toggleNewFriendsSearching = () => {
+        setFriends([])
         setNewFriendsSearching(prev => !prev);
         setPagination(prev => ({...prev, currentPage: 1}));
     };
 
     useEffect(() => {
-        fetchFriends(pagination.currentPage);
-    }, [fetchFriends, pagination.currentPage]);
+        fetchFriends(pagination.currentPage, filters);
+    }, [fetchFriends, pagination.currentPage, filters]);
 
     const handlePageChange = (page) => {
-        setPagination((prev) => ({
-            ...prev,
-            currentPage: page,
-        }));
-        fetchFriends(page);
+        if (!isLoading) {
+            setPagination((prev) => ({
+                ...prev,
+                currentPage: page,
+            }));
+        }
+    }
+
+    const changeFilter = (filters) => {
+        const cleanedFilters = Object.fromEntries(
+            Object.entries(filters).filter(
+                ([key, value]) => value.trim() !== ""
+            )
+        );
+        setFilters(cleanedFilters);
     }
 
 
@@ -104,6 +127,8 @@ const FriendList = () => {
         pageSize={pageSize}
         changePageSize={changePageSize}
         handleInvite={handleInvite}
+        changeFilter={changeFilter}
+        isLoading={isLoading}
     />
 }
 
