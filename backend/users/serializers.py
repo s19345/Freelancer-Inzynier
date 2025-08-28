@@ -18,6 +18,35 @@ class FriendListSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'profile_picture', ]
 
 
+class FriendSearchSerializer(serializers.ModelSerializer):
+    request_sent = serializers.SerializerMethodField()
+    request_received = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CustomUser
+        fields = [
+            "id", "username", "profile_picture",
+            "location", "specialization", "timezone",
+            "request_sent", "request_received"
+        ]
+
+    def get_request_sent(self, obj):
+        request = self.context.get("request")
+        if request and request.user.is_authenticated:
+            return FriendRequest.objects.filter(
+                sender=request.user, receiver=obj
+            ).exists()
+        return False
+
+    def get_request_received(self, obj):
+        request = self.context.get("request")
+        if request and request.user.is_authenticated:
+            return FriendRequest.objects.filter(
+                sender=obj, receiver=request.user
+            ).exists()
+        return False
+
+
 class CustomUserSerializer(serializers.ModelSerializer):
     friends = FriendListSerializer(many=True, read_only=True)
     skills = SkillSerializer(many=True)

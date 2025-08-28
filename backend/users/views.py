@@ -1,8 +1,8 @@
 from django.http.response import HttpResponseRedirect
 from django.conf import settings
 from django.db import IntegrityError
-from rest_framework import status, generics, viewsets
-from rest_framework.generics import ListAPIView, RetrieveAPIView, get_object_or_404  # todo get objor 404 chyba z django
+from rest_framework import status, generics
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -10,31 +10,62 @@ from rest_framework.viewsets import GenericViewSet
 import pytz
 from project.pagination import CustomPageNumberPagination
 from .models import CustomUser, FriendRequest, Skill, FriendNotes
-from .serializers import CustomUserSerializer, FriendListSerializer, GetSentFriendRequestSerializer, \
+from .serializers import FriendListSerializer, GetSentFriendRequestSerializer, \
     FriendRequestSendSerializer, FriendRequestAcceptSerializer, GetReceivedFriendRequestSerializer, \
-    FriendDetailSerializer, SkillAddSerializer, SkillSerializer, FriendNotesSerializer
-
-from rest_framework.pagination import PageNumberPagination
+    FriendDetailSerializer, SkillAddSerializer, SkillSerializer, FriendNotesSerializer, FriendSearchSerializer
 
 
 class UserSearchListAPIView(ListAPIView):
     """ApiView to list all users except the authenticated user."""
     queryset = CustomUser.objects.all()
-    serializer_class = FriendListSerializer
+    serializer_class = FriendSearchSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPageNumberPagination
 
     def get_queryset(self):
-        return CustomUser.objects.exclude(id=self.request.user.id)
+        user = self.request.user
+        return CustomUser.objects.exclude(
+            Q(id=user.id) | Q(id__in=user.friends.all())
+        )
+
+    def filter_queryset(self, queryset):
+        params = self.request.query_params
+
+        username = params.get("username")
+        first_name = params.get("first_name")
+        last_name = params.get("last_name")
+        specialization = params.get("specialization")
+        location = params.get("location")
+        skills = params.get("skills")
+
+        if username:
+            queryset = queryset.filter(username__icontains=username)
+        if first_name:
+            queryset = queryset.filter(first_name__icontains=first_name)
+        if last_name:
+            queryset = queryset.filter(last_name__icontains=last_name)
+        if specialization:
+            queryset = queryset.filter(specialization__icontains=specialization)
+        if location:
+            queryset = queryset.filter(location__icontains=location)
+        if skills:
+            skill_list = [s.strip() for s in skills.split(",") if s.strip()]
+            if skill_list:
+                queryset = queryset.filter(skills__name__in=skill_list).distinct()
+
+        return queryset
 
 
 class FriendListAPIView(ListAPIView):
     """ApiView to list all friends of the authenticated user."""
-    serializer_class = FriendListSerializer
+    serializer_class = FriendSearchSerializer
     pagination_class = CustomPageNumberPagination
 
     def get_queryset(self):
         return self.request.user.friends.all()
+
+    def filter_queryset(self, queryset):
+        return UserSearchListAPIView.filter_queryset(self, queryset)
 
 
 class FriendDetailsAPIView(RetrieveAPIView):
