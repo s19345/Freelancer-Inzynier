@@ -1,5 +1,4 @@
-import {Box, Stack, Typography, Avatar, Autocomplete, TextField} from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import {Box, Stack, Typography, Avatar} from "@mui/material";
 import {Link} from "react-router";
 import paths from "../../paths";
 import useAuthStore from "../../zustand_store/authStore";
@@ -20,57 +19,11 @@ export default function Header() {
         >
             <Stack
                 direction="row"
-                justifyContent="space-between"
+                justifyContent="flex-end"
                 alignItems="center"
                 width="100%"
                 spacing={2}
             >
-                {/* Search box */}
-                <Box
-                    sx={{
-                        flexGrow: 1,
-                        maxWidth: 480,
-                        height: 45,
-                        bgcolor: "background.paper",
-                        borderRadius: "22px",
-                        boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.15)",
-                        overflow: "hidden",
-                    }}
-                >
-                    <Stack
-                        direction="row"
-                        alignItems="center"
-                        spacing={1}
-                        sx={{height: "100%", px: 2}}
-                    >
-                        <SearchIcon sx={{color: "text.secondary", fontSize: 20}}/>
-                        <Autocomplete
-                            freeSolo
-                            options={[]}
-                            fullWidth
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    placeholder="Search"
-                                    variant="standard"
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        disableUnderline: true,
-                                    }}
-                                    sx={{
-                                        "& .MuiInputBase-root": {
-                                            fontSize: "0.95rem",
-                                            fontFamily: "inherit",
-                                            color: "text.secondary",
-                                        },
-                                    }}
-                                />
-                            )}
-                        />
-                    </Stack>
-                </Box>
-
-                {/* User info */}
                 {user &&
                     <Stack direction="row" spacing={2} alignItems="center" sx={{minWidth: 200}}>
                         <Box
@@ -96,8 +49,7 @@ export default function Header() {
                                 </Typography>
                             </Stack>
                         </Box>
-                    </Stack>
-                }
+                    </Stack>}
             </Stack>
         </Box>
     );
