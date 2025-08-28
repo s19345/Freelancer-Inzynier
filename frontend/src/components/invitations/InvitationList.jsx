@@ -17,7 +17,7 @@ const InvitationList = () => {
 
     const fetchInvitations = useCallback(async (url, page) => {
         try {
-            const res = await fetch(`${url}/?page=${page}`, {
+            const res = await fetch(`${url}/?page=${page}&page_size=${6}`, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Token ${token}`,
