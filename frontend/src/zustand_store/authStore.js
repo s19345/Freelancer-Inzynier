@@ -136,22 +136,12 @@ const useAuthStore = create(
                     const data = await res.json();
 
                     if (!res.ok) {
-                        const firstErrorKey = Object.keys(data)[0];
-                        const firstErrorMessage = Array.isArray(data[firstErrorKey]) ? data[firstErrorKey][0] : "Wyst�pi� b��d.";
-                        if (firstErrorKey === "password1") {
-                            set({error: "Hasło musi mieć co najmniej 8 znaków."});
-                            return false;
-                        }
-                        set({error: firstErrorMessage});
-                        return false;
+                        return {success: false, errors: data};
                     }
 
-
-                    set({successMessage: "Rejestracja zakończona sukcesem!"});
-                    return true;
+                    return {success: true};
                 } catch (err) {
-                    set({error: err.message});
-                    return false;
+                    return {success: false, errors: {general: [err.message]}};
                 } finally {
                     set({loading: false});
                 }

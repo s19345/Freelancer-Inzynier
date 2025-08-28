@@ -18,6 +18,7 @@ export default function Register() {
     const setMessage = useGlobalStore.getState().setMessage;
     const setType = useGlobalStore.getState().setType;
     const navigate = useNavigate();
+    const [errors, setErrors] = useState({});
 
     const [formData, setFormData] = useState({
         username: '',
@@ -26,6 +27,11 @@ export default function Register() {
         password2: '',
     });
 
+    const validate = () => {
+        const newErrors = {};
+        if (formData.password1.length < 8) newErrors.password1 = 'Hasło musi mieć co najmniej 8 znaków';
+        return newErrors;
+    }
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -34,13 +40,21 @@ export default function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const validationErrors = validate();
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
+        setErrors({});
+        const response = await registerUser(formData);
+        console.log(response)
 
-        const success = await registerUser(formData);
-
-        if (success) {
+        if (response.success) {
             setMessage('Rejestracja zakończona sukcesem');
             setType('success');
             navigate(paths.login)
+        } else if (response.errors) {
+            setErrors(response.errors);
         }
     };
 
@@ -58,16 +72,20 @@ export default function Register() {
             }}
             elevation={3}
         >
+
             <Typography variant="h5" gutterBottom>
                 Rejestracja
             </Typography>
-            <Box component="form" onSubmit={handleSubmit}
-                 sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
+            <Box component="form" onSubmit={handleSubmit} noValidate
+                 sx={{display: 'flex', flexDirection: 'column', gap: 2}}
+            >
                 <TextField
                     label="Nazwa użytkownika"
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
+                    error={!!errors.username}
+                    helperText={errors.username}
                     required
                     fullWidth
                 />
@@ -77,6 +95,8 @@ export default function Register() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
+                    error={!!errors.email}
+                    helperText={errors.email}
                     required
                     fullWidth
                 />
@@ -86,6 +106,8 @@ export default function Register() {
                     name="password1"
                     value={formData.password1}
                     onChange={handleChange}
+                    error={!!errors.password1}
+                    helperText={errors.password1}
                     required
                     fullWidth
                 />
@@ -95,6 +117,8 @@ export default function Register() {
                     name="password2"
                     value={formData.password2}
                     onChange={handleChange}
+                    error={!!errors.password2 || errors.non_field_errors}
+                    helperText={errors.password2 || errors.non_field_errors}
                     required
                     fullWidth
                 />
@@ -113,6 +137,7 @@ export default function Register() {
                     {error}
                 </Alert>
             )}
+
         </Box>
     );
 }

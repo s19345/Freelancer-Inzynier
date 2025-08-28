@@ -27,6 +27,14 @@ const Login = () => {
     const setToken = useAuthStore(state => state.setToken);
     const setIsLoggedIn = useAuthStore(state => state.setIsLoggedIn);
     const fetchUser = useAuthStore(state => state.fetchUser);
+    const [errors, setErrors] = useState({});
+
+    const validate = () => {
+        const newErrors = {};
+        if (!nickname) newErrors.nickname = 'Nick jest wymagany';
+        if (!password) newErrors.password = 'Hasło jest wymagane';
+        return newErrors;
+    }
 
     const loginUser = async () => {
         try {
@@ -60,6 +68,12 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const validationErrors = validate();
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
+        setErrors({});
         loginUser();
     };
 
@@ -74,7 +88,7 @@ const Login = () => {
     }
 
     return (
-        <Box maxWidth={400} mx="auto" mt={8} p={4} component="form" onSubmit={handleSubmit}>
+        <Box maxWidth={400} mx="auto" mt={8} p={4} component="form" onSubmit={handleSubmit} noValidate>
             <Typography variant="h5" gutterBottom>
                 Logowanie
             </Typography>
@@ -85,6 +99,8 @@ const Login = () => {
                     value={nickname}
                     onChange={(e) => setNickname(e.target.value)}
                     required
+                    error={!!errors.nickname}
+                    helperText={errors.nickname}
                     fullWidth
                 />
 
@@ -93,6 +109,8 @@ const Login = () => {
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    error={!!errors.password}
+                    helperText={errors.password}
                     required
                     fullWidth
                 />
@@ -107,7 +125,6 @@ const Login = () => {
                 >
                     {showReset ? 'Ukryj reset hasła' : 'Zapomniałeś hasła?'}
                 </Button>
-
                 <Button
                     variant="text"
                     onClick={() => handleRegisterClick()}

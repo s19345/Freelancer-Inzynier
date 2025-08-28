@@ -59,6 +59,8 @@ const PasswordReset = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                error={!!errorMessage}
+                helperText={errorMessage}
                 required
                 fullWidth
                 margin="normal"
@@ -77,12 +79,6 @@ const PasswordReset = () => {
             {successMessage && (
                 <Alert severity="success" sx={{mt: 1}}>
                     {successMessage}
-                </Alert>
-            )}
-
-            {errorMessage && (
-                <Alert severity="error" sx={{mt: 1}}>
-                    {errorMessage}
                 </Alert>
             )}
         </Box>

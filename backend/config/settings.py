@@ -156,7 +156,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 FRONTEND_HOST = os.environ.get('FRONTEND_HOST')
-# PASSWORD_RESET_CONFIRM_URL = f"password-reset/:uid/:token"
 SITE_DOMAIN = os.environ.get('FRONTEND_HOST', 'localhost:3000')
 
 REST_FRAMEWORK = {
@@ -190,8 +189,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.1.26:3000",
     FRONTEND_HOST,
 ]
-
-# CORS_ALLOW_ALL_ORIGINS = True
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_CONFIRM_EMAIL_ON_GET = False
