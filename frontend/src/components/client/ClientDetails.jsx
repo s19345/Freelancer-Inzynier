@@ -95,7 +95,7 @@ const ClientDetails = () => {
                 <Typography><strong>Osoba kontaktowa:</strong> {client.contact_person}</Typography>
                 <Typography><strong>Email:</strong> {client.email}</Typography>
                 <Typography><strong>Telefon:</strong> {client.phone || 'Brak danych'}</Typography>
-                <Typography><strong>Notes:</strong> {client.notes || 'Brak danych'}</Typography>
+                <Typography><strong>Notatki:</strong> {client.notes || 'Brak danych'}</Typography>
             </Stack>
             <ReturnButton label="Powrót do listy klientów" to={paths.clients}/>
 

@@ -208,7 +208,7 @@ export default function FriendDetails() {
 
                             <Grid>
                                 <ExpandableText
-                                    label="umiejętności"
+                                    label="Umiejętności"
 
                                     text={
                                         friend.skills?.length
@@ -219,7 +219,7 @@ export default function FriendDetails() {
                             </Grid>
                             <Grid>
                                 <ExpandableText
-                                    label="bio"
+                                    label="Bio"
                                     text={friend.bio}
                                 />
                             </Grid>
@@ -237,7 +237,7 @@ export default function FriendDetails() {
                                 </TextBox>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <Typography variant="subtitle2">Notes</Typography>
+                                <Typography variant="subtitle2">Notatki</Typography>
                                 <TextBox
                                     editable={true}
                                     friendId={friend.id}

@@ -243,7 +243,7 @@ const FriendsDump = ({
                             }}
                         >
                             <Typography variant={"body1"}>
-                                Pokaż filtry
+                                {showFilters ? "Ukryj filtry" : "Pokaż filtry"}
                             </Typography>
                         </Button>
 
@@ -288,6 +288,33 @@ const FriendsDump = ({
                 }
 
                 <Stack spacing={2} sx={{mt: 2, p: 2, overflowY: "auto"}}>
+                    <Card
+                        sx={{
+                            borderRadius: "15px",
+                            boxShadow: 1,
+                            border: "1px solid rgba(0, 0, 0, 0.05)",
+                            bgcolor: "grey.100",
+                            p: 1,
+                        }}
+                    >
+                        <Stack direction="row" alignItems="center" justifyContent="space-between">
+                            <Typography variant="subtitle2" sx={{flexBasis: "25%"}}>
+                                Użytkownik
+                            </Typography>
+                            <Typography variant="subtitle2" sx={{flexBasis: "25%"}}>
+                                Specjalizacja
+                            </Typography>
+                            <Typography variant="subtitle2" sx={{flexBasis: "20%"}}>
+                                Lokalizacja
+                            </Typography>
+                            <Typography variant="subtitle2" sx={{flexBasis: "20%"}}>
+                                Strefa czasowa
+                            </Typography>
+                            <Typography variant="subtitle2" sx={{flexBasis: "15%", pl: 5}}>
+                                Akcja
+                            </Typography>
+                        </Stack>
+                    </Card>
                     {collaborators && collaborators.length > 0 ? (
                         collaborators.map((collaborator) => (
                             <Card

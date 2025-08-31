@@ -83,29 +83,33 @@ const ProjectsCard = () => {
                                     display: "flex",
                                     flexDirection: "column",
                                     justifyContent: "center",
-                                    p: 2,
+                                    p: 1,
                                     width: 170,
                                     cursor: "pointer",
                                 }}
                                 onClick={() => handleProjectClick(project.id)}
                             >
-                                <CardContent>
-                                    <Stack spacing={1}>
+                                <CardContent sx={{p: 0}}>
+                                    <Stack spacing={1} alignItems="center" sx={{p: 0}}>
                                         <Typography
-                                            variant="h6"
+                                            variant="body1"
                                             fontWeight="bold"
-                                            noWrap
+                                            // noWrap
                                             title={project.name}
                                             sx={{
-                                                maxWidth: 90,
+                                                maxWidth: 160,
+                                                textAlign: "center",
                                                 overflow: "hidden",
-                                                textOverflow: "ellipsis",
+                                                display: "-webkit-box",
+                                                WebkitLineClamp: 2,
+                                                WebkitBoxOrient: "vertical",
+                                                wordBreak: "break-word",
                                             }}
                                         >
                                             {project.name}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            Wersja: {project.version}
+                                            {project.version}
                                         </Typography>
                                         <Chip
                                             label={project.status}

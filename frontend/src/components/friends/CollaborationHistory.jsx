@@ -5,7 +5,7 @@ const CollaborationHistory = ({history}) => {
     return (
         <Box sx={{mt: 4}}>
             <Typography variant="h6" gutterBottom>
-                Collaboration History
+                Historia współpracy
             </Typography>
             <Card sx={{maxWidth: 400, borderRadius: 3, boxShadow: 2}}>
                 <CardContent>

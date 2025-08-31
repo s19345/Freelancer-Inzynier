@@ -72,7 +72,7 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
     }
 
     return (
-        <Card sx={{p: 2}}>
+        <Box sx={{ p: 2, mb: 1 }}>
             {project && (
                 <Box sx={{
                     display: "flex",
@@ -124,17 +124,6 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
                                     borderRadius: "22px",
                                 }}
                             />
-                            {/*<Chip*/}
-                            {/*    label={project.version}*/}
-                            {/*    size="medium"*/}
-                            {/*    sx={{*/}
-                            {/*        ml: 1,*/}
-                            {/*        fontWeight: "medium",*/}
-                            {/*        fontSize: 14,*/}
-                            {/*        height: 24,*/}
-                            {/*        borderRadius: "22px",*/}
-                            {/*    }}*/}
-                            {/*/>*/}
                             <Chip
                                 label={project.budget + " zł"}
                                 size="medium"
@@ -189,9 +178,8 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
                 </Box>
             )
             }
-        </Card>
-    )
-        ;
+        </Box>
+    );
 };
 
 export default ProjecDetailsDump;
