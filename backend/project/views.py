@@ -1,17 +1,21 @@
 import datetime
 import itertools
+from collections import defaultdict
 from datetime import timedelta
 from rest_framework import status, generics, mixins
-from users.models import CustomUser
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
+
 from django.db.models import Q, Count, Case, When, IntegerField, Min, Prefetch, Value
 from django.db.models.functions import Coalesce, TruncDate
 from django.utils import timezone
 from django.utils.timezone import now
 from django.http import Http404
-from rest_framework.response import Response
+
+from users.models import CustomUser
+
 from .models import Client, Project, Task, TimeLog
 from .pagination import CustomPageNumberPagination
 from .serializers import ClientSerializer, ProjectSerializer, TaskSerializer, TimeLogCreateSerializer, \
@@ -139,12 +143,12 @@ class TaskCreateView(generics.CreateAPIView):
     Tworzy nowy task:
     - POST /tasks/?project=<id>&parent_task=<id?>
     """
+
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
     def create(self, request, *args, **kwargs):
         project_id = request.query_params.get("project")
-
         if not project_id:
             raise ValidationError({"detail": "Musisz podać parametr project=<id>"})
 
@@ -233,7 +237,13 @@ class RecentProjectsWithTasksView(generics.ListAPIView):
             .order_by('status_order', 'due_date')
         )
 
-        project_ids = tasks.values_list('project_id', flat=True).distinct()
+        # project_ids = tasks.values_list('project_id', flat=True).distinct()
+        projects = Project.objects.filter(
+            Q(manager=user) | Q(collabolators=user)
+        ).distinct()
+
+        project_ids = projects.values_list("id", flat=True)
+
         timelogs = (
             TimeLog.objects
             .filter(task__project_id__in=project_ids, task__user=user)
@@ -245,12 +255,17 @@ class RecentProjectsWithTasksView(generics.ListAPIView):
             .order_by('start_time')
         )
 
+        intervals_by_day = defaultdict(list)
+
+        for log in timelogs:
+            for start, end in self.split_interval_by_day(log.start_time, log.effective_end_time):
+                intervals_by_day[start.date()].append((start, end))
+
         timelog_map = {}
-        for date, date_logs in itertools.groupby(timelogs, key=lambda t: t.date):
-            intervals = [(log.start_time, log.effective_end_time) for log in date_logs]
-            merged_intervals = self.merge_intervals(intervals)
-            total_time = sum((end - start for start, end in merged_intervals), timedelta())
-            timelog_map[date] = total_time
+        for day, intervals in intervals_by_day.items():
+            merged = self.merge_intervals(intervals)
+            total = sum((end - start for start, end in merged), timedelta())
+            timelog_map[day] = total
 
         self.timelog_map = timelog_map
 
@@ -271,6 +286,25 @@ class RecentProjectsWithTasksView(generics.ListAPIView):
             )
         )
 
+    def split_interval_by_day(self, start, end):
+        """
+        Splits the interval (start, end) into smaller intervals, so that each fits within a single calendar day.
+        """
+        intervals = []
+        current_start = start
+
+        while current_start.date() < end.date():
+            end_of_day = datetime.datetime.combine(
+                current_start.date() + datetime.timedelta(days=1),
+                datetime.datetime.min.time(),
+                tzinfo=current_start.tzinfo
+            )
+            intervals.append((current_start, end_of_day))
+            current_start = end_of_day
+
+        intervals.append((current_start, end))
+        return intervals
+
     def merge_intervals(self, intervals):
         # intervals: lista krotek (start_time, end_time)
         if not intervals:
@@ -282,12 +316,11 @@ class RecentProjectsWithTasksView(generics.ListAPIView):
 
         for current_start, current_end in sorted_intervals[1:]:
             last_start, last_end = merged[-1]
-            if current_start <= last_end:  # nakłada się
+            if current_start < last_end:
                 # scalaj przedziały
                 merged[-1] = (last_start, max(last_end, current_end))
             else:
                 merged.append((current_start, current_end))
-        print("merged", merged)
         return merged
 
     def list(self, request, *args, **kwargs):
@@ -301,7 +334,6 @@ class RecentProjectsWithTasksView(generics.ListAPIView):
             }
             for date, total_time in sorted(self.timelog_map.items())
         ]
-
         return Response({
             "projects": serializer.data,
             "total_daily_times": total_daily_times,
