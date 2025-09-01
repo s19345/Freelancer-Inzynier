@@ -1,3 +1,4 @@
+from django.db.models.query_utils import Q
 from django.http.response import HttpResponseRedirect
 from django.conf import settings
 from django.db import IntegrityError
@@ -8,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 import pytz
+
 from project.pagination import CustomPageNumberPagination
 from .models import CustomUser, FriendRequest, Skill, FriendNotes
 from .serializers import FriendListSerializer, GetSentFriendRequestSerializer, \
@@ -249,12 +251,12 @@ class FriendNotesUpdateCreateView(generics.GenericAPIView):
 
     def post(self, request, friend_id):
         """
-        Utwórz lub zaktualizuj notatkę (friend_id w URL)
+        Create or update a note (friend_id in URL)
         """
         data = request.data.copy()
-        data["friend"] = friend_id  # żeby nie musiał być podany w body
-
+        data["friend"] = friend_id
         serializer = self.get_serializer(data=data)
+
         serializer.is_valid(raise_exception=True)
 
         friend = serializer.validated_data['friend']

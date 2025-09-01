@@ -60,8 +60,9 @@ export const fetchTimezones = async (token) => {
 export const updateOrCreateNotes = async (friendId, notes, rate) => {
     try {
         const payload = {};
-        if (notes && notes.trim() !== "") payload.notes = notes;
-        if (rate && rate.trim() !== "") payload.rate = rate;
+        console.log({notes, rate});
+        if (notes != null) payload.notes = notes;
+        if (rate != null) payload.rate = rate;
 
         const response = await fetch(
             `${USERS_LIST_URL}friend-notes/${friendId}/`,
