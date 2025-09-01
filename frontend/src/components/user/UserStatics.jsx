@@ -5,7 +5,7 @@ const StaticsBox = ({workTime}) => {
     const workHours = Math.floor(workTime / 3600);
 
     function getWorkPercentage(timeInSeconds) {
-        const fullTimeInSeconds = 40 * 3600; // 40 godzin = 144000 sekund
+        const fullTimeInSeconds = 40 * 3600;
         const percentage = (timeInSeconds / fullTimeInSeconds) * 100;
         return Number(percentage.toFixed(2));
     }
@@ -27,8 +27,6 @@ const StaticsBox = ({workTime}) => {
                 variant="h6"
                 sx={{
                     fontWeight: "bold",
-                    color: "#4b4b4b",
-                    fontSize: "21px",
                 }}
             >
                 Tygodniowy czas pracy

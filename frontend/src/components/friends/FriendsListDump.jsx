@@ -311,7 +311,7 @@ const FriendsDump = ({
                                 Strefa czasowa
                             </Typography>
                             <Typography variant="subtitle2" sx={{flexBasis: "15%", pl: 5}}>
-                                Akcja
+                                {newFriendsSearching && "Akcja"}
                             </Typography>
                         </Stack>
                     </Card>
