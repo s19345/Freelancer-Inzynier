@@ -9,7 +9,6 @@ import {fetchLastActiveProjects} from "../fetchers";
 const UserProfile = () => {
     const {user, isLoggedIn, fetchUser, setUser, token} = useAuthStore();
     const [workTimeSeconds, setWorkTimeSeconds] = React.useState(null);
-
     useEffect(() => {
         const loadWorkTime = async () => {
             try {
@@ -37,8 +36,6 @@ const UserProfile = () => {
 
         loadWorkTime();
     }, [token]);
-
-
     useEffect(() => {
         const fetchData = async () => {
             try {

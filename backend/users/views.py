@@ -51,9 +51,12 @@ class UserSearchListAPIView(ListAPIView):
         if location:
             queryset = queryset.filter(location__icontains=location)
         if skills:
-            skill_list = [s.strip() for s in skills.split(",") if s.strip()]
-            if skill_list:
-                queryset = queryset.filter(skills__name__in=skill_list).distinct()
+            skill_parts = [s.strip() for s in skills.split(",") if s.strip()]
+            if skill_parts:
+                q = Q()
+                for part in skill_parts:
+                    q |= Q(skills__name__icontains=part)
+                queryset = queryset.filter(q).distinct()
 
         return queryset
 

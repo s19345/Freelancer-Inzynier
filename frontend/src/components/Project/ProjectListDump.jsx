@@ -12,13 +12,6 @@ import {useNavigate} from "react-router";
 
 function ProjectBox({project}) {
     const navigate = useNavigate();
-    if (project) {
-        project = {
-            ...project,
-            status: project.status.charAt(0).toUpperCase() + project.status.slice(1)
-        };
-    }
-    ;
 
     const handleNavigate = (e) => {
         e.stopPropagation();
@@ -85,7 +78,7 @@ function ProjectBox({project}) {
                         Status
                     </Typography>
                     <Chip
-                        label={project.status}
+                        label={project.status_display}
                         size="small"
                         sx={{
                             backgroundColor: `${statusColors[`${project.status}_bcg`]}`,

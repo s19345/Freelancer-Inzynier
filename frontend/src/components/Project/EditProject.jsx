@@ -3,7 +3,7 @@ import useAuthStore from "../../zustand_store/authStore";
 import {useParams} from "react-router";
 import {PROJECT_BACKEND_URL,} from "../../settings";
 import {
-    CircularProgress
+    CircularProgress,
 } from "@mui/material";
 import useGlobalStore from "../../zustand_store/globalInfoStore";
 import ProjectForm from "./ProjectForm";
@@ -20,15 +20,14 @@ const EditProject = ({setIsEditing, handleUpdate, project}) => {
         description: project.description || "",
         status: project.status || "",
         budget: project.budget || "",
-        client: project.client?.id || "",  // todo czy tu powinno być id czy cały klient
-        collabolators: project.collabolators?.map(c => c.id) || [] // todo czy tu powinno być id czy cali współpracownicy
+        client: project.client?.id || "",
+        collabolators: project.collabolators?.map(c => c.id) || []
     });
 
     const [loading, setLoading] = useState(false);
 
 
     const handleSubmit = async (e) => {
-
         try {
             const response = await fetch(`${PROJECT_BACKEND_URL}projects/${projectId}/`, {
                 method: "PATCH",
@@ -45,7 +44,6 @@ const EditProject = ({setIsEditing, handleUpdate, project}) => {
             }
 
             const data = await response.json();
-            console.log("Updated project data:", data);
             setMessage("Projekt został zaktualizowany pomyślnie");
             setType("success");
             handleUpdate(data);
@@ -62,7 +60,6 @@ const EditProject = ({setIsEditing, handleUpdate, project}) => {
     if (loading) return <CircularProgress/>;
 
     return (
-
         <ProjectForm
             formData={formData}
             setFormData={setFormData}

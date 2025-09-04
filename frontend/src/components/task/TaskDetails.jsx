@@ -210,7 +210,8 @@ const TaskDetails = () => {
                 )
             )}
         </Box>
-    );
+    )
+        ;
 };
 
 export default TaskDetails;

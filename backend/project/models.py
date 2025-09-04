@@ -17,9 +17,9 @@ class Client(models.Model):
 
 class Project(models.Model):
     STATUS_CHOICES = [
-        ('active', 'Active'),
-        ('completed', 'Completed'),
-        ('paused', 'Paused'),
+        ('active', 'Aktywny'),
+        ('completed', 'Ukończony'),
+        ('paused', 'Wstrzymany'),
     ]
 
     manager = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="projects")
@@ -27,7 +27,7 @@ class Project(models.Model):
     description = models.TextField()
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, related_name="projects", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='active')
+    status = models.CharField(max_length=9, choices=STATUS_CHOICES, default='active')
     budget = models.DecimalField(max_digits=10, decimal_places=2)
     collabolators = models.ManyToManyField(CustomUser, related_name="collaborated_projects", blank=True)
 
@@ -37,23 +37,23 @@ class Project(models.Model):
 
 class Task(models.Model):
     STATUS_CHOICES = [
-        ('to_do', 'To Do'),
-        ('in_progress', 'In Progress'),
-        ('completed', 'Completed'),
+        ('to_do', 'Do zrobienia'),
+        ('in_progress', 'W trakcie'),
+        ('completed', 'Ukończony'),
     ]
     PRIORITY_CHOICES = [
-        ('low', 'Low'),
-        ('medium', 'Medium'),
-        ('high', 'High'),
+        ('low', 'Niski'),
+        ('medium', 'Średni'),
+        ('high', 'Wysoki'),
     ]
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="tasks")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="tasks", null=True, blank=True)
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='to_do')
+    status = models.CharField(max_length=11, choices=STATUS_CHOICES, default='to_do')
     due_date = models.DateField()
-    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='medium')
+    priority = models.CharField(max_length=6, choices=PRIORITY_CHOICES, default='medium')
     created_at = models.DateTimeField(auto_now_add=True)
     parent_task = models.ForeignKey('self', on_delete=models.CASCADE, related_name="subtasks", blank=True, null=True)
 

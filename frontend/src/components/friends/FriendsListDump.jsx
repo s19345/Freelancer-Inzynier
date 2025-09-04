@@ -335,7 +335,7 @@ const FriendsDump = ({
                         ))
                     ) : (
                         <Typography variant="body1">
-                            {newFriendsSearching ? "Wyszukuję użytkowników..." : "Brak wyników"}
+                            {isLoading ? "Wyszukuję użytkowników..." : "Brak wyników"}
                         </Typography>
                     )}
                 </Stack>

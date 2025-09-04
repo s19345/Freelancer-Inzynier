@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('project', '0003_alter_timelog_end_time_alter_timelog_task'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
@@ -24,7 +23,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='project',
             name='client',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='projects', to='project.client'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                    related_name='projects', to='project.client'),
         ),
         migrations.AlterField(
             model_name='project',

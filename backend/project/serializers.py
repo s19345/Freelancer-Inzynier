@@ -35,10 +35,12 @@ class ProjectSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
     manager = FriendListSerializer(read_only=True)
     client = ClientSimpleSerializer(read_only=True)
+    status_display = serializers.CharField(source='get_status_display')
 
     class Meta:
         model = Project
-        fields = '__all__'
+        fields = ['manager', 'name', 'description', 'budget',
+                  'client', 'status', 'status_display', 'collabolators', 'created_at', 'id']
         read_only_fields = ['manager']
 
 
@@ -83,10 +85,20 @@ class TaskSerializer(serializers.ModelSerializer):
     parent_task_id = serializers.PrimaryKeyRelatedField(
         queryset=Task.objects.all(), source='parent_task', write_only=True, required=False, allow_null=True
     )
+    status_display = serializers.CharField(source='get_status_display', read_only=True)
+    priority_display = serializers.CharField(source='get_priority_display', read_only=True)
 
     class Meta:
         model = Task
-        fields = '__all__'
+        fields = [
+            'id', 'title', 'description',
+            'status', 'status_display',
+            'priority', 'priority_display',
+            'due_date', 'created_at',
+            'project', 'project_id',
+            'parent_task', 'parent_task_id',
+            'user', 'user_id'
+        ]
         read_only_fields = ('id', 'created_at')
 
 

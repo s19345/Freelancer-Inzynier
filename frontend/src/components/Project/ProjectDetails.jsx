@@ -30,7 +30,9 @@ const ProjectDetails = () => {
     const [tasksPagination, setTasksPagination] = useState({next: null, prev: null, pages: 0, currentPage: 1});
     const navigate = useNavigate()
 
+
     const fetchProject = useCallback(async () => {
+
         try {
             const response = await fetch(`${PROJECT_BACKEND_URL}projects/${projectId}/`, {
                 headers: {
@@ -41,6 +43,7 @@ const ProjectDetails = () => {
             if (!response.ok) {
                 throw new Error("Nie udało się pobrać danych projektu");
             }
+
             const data = await response.json();
             setProject(data);
         } catch (err) {
@@ -66,6 +69,7 @@ const ProjectDetails = () => {
 
     useEffect(() => {
         fetchProject();
+
     }, [fetchProject]);
 
     useEffect(() => {
@@ -89,8 +93,6 @@ const ProjectDetails = () => {
     const handleTaskNavigate = (taskId) => {
         navigate(paths.taskDetails(projectId, taskId));
     }
-
-
     return (
         <Box sx={{p: 0}}>
             {project && (<>
@@ -118,14 +120,19 @@ const ProjectDetails = () => {
                     </>
                 )}
                 {isEditing && (
+
                     <EditProject
                         handleUpdate={handleProjectUpdate}
                         project={project}
                         setIsEditing={setIsEditing}
                     />
+
                 )}
 
+
             </>)}
+
+
         </Box>);
 };
 

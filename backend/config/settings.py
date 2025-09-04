@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+
 from dotenv import load_dotenv
 import dj_database_url
 
@@ -163,6 +164,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated', ],
     'DEFAULT_PAGINATION_CLASS': 'project.pagination.CustomPageNumberPagination',
     "PAGE_SIZE": 10,
 }
@@ -170,7 +172,6 @@ REST_FRAMEWORK = {
 REST_AUTH = {
     'USER_DETAILS_SERIALIZER': 'users.serializers.CustomUserSerializer',
     'PASSWORD_RESET_CONFIRM_URL': 'password-reset/confirm/{uid}/{token}/',
-
     'OLD_PASSWORD_FIELD_ENABLED': True,
 }
 

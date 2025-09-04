@@ -119,11 +119,11 @@ const TaskListDump = ({tasks, handleNavigate, handleDeleteSuccess}) => {
                                                             color: "black",
                                                         }}
                                                     >
-                                                        Opened {daysSince(task.created_at)} days ago
+                                                        Utworzone {daysSince(task.created_at)} dni temu
                                                     </Typography>
 
                                                     <Chip
-                                                        label={task.status}
+                                                        label={task.status_display}
                                                         size="small"
                                                         sx={{
                                                             backgroundColor: `${statusColors[`${task.status}_bcg`]}`,
@@ -135,7 +135,7 @@ const TaskListDump = ({tasks, handleNavigate, handleDeleteSuccess}) => {
                                                         }}
                                                     />
                                                     <Chip
-                                                        label={task.priority}
+                                                        label={task.priority_display}
                                                         size="small"
                                                         sx={{
                                                             backgroundColor: `${priorityColors[`${task.priority}_bcg`]}`,

@@ -82,7 +82,7 @@ const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick, handleTask
                         </Typography>
 
                         <Chip
-                            label={task.status}
+                            label={task.status_display}
                             size="small"
                             sx={{
                                 backgroundColor: `${statusColors[`${task.status}_bcg`]}`,
@@ -94,7 +94,7 @@ const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick, handleTask
                             }}
                         />
                         <Chip
-                            label={task.priority}
+                            label={task.priority_display}
                             size="small"
                             sx={{
                                 backgroundColor: `${priorityColors[`${task.priority}_bcg`]}`,

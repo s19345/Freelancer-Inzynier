@@ -42,6 +42,7 @@ const Sidebar = () => {
         }
     }, [isLoggedIn, navigate]);
 
+
     const handleItemClick = (text) => {
         setSelectedItem(text);
     };
@@ -129,8 +130,6 @@ const Sidebar = () => {
                         </ListItem>
                     ))}
                 </List>
-
-
             </Box>
 
 

@@ -4,7 +4,6 @@ import {PROJECT_BACKEND_URL} from "../../settings";
 import DeleteButton from "../common/DeleteButton";
 import useGlobalStore from "../../zustand_store/globalInfoStore";
 
-
 const DeleteTask = ({taskId, handleDeleteSuccess, contextText}) => {
     const token = useAuthStore((state) => state.token);
     const setMessage = useGlobalStore.getState().setMessage;
@@ -34,10 +33,9 @@ const DeleteTask = ({taskId, handleDeleteSuccess, contextText}) => {
     };
 
     return (
-
         <DeleteButton handleDelete={handleDelete}/>
-    );
-
+    )
+        ;
 };
 
 export default DeleteTask;

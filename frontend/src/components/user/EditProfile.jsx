@@ -174,7 +174,8 @@ const EditProfile = () => {
                 }
             </Box>
         </Box>
-    );
+    )
+        ;
 };
 
 export default EditProfile;

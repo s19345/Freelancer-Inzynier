@@ -1,5 +1,4 @@
 import datetime
-import itertools
 from collections import defaultdict
 from datetime import timedelta
 from rest_framework import status, generics, mixins
@@ -222,22 +221,12 @@ class RecentProjectsWithTasksView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
 
-        status_order = Case(
-            When(status='in_progress', then=0),
-            default=1,
-            output_field=IntegerField(),
-        )
-
         tasks = (
             Task.objects.filter(user=user)
             .exclude(status='completed')
-            .annotate(
-                status_order=status_order,
-            )
-            .order_by('status_order', 'due_date')
+            .order_by('due_date')
         )
 
-        # project_ids = tasks.values_list('project_id', flat=True).distinct()
         projects = Project.objects.filter(
             Q(manager=user) | Q(collabolators=user)
         ).distinct()
@@ -273,10 +262,26 @@ class RecentProjectsWithTasksView(generics.ListAPIView):
             task_count=Count('tasks', filter=Q(tasks__project_id__in=project_ids))
         ).order_by('-task_count')
 
+        status_order = Case(
+            When(status='active', then=Value(0)),
+            When(status='paused', then=Value(1)),
+            When(status='completed', then=Value(2)),
+            output_field=IntegerField(),
+        )
+
         return (
             Project.objects.filter(id__in=project_ids)
-            .annotate(most_urgent_due_date=Min('tasks__due_date', filter=Q(tasks__user=user)))
-            .order_by('most_urgent_due_date')
+            .annotate(
+                most_urgent_due_date=Min('tasks__due_date', filter=Q(tasks__user=user)),
+                status_order=status_order,
+                has_due_date=Case(
+                    # określa czy projekt ma jakiekolwiek taski
+                    When(tasks__due_date__isnull=False, then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by('status_order', '-has_due_date', 'most_urgent_due_date')
             .prefetch_related(
                 Prefetch('tasks', queryset=tasks, to_attr='user_tasks_prefetched'),
                 Prefetch(

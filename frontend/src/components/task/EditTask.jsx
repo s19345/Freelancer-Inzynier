@@ -22,7 +22,6 @@ const EditTask = ({handleTaskUpdate, setIsEditing, task}) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-
     const handleSubmit = async (e) => {
         setLoading(true);
         setError(null);

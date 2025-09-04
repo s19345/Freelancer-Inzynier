@@ -3,7 +3,7 @@ import {
     Box,
     Chip,
     Typography,
-    Tooltip, Card
+    Tooltip
 } from "@mui/material";
 import React from "react";
 import DeleteProject from "./DeleteProject";
@@ -28,23 +28,16 @@ const CustomAvatar = ({user}) => {
 }
 
 export const statusColors = {
-    "Active_color": "#1f9254",
-    "Active_bcg": "success.background",
-    "Paused_color": "warning.dark",
-    "Paused_bcg": "warning.background",
-    "Completed_color": "#bc0d01",
-    "Completed_bcg": "#fdeaea",
+    "active_color": "#1f9254",
+    "active_bcg": "success.background",
+    "paused_color": "warning.dark",
+    "paused_bcg": "warning.background",
+    "completed_color": "#bc0d01",
+    "completed_bcg": "#fdeaea",
 }
 
 const ProjecDetailsDump = ({project, handleEdit}) => {
 
-    if (project) {
-        project = {
-            ...project,
-            status: project.status.charAt(0).toUpperCase() + project.status.slice(1)
-        };
-    }
-    ;
 
     function daysSince(startDate) {
         const now = new Date();
@@ -72,7 +65,7 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
     }
 
     return (
-        <Box sx={{ p: 2, mb: 1 }}>
+        <Box sx={{p: 2, mb: 1}}>
             {project && (
                 <Box sx={{
                     display: "flex",
@@ -113,7 +106,7 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
                         </Box>
                         <Box sx={{display: "flex", flexDirection: "row", mt: 2}}>
                             <Chip
-                                label={project.status}
+                                label={project.status_display}
                                 size="medium"
                                 sx={{
                                     backgroundColor: `${statusColors[`${project.status}_bcg`]}`,
@@ -167,7 +160,7 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
 
 
                     <Box>
-                        <TimeInfo time={daysSince(project.created_at)} label={"Spędzony czas"}/>
+                        <TimeInfo time={daysSince(project.created_at)} label={"Czas trwania"}/>
                     </Box>
 
 
@@ -179,7 +172,8 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
             )
             }
         </Box>
-    );
+    )
+        ;
 };
 
 export default ProjecDetailsDump;

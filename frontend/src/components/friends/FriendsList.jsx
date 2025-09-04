@@ -51,6 +51,12 @@ const FriendList = () => {
         }
     }, [token, newFriendsSearching, pageSize]);
 
+    const changeCurrentPage = (newPage) => {
+        if (newPage !== pagination.currentPage) {
+            setPagination(prev => ({...prev, currentPage: newPage}));
+        }
+    }
+
     const handleInvite = async (friendId) => {
         try {
             const res = await fetch(`${USERS_LIST_URL}friend-request-send/`, {
@@ -86,13 +92,13 @@ const FriendList = () => {
 
     const changePageSize = (newSize) => {
         setPageSize(newSize);
-        setPagination(prev => ({...prev, currentPage: 1}));
+        changeCurrentPage(1);
     }
 
     const toggleNewFriendsSearching = () => {
         setFriends([])
         setNewFriendsSearching(prev => !prev);
-        setPagination(prev => ({...prev, currentPage: 1}));
+        changeCurrentPage(1);
     };
 
     useEffect(() => {
@@ -101,10 +107,7 @@ const FriendList = () => {
 
     const handlePageChange = (page) => {
         if (!isLoading) {
-            setPagination((prev) => ({
-                ...prev,
-                currentPage: page,
-            }));
+            changeCurrentPage(page);
         }
     }
 
@@ -114,6 +117,7 @@ const FriendList = () => {
                 ([key, value]) => value.trim() !== ""
             )
         );
+        changeCurrentPage(1);
         setFilters(cleanedFilters);
     }
 

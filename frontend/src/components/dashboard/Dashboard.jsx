@@ -355,11 +355,17 @@ const Dashboard = () => {
                     <Typography variant="h6">
                         Zespoły
                     </Typography>
-                    {projects && projects.length > 0 ? (
-                        projects.map((project) =>
-                                project.users?.length > 0 && (
+                    {projects ? (
+                        projects.filter(p => p.users?.length > 0).length > 0 ? (
+                            projects
+                                .filter(p => p.users?.length > 0)
+                                .map(project => (
                                     <TeamCard key={project.id} project={project}/>
-                                )
+                                ))
+                        ) : (
+                            <Typography variant="body1">
+                                Nie masz jeszcze żadnych zespołów
+                            </Typography>
                         )
                     ) : (
                         <Typography variant="body1">

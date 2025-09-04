@@ -30,6 +30,7 @@ const UserProjectsList = () => {
             if (!res.ok) {
                 throw new Error("Nie udało się pobrać projektów");
             }
+
             const data = await res.json();
             setPagination({
                 next: data.next,
@@ -46,7 +47,6 @@ const UserProjectsList = () => {
     }, [token])
 
     useEffect(() => {
-
         fetchProjects();
     }, [fetchProjects]);
 
@@ -76,7 +76,6 @@ const UserProjectsList = () => {
                 }
                 <AddButton label={"Stwórz nowy projekt"} to={paths.createProject}/>
             </Box>
-
         </Box>
     );
 };
