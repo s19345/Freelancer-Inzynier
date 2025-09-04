@@ -40,8 +40,7 @@ const SkillEditor = ({initialSkills = []}) => {
 
             if (!res.ok) {
                 throw new Error('Błąd dodawania umiejętności')
-            }
-            ;
+            };
             const data = await res.json();
             const filtered = data.filter(skill => !skills.some(s => s.id === skill.id));
             setSkills(prev => [...prev, ...filtered]);
