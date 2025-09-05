@@ -46,7 +46,6 @@ const ProjectsCard = () => {
                 }
 
                 const data = await res.json();
-                console.log(data);
                 setProjects(data.results);
             } catch (err) {
             }
