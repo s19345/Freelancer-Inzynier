@@ -164,7 +164,7 @@ class BaseTaskTimeLogView(generics.GenericAPIView):
     """Base class for task time log actions."""
     serializer_class = None
     new_status = None
-    success_message = None
+    success_message = 'Status został ustawiony na {status}.'
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -195,19 +195,16 @@ class BaseTaskTimeLogView(generics.GenericAPIView):
 class StartTaskTimeLogView(BaseTaskTimeLogView):
     serializer_class = TimeLogCreateSerializer
     new_status = 'in_progress'
-    success_message = 'Zadanie zostało rozpoczęte, status został ustawiony na {status}.'
 
 
 class StopTaskTimeLogView(BaseTaskTimeLogView):
     serializer_class = TimeLogStopSerializer
     new_status = 'to_do'
-    success_message = 'Zadanie zostało wstrzymane a status został ustawiony na {status}.'
 
 
 class EndTaskTimeLogView(BaseTaskTimeLogView):
     serializer_class = TimeLogStopSerializer
     new_status = 'completed'
-    success_message = 'Zadanie zostało zakończone a status został ustawiony na {status}.'
 
 
 class RecentProjectsWithTasksView(generics.ListAPIView):

@@ -8,7 +8,14 @@ import {priorityColors, statusColors} from "./TaskListDump";
 import ExpandableText from "../common/ExpandableText";
 import EditButton from "../common/EditButton";
 
-const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick, handleTaskStartOrPause, handleEndTask}) => {
+const TaskDetailsDump = ({
+                             task,
+                             handleDeleteSuccess,
+                             handleEditClick,
+                             handleTaskStartOrPause,
+                             handleEndTask,
+                             showTimelogButtons
+                         }) => {
     const contextText = task.parent_task ? 'Podzadanie' : 'Zadanie';
 
     return (
@@ -108,20 +115,25 @@ const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick, handleTask
                     </Stack>
                     <ExpandableText text={task.description} label={"opis"}/>
                 </Box>
-                <Button
-                    onClick={() => handleTaskStartOrPause(task.id)}
-                >
-                    {task.status === "to_do" && <Typography variant={"subtitle2"}>Rozpocznij {contextText}</Typography>}
-                    {task.status === "in_progress" &&
-                        <Typography variant={"subtitle2"}>Wstrzymaj {contextText}</Typography>}
-                </Button>
-                {task.status === "in_progress" && (
-                    <Button
-                        onClick={() => handleEndTask(task.id)}
-                    >
-                        <Typography variant={"subtitle2"}>Zakończ {contextText}</Typography>
-                    </Button>
-                )}
+                {showTimelogButtons &&
+                    <Box>
+                        <Button
+                            onClick={() => handleTaskStartOrPause(task.id)}
+                        >
+                            {task.status === "to_do" &&
+                                <Typography variant={"subtitle2"}>Rozpocznij {contextText}</Typography>}
+                            {task.status === "in_progress" &&
+                                <Typography variant={"subtitle2"}>Wstrzymaj {contextText}</Typography>}
+                        </Button>
+                        {task.status === "in_progress" && (
+                            <Button
+                                onClick={() => handleEndTask(task.id)}
+                            >
+                                <Typography variant={"subtitle2"}>Zakończ {contextText}</Typography>
+                            </Button>
+                        )}
+                    </Box>
+                }
                 <Box
                     sx={{
                         backgroundColor: "rgba(75, 166, 101, 0.11)",

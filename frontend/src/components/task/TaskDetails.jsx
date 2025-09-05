@@ -20,12 +20,14 @@ import PaginationFrame from "../common/Pagination";
 const TaskDetails = () => {
     const {taskId, projectId} = useParams();
     const token = useAuthStore((state) => state.token);
+    const user = useAuthStore((state) => state.user);
     const navigate = useNavigate()
     const [task, setTask] = useState(null);
     const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [subtasks, setSubtasks] = useState([]);
     const [subtasksPagination, setSubtasksPagination] = useState({next: null, prev: null, pages: 0, currentPage: 1});
+    const showTimelogButtons = user?.id === task?.user?.id
 
 
     useEffect(() => {
@@ -173,6 +175,7 @@ const TaskDetails = () => {
                             handleEditClick={handleEditClick}
                             handleTaskStartOrPause={handleTaskStartOrPause}
                             handleEndTask={handleEndTask}
+                            showTimelogButtons={showTimelogButtons}
                         />
                         <Box sx={{p: 3}}>
                             {subtasks && subtasks.length > 0 && (
