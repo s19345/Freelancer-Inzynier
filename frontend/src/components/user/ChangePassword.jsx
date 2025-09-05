@@ -2,12 +2,13 @@ import React, {useState, useEffect} from 'react';
 import useAuthStore from "../../zustand_store/authStore";
 import {Box, Typography, TextField, Button, Alert, Stack} from '@mui/material';
 
+
 const ChangePassword = ({setIsEdited}) => {
     const {loading, error, successMessage, resetError, changePassword} = useAuthStore();
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword1, setNewPassword1] = useState("");
     const [newPassword2, setNewPassword2] = useState("");
-    const [localError, setLocalError] = useState(null);
+    const [errors, setErrors] = useState({});
 
 
     useEffect(() => {
@@ -18,12 +19,13 @@ const ChangePassword = ({setIsEdited}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (newPassword1 !== newPassword2) {
-            setLocalError("Nowe hasła nie są takie same!");
-            return;
+        const response = await changePassword({oldPassword, newPassword1, newPassword2});
+        if (response?.errors) {
+            setErrors(response.errors);
+        } else {
+            setErrors({});
         }
-        setLocalError(null);
-        await changePassword({oldPassword, newPassword1, newPassword2});
+
     };
 
     return (
@@ -55,27 +57,34 @@ const ChangePassword = ({setIsEdited}) => {
                 <TextField
                     label="Aktualne hasło"
                     type="password"
+                    name="old_password"
+                    error={!!errors.old_password}
+                    helperText={errors.old_password}
                     value={oldPassword}
                     onChange={(e) => setOldPassword(e.target.value)}
-                    required
+
                     fullWidth
                 />
 
                 <TextField
                     label="Nowe hasło"
                     type="password"
+                    name="new_password1"
+                    error={!!errors.new_password1}
+                    helperText={errors.new_password1}
                     value={newPassword1}
                     onChange={(e) => setNewPassword1(e.target.value)}
-                    required
                     fullWidth
                 />
 
                 <TextField
                     label="Powtórz nowe hasło"
                     type="password"
+                    name="new_password2"
+                    error={!!errors.new_password2}
+                    helperText={errors.new_password2}
                     value={newPassword2}
                     onChange={(e) => setNewPassword2(e.target.value)}
-                    required
                     fullWidth
                 />
 
@@ -88,7 +97,6 @@ const ChangePassword = ({setIsEdited}) => {
                     </Button>
                 </Stack>
 
-                {localError && <Alert severity="error">{localError}</Alert>}
                 {error && <Alert severity="error">{error}</Alert>}
                 {successMessage && <Alert severity="success">{successMessage}</Alert>}
             </Box>

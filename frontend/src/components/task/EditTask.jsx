@@ -10,6 +10,7 @@ const EditTask = ({handleTaskUpdate, setIsEditing, task}) => {
     const token = useAuthStore(state => state.token);
     const setMessage = useGlobalStore((state) => state.setMessage);
     const setType = useGlobalStore((state) => state.setType);
+    const contextText = task.parent_task ? "Podzadanie" : "Zadanie";
 
     const [formData, setFormData] = useState({
         title: task?.title || '',
@@ -40,7 +41,7 @@ const EditTask = ({handleTaskUpdate, setIsEditing, task}) => {
                 const errorData = await res.json();
                 throw new Error(errorData.detail || 'Błąd podczas aktualizacji zadania');
             }
-            setMessage('Zadanie zostało zaktualizowane pomyślnie');
+            setMessage(`${contextText} zostało zaktualizowane pomyślnie`);
             setType('success');
             handleTaskUpdate(await res.json());
         } catch (err) {

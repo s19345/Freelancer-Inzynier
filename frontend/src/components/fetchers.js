@@ -60,7 +60,6 @@ export const fetchTimezones = async (token) => {
 export const updateOrCreateNotes = async (friendId, notes, rate) => {
     try {
         const payload = {};
-        console.log({notes, rate});
         if (notes != null) payload.notes = notes;
         if (rate != null) payload.rate = rate;
 
@@ -76,13 +75,12 @@ export const updateOrCreateNotes = async (friendId, notes, rate) => {
                 body: JSON.stringify(payload),
             }
         );
-
+        const data = await response.json();
         if (!response.ok) {
             showMessage("Błąd podczas zapisywania notatki.", "error");
             throw new Error("Błąd podczas zapisywania notatki.");
         }
 
-        const data = await response.json();
         return data;
     } catch (error) {
         showMessage("Nie udało się zapisać notatki.", "error");

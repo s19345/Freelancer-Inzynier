@@ -50,13 +50,12 @@ const useAuthStore = create(
                             new_password2: newPassword2,
                         }),
                     });
-
+                    const data = await response.json();
                     if (!response.ok) {
-                        const data = await response.json();
-                        throw new Error(data.detail || "Błąd zmiany hasła");
+                        return {success: false, errors: data};
+                    } else {
+                        set({successMessage: "Hasło zostało zmienione pomyślnie!"});
                     }
-
-                    set({successMessage: "Hasło zostało zmienione pomyślnie!"});
                 } catch (err) {
                     set({error: err.message});
                 } finally {
@@ -103,23 +102,25 @@ const useAuthStore = create(
                         body: JSON.stringify(updatedData),
                     });
 
-                    if (!res.ok) {
-                        const errorData = await res.json();
-                        set({error: JSON.stringify(errorData), loading: false});
-                        return false;
-                    }
-
                     const data = await res.json();
+                    if (!res.ok) {
+                        set({error: JSON.stringify(data), loading: false});
+                        data.success = false;
+
+                        return data;
+
+                    }
                     set({
                         user: data,
                         loading: false,
                         error: null,
                         successMessage: 'Dane użytkownika zostały zaktualizowane'
                     });
-                    return true;
+                    data.success = true;
+                    return data;
                 } catch (error) {
                     set({error: 'Błąd aktualizacji danych', loading: false});
-                    return false;
+                    return error
                 }
             },
 

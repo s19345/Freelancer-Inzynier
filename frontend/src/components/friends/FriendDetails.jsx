@@ -118,16 +118,18 @@ const TextBox = ({
                     <DialogTitle>
                         {field === "notes" ? "Edytuj notatkę" : "Edytuj ocenę"}
                     </DialogTitle>
-                    <DialogContent>
+                    <DialogContent sx={{width: 500}}>
                         <TextField
                             autoFocus
                             margin="dense"
                             label={field === "notes" ? "Wpisz notatkę" : "Podaj ocenę"}
                             type="text"
                             fullWidth
+                            multiline
                             variant="outlined"
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
+                            inputProps={field !== "notes" ? {maxLength: 20} : {}}
                         />
                     </DialogContent>
                     <DialogActions>
@@ -245,13 +247,13 @@ export default function FriendDetails() {
                                     initialValue={friend.friend_notes?.notes ? friend.friend_notes.notes : ""}
                                     setFriend={setFriend}
                                 >
-                                    {friend.friend_notes?.notes ? friend.friend_notes.notes : "Dodaj notatkę."}
+                                    {friend.friend_notes?.notes ? friend.friend_notes.notes : "Kliknij aby dodać notatkę."}
                                 </TextBox>
                             </Grid>
                         </Grid>
+
                     </>
                 )}
-
             </Paper>
             {friend?.collaboration_history &&
                 <Box sx={{p: 3, borderRadius: 4, maxWidth: 900, mx: 'auto'}}>

@@ -42,7 +42,7 @@ const TaskListDump = ({tasks, handleNavigate, handleDeleteSuccess}) => {
                 <Box sx={{p: 2}}>
                     <Stack spacing={2}>
                         {tasks.map((task, index) => {
-                                const contextText = task.parent_task ? 'podzadanie' : 'zadanie';
+                                const contextText = task.parent_task ? 'Podzadanie' : 'Zadanie';
                                 return (
                                     <Card key={index}
                                           id="task-box"

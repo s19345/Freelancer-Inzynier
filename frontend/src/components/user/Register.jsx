@@ -47,7 +47,6 @@ export default function Register() {
         }
         setErrors({});
         const response = await registerUser(formData);
-        console.log(response)
 
         if (response.success) {
             setMessage('Rejestracja zakończona sukcesem');

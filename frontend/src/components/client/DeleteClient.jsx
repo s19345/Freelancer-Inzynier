@@ -12,8 +12,11 @@ import {
 } from "@mui/material";
 import paths from "../../paths";
 import DeleteButton from "../common/DeleteButton";
+import useGlobalStore from "../../zustand_store/globalInfoStore";
 
 const DeleteClient = ({clientId}) => {
+    const setMessage = useGlobalStore.getState().setMessage;
+    const setType = useGlobalStore.getState().setType;
     const token = useAuthStore((state) => state.token);
     const [open, setOpen] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -30,6 +33,8 @@ const DeleteClient = ({clientId}) => {
             });
 
             if (response.ok) {
+                setMessage("Klient został pomyślnie usunięty.");
+                setType("success");
                 setOpen(false);
                 navigate(paths.clients)
             } else {

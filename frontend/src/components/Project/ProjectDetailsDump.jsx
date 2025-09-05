@@ -12,19 +12,21 @@ import ExpandableText from "../common/ExpandableText";
 import EditButton from "../common/EditButton";
 
 const CustomAvatar = ({user}) => {
-    return <Avatar
-        key={user.id}
-        alt={user.username}
-        src={user.profile_picture || ""}
-        sx={{
-            width: 32,
-            height: 32,
-            bgcolor: !user.profile_picture ? "primary.main" : undefined,
-            color: !user.profile_picture ? "white" : undefined,
-        }}
-    >
-        {!user.profile_picture && user.username?.charAt(0).toUpperCase()}
-    </Avatar>
+    return <Tooltip title={user.username}>
+        <Avatar
+            key={user.id}
+            alt={user.username}
+            src={user.profile_picture || ""}
+            sx={{
+                width: 32,
+                height: 32,
+                bgcolor: !user.profile_picture ? "primary.main" : undefined,
+                color: !user.profile_picture ? "white" : undefined,
+            }}
+        >
+            {!user.profile_picture && user.username?.charAt(0).toUpperCase()}
+        </Avatar>
+    </Tooltip>
 }
 
 export const statusColors = {
@@ -172,8 +174,7 @@ const ProjecDetailsDump = ({project, handleEdit}) => {
             )
             }
         </Box>
-    )
-        ;
+    );
 };
 
 export default ProjecDetailsDump;

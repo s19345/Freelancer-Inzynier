@@ -9,7 +9,7 @@ import ExpandableText from "../common/ExpandableText";
 import EditButton from "../common/EditButton";
 
 const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick, handleTaskStartOrPause, handleEndTask}) => {
-    const contextText = task.parent_task ? 'podzadanie' : 'zadanie';
+    const contextText = task.parent_task ? 'Podzadanie' : 'Zadanie';
 
     return (
         <Box key={task.id}
@@ -78,7 +78,7 @@ const TaskDetailsDump = ({task, handleDeleteSuccess, handleEditClick, handleTask
                                 color: "black",
                             }}
                         >
-                            Opened {daysSince(task.created_at)} days ago
+                            Utworzone {daysSince(task.created_at)} dni temu
                         </Typography>
 
                         <Chip

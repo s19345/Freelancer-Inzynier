@@ -34,8 +34,7 @@ const DeleteTask = ({taskId, handleDeleteSuccess, contextText}) => {
 
     return (
         <DeleteButton handleDelete={handleDelete}/>
-    )
-        ;
+    );
 };
 
 export default DeleteTask;

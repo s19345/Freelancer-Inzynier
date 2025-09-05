@@ -12,10 +12,10 @@ import {
 } from '@mui/material';
 import useGlobalStore from "../../zustand_store/globalInfoStore";
 import {useNavigate} from "react-router";
-import paths from "../../paths";
 import ChangePassword from "./ChangePassword";
 import SkillEditor from "./EditSkills";
 import {fetchTimezones} from "../fetchers";
+import paths from "../../paths";
 
 
 const EditProfile = () => {
@@ -33,6 +33,7 @@ const EditProfile = () => {
     const setType = useGlobalStore((state) => state.setType);
     const navigate = useNavigate();
     const [isEdited, setIsEdited] = useState(false);
+    const [errors, setErrors] = useState({});
 
     const [form, setForm] = useState({
         username: '',
@@ -74,16 +75,17 @@ const EditProfile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await updateUserData(form);
-
-        if (success) {
-            setMessage('Dane użytkownika zostały zaktualizowane');
+        const response = await updateUserData(form);
+        if (!response.success) {
+            setErrors(response);
+        } else if (response.success) {
+            setErrors({})
+            setMessage('Profil zaktualizowany pomyślnie');
             setType('success');
             navigate(paths.userProfile);
-        } else {
-            setMessage('Wystąpił błąd podczas aktualizacji');
-            setType('error');
         }
+
+
     };
 
     if (!isLoggedIn) {
@@ -98,6 +100,7 @@ const EditProfile = () => {
         <Box sx={{display: "flex", flexDirection: "row", gap: 3, flexWrap: "wrap",}}>
             <Box
                 component="form"
+                noValidate
                 onSubmit={handleSubmit}
                 sx={{
                     width: "50%",
@@ -116,17 +119,71 @@ const EditProfile = () => {
                     Edytuj profil
                 </Typography>
 
-                <TextField label="Nick" name="username" value={form.username} onChange={handleChange} required
-                           fullWidth/>
-                <TextField label="Imię" name="first_name" value={form.first_name} onChange={handleChange} fullWidth/>
-                <TextField label="Nazwisko" name="last_name" value={form.last_name} onChange={handleChange} fullWidth/>
-                <TextField label="Email" name="email" type="email" value={form.email} onChange={handleChange} required
-                           fullWidth/>
-                <TextField label="Telefon" name="phone_number" value={form.phone_number} onChange={handleChange}
-                           fullWidth/>
-                <TextField label="Lokalizacja" name="location" value={form.location} onChange={handleChange} fullWidth/>
-                <TextField label="Specjalizacja" name="specialization" value={form.specialization}
-                           onChange={handleChange} fullWidth/>
+                <TextField
+                    label="Nick"
+                    name="username"
+                    value={form.username}
+                    onChange={handleChange}
+                    error={!!errors.username}
+                    helperText={errors.username}
+                    required
+                    fullWidth
+                />
+                <TextField
+                    label="Imię"
+                    name="first_name"
+                    value={form.first_name}
+                    onChange={handleChange}
+                    fullWidth
+                    error={!!errors.first_name}
+                    helperText={errors.first_name}
+                />
+                <TextField
+                    label="Nazwisko"
+                    name="last_name"
+                    value={form.last_name}
+                    onChange={handleChange}
+                    fullWidth
+                    error={!!errors.last_name}
+                    helperText={errors.last_name}
+                />
+                <TextField
+                    label="Email"
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    fullWidth
+                    error={!!errors.email}
+                    helperText={errors.email}
+                />
+                <TextField
+                    label="Telefon"
+                    name="phone_number"
+                    value={form.phone_number}
+                    onChange={handleChange}
+                    fullWidth
+                    error={!!errors.phone_number}
+                    helperText={errors.phone_number}
+                />
+                <TextField
+                    label="Lokalizacja"
+                    name="location"
+                    value={form.location}
+                    onChange={handleChange}
+                    fullWidth
+                    error={!!errors.location}
+                    helperText={errors.location}
+                />
+                <TextField
+                    label="Specjalizacja"
+                    name="specialization"
+                    value={form.specialization}
+                    onChange={handleChange}
+                    fullWidth
+                    error={!!errors.specialization}
+                    helperText={errors.specialization}
+                />
                 <FormControl fullWidth>
                     <InputLabel>Strefa czasowa</InputLabel>
                     <Select name="timezone" value={form.timezone} label="Strefa czasowa" onChange={handleChange}>
@@ -147,11 +204,6 @@ const EditProfile = () => {
                     rows={4}
                     fullWidth
                 />
-
-                {/*<Button variant="outlined" component="label">*/}
-                {/*    Dodaj zdjęcie profilowe*/}
-                {/*    <input type="file" name="profile_picture" hidden onChange={handleChange} accept="image/*"/>*/}
-                {/*</Button>*/}
                 <Box sx={{display: "flex", flexDirection: "row"}}>
                     <Button variant="contained" type="submit" sx={{mt: 2, width: "50%"}}>
                         Zapisz zmiany
@@ -174,8 +226,7 @@ const EditProfile = () => {
                 }
             </Box>
         </Box>
-    )
-        ;
+    );
 };
 
 export default EditProfile;

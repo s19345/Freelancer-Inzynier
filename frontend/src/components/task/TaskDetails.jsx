@@ -97,6 +97,7 @@ const TaskDetails = () => {
                 setTask(prev => ({
                     ...prev,
                     status: "in_progress",
+                    status_display: result.status,
                     start_time: result.start_time,
                 }));
             }
@@ -107,6 +108,7 @@ const TaskDetails = () => {
                 setTask(prev => ({
                     ...prev,
                     status: "to_do",
+                    status_display: result.status,
                     stop_time: result.stop_time,
                 }));
             }
@@ -119,6 +121,7 @@ const TaskDetails = () => {
             setTask(prev => ({
                 ...prev,
                 status: "completed",
+                status_display: result.status,
                 end_time: result.end_time,
             }));
         }
@@ -210,8 +213,7 @@ const TaskDetails = () => {
                 )
             )}
         </Box>
-    )
-        ;
+    );
 };
 
 export default TaskDetails;

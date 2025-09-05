@@ -188,7 +188,7 @@ class BaseTaskTimeLogView(generics.GenericAPIView):
             'timelog_id': timelog.id,
             'start_time': timelog.start_time,
             'end_time': timelog.end_time,
-            'task.status': task.get_status_display()
+            'status': task.get_status_display()
         }, status=status.HTTP_200_OK)
 
 
