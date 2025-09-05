@@ -72,6 +72,7 @@ const TextBox = ({
                  }) => {
     const [open, setOpen] = useState(false);
     const [inputValue, setInputValue] = useState(initialValue);
+    const token = useAuthStore((state) => state.token);
 
     const handleOpen = () => {
         if (editable) setOpen(true);
@@ -83,7 +84,7 @@ const TextBox = ({
         const rate = field === "rate" ? inputValue : null;
 
         try {
-            const updatedNotes = await updateOrCreateNotes(friendId, notes, rate);
+            const updatedNotes = await updateOrCreateNotes(friendId, notes, rate, token);
 
             setFriend((prevFriend) => ({
                 ...prevFriend,

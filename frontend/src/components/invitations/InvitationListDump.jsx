@@ -12,7 +12,7 @@ import React, {useState} from "react";
 import PaginationFrame from "../common/Pagination";
 
 
-const InvitationBox = ({invitations, handleAccept, pagination, handleChange, handleDelete, setIsSelectedReceived}) => {
+const InvitationBox = ({invitations, handleAccept, pagination, handleChange, handleDelete, handleChangeTab}) => {
     const [activeTab, setActiveTab] = useState("received");
     return (
         <Box>
@@ -34,7 +34,7 @@ const InvitationBox = ({invitations, handleAccept, pagination, handleChange, han
                                 variant={activeTab === tab ? "contained" : "outlined"}
                                 onClick={() => {
                                     setActiveTab(tab);
-                                    setIsSelectedReceived(tab === "received");
+                                    handleChangeTab(tab === "received");
                                 }}
                                 sx={{
                                     borderRadius: 0,

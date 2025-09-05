@@ -67,15 +67,25 @@ const InvitationList = () => {
         }
     }
 
+    const changePage = (newPage) => {
+        setPagination((prev) => ({
+            ...prev,
+            currentPage: newPage,
+        }));
+    }
+
+    const handleChangeTab = (value) => {
+        if (value === isSelectedReceived) return;
+        changePage(1)
+        setIsSelectedReceived(value);
+    }
+
     const handleDelete = (projectId) => {
         deleteFriendInvitation(projectId);
     };
 
     const handlePageChange = (page) => {
-        setPagination((prev) => ({
-            ...prev,
-            currentPage: page,
-        }));
+        changePage(page);
         fetchInvitations(page);
     }
 
@@ -124,7 +134,7 @@ const InvitationList = () => {
             pagination={pagination}
             handleChange={handlePageChange}
             handleDelete={handleDelete}
-            setIsSelectedReceived={setIsSelectedReceived}
+            handleChangeTab={handleChangeTab}
         />
     )
 };

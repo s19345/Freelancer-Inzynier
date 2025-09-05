@@ -57,11 +57,16 @@ export const fetchTimezones = async (token) => {
     }
 };
 
-export const updateOrCreateNotes = async (friendId, notes, rate) => {
+export const updateOrCreateNotes = async (friendId, notes, rate, token) => {
+    let context = "notatki";
     try {
+
         const payload = {};
         if (notes != null) payload.notes = notes;
-        if (rate != null) payload.rate = rate;
+        if (rate != null) {
+            payload.rate = rate;
+            context = "oceny"
+        }
 
         const response = await fetch(
             `${USERS_LIST_URL}friend-notes/${friendId}/`,
@@ -77,13 +82,13 @@ export const updateOrCreateNotes = async (friendId, notes, rate) => {
         );
         const data = await response.json();
         if (!response.ok) {
-            showMessage("Błąd podczas zapisywania notatki.", "error");
-            throw new Error("Błąd podczas zapisywania notatki.");
+            showMessage(`Błąd podczas zapisywania ${context}.`, "error");
+            throw new Error(`Błąd podczas zapisywania ${context}.`);
         }
 
         return data;
     } catch (error) {
-        showMessage("Nie udało się zapisać notatki.", "error");
+        showMessage(`Nie udało się zapisać ${context}.`, "error");
         return null;
     }
 };

@@ -46,6 +46,7 @@ const ProjectsCard = () => {
                 }
 
                 const data = await res.json();
+                console.log(data);
                 setProjects(data.results);
             } catch (err) {
             }
@@ -112,7 +113,7 @@ const ProjectsCard = () => {
                                             {project.version}
                                         </Typography>
                                         <Chip
-                                            label={project.status}
+                                            label={project.status_display}
                                             color={getStatusColor(project.status)}
                                             size="small"
                                             sx={{width: "fit-content"}}
