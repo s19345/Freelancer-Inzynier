@@ -18,12 +18,12 @@ const PasswordResetConfirm = () => {
     const [newPassword1, setNewPassword1] = useState('');
     const [newPassword2, setNewPassword2] = useState('');
     const [success, setSuccess] = useState(false);
-    const [error, setError] = useState(null);
+    const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null);
+        setErrors(null);
         setLoading(true);
 
         try {
@@ -41,21 +41,18 @@ const PasswordResetConfirm = () => {
             });
 
             const data = await response.json();
-
             if (response.ok) {
                 setSuccess(true);
                 setTimeout(() => navigate('/login'), 3000);
             } else {
-                const errorMsg = data?.new_password2?.[0] || data?.detail || 'Coś poszło nie tak. Spróbuj ponownie.';
-                setError(errorMsg);
+                setErrors(data);
             }
         } catch (err) {
-            setError('Wystąpił błąd sieci.');
+            setErrors('Wystąpił błąd sieci.');
         } finally {
             setLoading(false);
         }
     };
-
     return (
         <Box maxWidth={400} mx="auto" mt={8} p={4}>
             <Typography variant="h5" gutterBottom>
@@ -67,7 +64,7 @@ const PasswordResetConfirm = () => {
                     Hasło zostało zmienione. Za chwilę nastąpi przekierowanie do logowania...
                 </Alert>
             ) : (
-                <Box component="form" onSubmit={handleSubmit}>
+                <Box component="form" onSubmit={handleSubmit} noValidate>
                     <Stack spacing={2}>
                         <TextField
                             label="Nowe hasło"
@@ -76,6 +73,8 @@ const PasswordResetConfirm = () => {
                             onChange={(e) => setNewPassword1(e.target.value)}
                             required
                             fullWidth
+                            error={!!errors?.new_password1}
+                            helperText={errors?.new_password1?.[0]}
                         />
 
                         <TextField
@@ -85,11 +84,9 @@ const PasswordResetConfirm = () => {
                             onChange={(e) => setNewPassword2(e.target.value)}
                             required
                             fullWidth
+                            error={!!errors?.new_password2}
+                            helperText={errors?.new_password2?.[0]}
                         />
-
-                        {error && (
-                            <Alert severity="error">{error}</Alert>
-                        )}
 
                         <Button
                             type="submit"
